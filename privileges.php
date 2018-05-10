@@ -203,8 +203,8 @@ $(document).ready(function() {
 </div> <!-- end of wrapper -->
 </div>
     <script type="text/javascript">
-        function deletePrivileges($id) {
-            alert($id);
+        function deletePrivileges(e) {
+            $id =  e.parentElement.children[1].value;
             
             if (window.XMLHttpRequest) {
               // code for IE7+, Firefox, Chrome, Opera, Safari

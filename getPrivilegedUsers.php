@@ -18,8 +18,8 @@
              echo '<table id="tblUsers" width="100%"><thead><tr bgcolor="#424066" height="30px" style="color:white;"><th>Emp Code</th><th style="float:left;padding-top:5px;padding-left:5px;">Employee Name</th><th /></tr></thead><tbody>';
             $i=1;
              while($row= mysqli_fetch_array($result)) {
-                 echo '<tr><td width="100px" align="center">' . $row['employeeCode'] . '<input type="hidden" name="txtID" id="txtID'.$i.'" value="'.$row['privilegeID'].'" /> </td><td width="300px" style="padding-left:5px;">' . $row['employeeName']. '</td><td align="center"><img src="images/erase.png" '
-                         . 'onclick="deletePrivileges(document.getElementById("txtID'.$i.'").value);" style="cursor:pointer;" /></td></tr>'; 
+                 echo '<tr><td width="100px" align="center">' . $row['employeeCode'] . ' </td><td width="300px" style="padding-left:5px;">' . $row['employeeName']. '</td><td align="center"><img src="images/erase.png" '
+                         . 'onclick="deletePrivileges(this)" style="cursor:pointer;" /><input type="hidden" name="txtID" id="txtID'.$i.'" value="'.$row['privilegeID'].'" /></td></tr>'; 
              
                  $i++;
              }
