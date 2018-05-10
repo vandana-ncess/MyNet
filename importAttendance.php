@@ -64,7 +64,7 @@ $(document).ready(function() {
     </div> <!-- end of header -->
     
     <div id="templatemo_main_top" ></div>
-    <div id="templatemo_main" style="height: 295px;"><span id="main_top" style="height: 160px;"></span><span id="main_bottom"  style="height: 160px;"></span>
+    <div id="templatemo_main" style="height: 345px;"><span id="main_top" style="height: 160px;"></span><span id="main_bottom"  style="height: 160px;"></span>
     	
         <div id="templatemo_sidebar" style="height: 200px;">
         

@@ -568,17 +568,13 @@ button:hover {
         </div>
         <div data-u="slides" style="cursor:default;position:relative;top:0px;left:0px;width:980px;height:150px;overflow:hidden;">
             <?php
-            for($i=1;$i<=12;$i++) {
+            for($i=1;$i<=77;$i++) {
             echo '<div>
                 <img data-u="image" src="images/Website Gallery/'.$i.'.jpg" />
             </div>';}
             ?>
            
-            <div style="background-color:#ff7c28;">
-                <div style="position:absolute;top:3px;left:16px;width:150px;height:62px;z-index:0;font-size:16px;color:#000000;line-height:24px;text-align:left;padding:5px;box-sizing:border-box;">Photos in this slider are to demostrate jssor slider,<br />
-                    which are not licensed for any other purpose.
-                </div>
-            </div>
+           
         </div>
         <!-- Bullet Navigator -->
         <div data-u="navigator" class="jssorb057" style="position:absolute;bottom:12px;right:12px;" data-autocenter="1" data-scale="0.5" data-scale-bottom="0.75">

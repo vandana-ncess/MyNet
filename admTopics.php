@@ -58,7 +58,7 @@ $(document).ready(function() {
     	<span id="header_icon"></span>
     	<div id="header_content">
         	<div id="site_title">
-				    <p>Welcome to NCESS Family</p>         </div>
+				    <p>Welcome to NCESS Intranet</p>         </div>
            
 		 
 		</div>
@@ -106,90 +106,28 @@ $(document).ready(function() {
         </div> <!-- end of sidebar -->
         
         <div id="templatemo_content">
+            <h5>Discussion Topics</h5>
             <form method="post" enctype="multipart/form-data" onsubmit="setSelected()">
-                <table cellspacing="5">
-                <tr>
-                    <td width="100px;"> Select Menu</td>
-                    <td><?php
-                        $sql= "SELECT * FROM adminmenu where status=1";
-                        $result = mysqli_query($conn,$sql);
-                        if(mysqli_num_rows($result)>0) {
-                            echo "<select name='ddlMenu' id='ddlMenu' onchange='loadPrivilegedUsers()' style='height:25px;width:200px;'>";
-                            while($row = mysqli_fetch_array($result)) {
-                                echo "<option value='".$row['menuID'] ."'>". $row['menu']."</option>";
-                            }
-                            echo '</select>';
-                        }
-                    ?></td>
-                </tr>
+                <table>
                     <tr>
-                        <td colspan="4"><table id="tblUsers"></table></td>
-                    </tr>
+                        <td><input type="text" name="txtTopic" style="width:450px;" /></td><td><input type="submit" name="btnSave" value="Add" /> </td>
+                    </tr> 
                     <tr>
-                            <td  style="padding-top: 20px;">Division</td>
-                            <td style="padding-top: 20px;">
-                                <select id="ddlDivision" name="ddlDivision"  style="width: 220px;"><option value="-1">All</option>
-                                    <?php
-                                        $sql = "SELECT divisionID,divisionName FROM division WHERE divisionStatus=1";
-                                        $result = mysqli_query($conn,$sql);
-                                        if(mysqli_num_rows($result) > 0)
-                                        {
-                                            while ($row = mysqli_fetch_array($result)) {
-                                                echo "<option value=" . $row['divisionID'] . ">" . $row['divisionName'] . "</option>";
-                                            }
-                                        }
-                                    ?>
-                                </select>
-                            </td>
-                            <td  style="padding-top: 20px;padding-left: 5px;">Category</td>
-                            <td style="padding-top: 20px;"><select id="ddlCategory" name="ddlCategory" onchange="loadDesignation()" style="width: 200px;" ><option value="0">All</option>
+                        <td colspan="2">
                             <?php
-                                $sql = "SELECT categoryID,categoryName FROM category WHERE categoryStatus=1";
+                                $sql = "SELECT * FROM discussion_topics WHERE status=1";
                                 $result = mysqli_query($conn,$sql);
-                                if(mysqli_num_rows($result) > 0)
-                                {
-                                    while ($row = mysqli_fetch_array($result)) {
-                                        echo "<option value=" . $row['categoryID'] . ">" . $row['categoryName'] . "</option>";
+                                if(mysqli_num_rows($result)) {
+                                    echo '<table><tr  style="background-color:#424066;color:white;height:25px;"><td>Topic</td><td>Delete</td>';
+                                    while($data = mysqli_fetch_array($result)) {
+                                        echo '<tr><td>'. $data['topic'] . '</td><td><img src="images/erase.png"  onclick="delete()" style="cursor:pointer;"></td></tr>';
                                     }
+                                    echo '</table>';
                                 }
                             ?>
-                            </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td >Designation</td>
-                            <td>
-                                <select id="ddlDesignation" name="ddlDesignation"  style="width: 220px;">
-                                </select>
-                            </td>
-                            <td   style="padding-left: 5px;">Name</td><td colspan="3"><input type="text" name="txtEmployee" id="txtEmployee" style="width: 194px;" /> </td>
-                        </tr>
-                        <tr>
-                            <td colspan="4" align="right" style="padding: 10px;"><input type="button" name="btnSearch" id="btnSearch" value="Search" onclick="loadEmp()" /></td>
-                        </tr>
-                        <tr align="right">
-			    <td colspan="4" align="left" bgcolor="#424066" height="25px;" style="color: white;" ></td>
-                        </tr>
-                        <tr>
-                            <td colspan="4" style="padding-top: 10px;"><div style="overflow-y:scroll;max-height: 350px;"> <table id ="tblEmp" style="overflow-x:   scroll;overflow-y: auto;"></table></div></td>
-                        </tr>
-                    <tr>
-                        <td colspan="4" align="right"><input type='submit' name='btnSave' id='btnSave' value='Save' style="display: none;float: right;"  /> </td> 
+                        </td>
                     </tr>
-                    <?php
-                        if(isset($_POST['btnSave'])) {
-                            $selected = $_POST['txtSelect'];
-                            $empCode = $_POST['txtEmpCode'];
-                            for($i=0;$i<sizeof($selected);$i++) {
-                                if($selected[$i]) { 
-                                   $sql = "INSERT INTO adminmenu_privileges(menuID,users,status) VALUES(" .  $_POST['ddlMenu'] . "," . $empCode[$i] . ",1)";
-                                   $result = mysqli_query($conn,$sql);
-                                }
-                               
-                            }
-                        }
-                    ?>
-            </table>
+                </table>
             </form>
               
         </div>
@@ -203,24 +141,6 @@ $(document).ready(function() {
 </div> <!-- end of wrapper -->
 </div>
     <script type="text/javascript">
-        function deletePrivileges($id) {
-            alert($id);
-            
-            if (window.XMLHttpRequest) {
-              // code for IE7+, Firefox, Chrome, Opera, Safari
-              xmlhttp = new XMLHttpRequest();
-          } else {
-              // code for IE6, IE5
-              xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-          }
-          xmlhttp.onreadystatechange = function() {
-              if (this.readyState == 4 && this.status == 200) {
-                  document.getElementById("tblUsers").innerHTML = this.responseText ;
-              }
-          };
-          xmlhttp.open("GET","delete.php?id="+$id+"&table=privileges");
-          xmlhttp.send();
-        }
         function loadPrivilegedUsers() {
             $menuID = document.getElementById('ddlMenu').value;
             if (window.XMLHttpRequest) {

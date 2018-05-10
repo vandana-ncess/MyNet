@@ -12,6 +12,8 @@
         $_SESSION['LAST_ACTIVITY'] = time();   
    }
      $conn = require_once('databaseconnection.php');
+     $topicID = $_GET['topicID'];
+     $quote = $_GET['quote'];
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -96,20 +98,54 @@ $(document).ready(function() {
         </div> <!-- end of sidebar -->
         
         <div id="templatemo_content">
-            <h4>Discussion Forum</h4>
-            <?php
-                $sql = "SELECT *,COUNT(comment) as comments_no FROM discussion_topics A LEFT JOIN discussion_posts B ON A.topicID=B.topicID AND approvalStatus=1 WHERE status=1  GROUP BY A.topicID";
-                $res = mysqli_query($conn,$sql);
-                if(mysqli_num_rows($res)>0) {
-                    while($data = mysqli_fetch_array($res)) {
-                        echo '<div class="content_box" ><h5>'.$data['title'] .'</h5>
-                <p>'.$data['topic'].'</p><br /><span align="right"><a href="post.php?topicID='.$data[0].'&quote=0">';
-                        if ($data['comments_no']==0) echo 'Add New Comment'; else echo $data['comments_no'] .' Comments';
-                        echo '</a></span></div>';
-                    }
-                }
-            ?>
            
+            <?php
+                $sql = "SELECT * FROM discussion_topics WHERE topicID=". $topicID ;
+                $res = mysqli_query($conn,$sql); 
+                if(mysqli_num_rows($res)>0) {
+                    $data = mysqli_fetch_array($res);
+                    echo '<div class="content_box" style="padding-bottom:5px;overflow-y:scroll;min-height:550px;" ><h5>'.$data['title'] .'</h5>';
+                    echo $data['topic'] . '<br /><br />';
+                }
+                $sql = "SELECT * FROM discussion_posts WHERE topicID=" . $topicID;
+                $res = mysqli_query($conn,$sql); 
+                $no = mysqli_num_rows($res);
+                if($no>0) {
+                        while($data = mysqli_fetch_array($res)) {
+                            echo '<div class="content_box" style="padding-bottom:20px;height:auto;" ><p><b>'.$data['postedBy'].'</b>&nbsp;'.$data['postedOn'].'</p><p>'.$data['comment'].'</p> ';
+                            $sql1 = "SELECT * FROM discussion_quotes WHERE approvalStatus=1 AND postID=" . $data['postID'];
+                            $re = mysqli_query($conn,$sql1);
+                            if(mysqli_num_rows($re)) {
+                                while($row = mysqli_fetch_array($re)) {
+                                    echo '<p style="padding-left:10px;"><b>'.$data['postedBy'].'</b>&nbsp;'.$data['postedOn'].'</p><p style="padding-left:10px;">'. $row['quote'].'</p>';
+                                }
+                            }
+                            echo '<span style="float:right;"><a href="post.php?topicID='.$topicID.'&quote='.$data['postID'].'#comment">Quote</a></span></div>';
+                        } 
+                    }
+  echo '</div>';
+            ?>
+            <div class="content_box"  style="padding-bottom: 5px;"><a name="comment"> <h5>Add  Comments</h5></a>
+                <form method="POST">
+                    <textarea name="txtComment" rows="5" cols="80"></textarea>
+                    <input type="submit" name="btnSend" value="Send" />
+                    <?php
+                        if(isset($_POST['btnSend'])) {
+                            if($quote == 0)
+                                $sql = "INSERT INTO discussion_posts(topicID,comment,postedBy,postedOn,approvalStatus) VALUES(" . $topicID . ",'" .
+                                    $_POST['txtComment'] . "','" . $_SESSION['user'] . "',CURRENT_TIMESTAMP,0)";
+                            else 
+                                $sql = "INSERT INTO discussion_quotes(postID,quote,postedBy,postedOn,approvalStatus) VALUES(" . $quote . ",'" .
+                                    $_POST['txtComment'] . "','" . $_SESSION['user'] . "',CURRENT_TIMESTAMP,0)";
+                            $result = mysqli_query($conn,$sql);
+                            if($result)
+                                echo 'Your comments are send for verification!';
+                            else
+                                echo 'Failed to send!';
+                        }
+                    ?>
+                </form>
+            </div>
         </div>
         
         <div class="cleaner"></div>    
