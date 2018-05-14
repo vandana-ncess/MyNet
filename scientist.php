@@ -103,10 +103,10 @@ $(document).ready(function() {
                             echo '<table style="font-size:12px;"><tr>';
                             $row=mysqli_fetch_array($result);
                             $$last = $row['divisionName'];
-                             echo '<td style="font-size:18px;padding-bottom:10px;" colspan="3">' . $row['designation'] . '</td></tr><tr><td width="185px"><img class="image_wrapper image_fl" width="140px" height="160px" src="images/profile/'.$row['employeeCode'] . '.jpg" alt="Image 1" /><a href="employeeProfile.php?empID=' . $row['employeeCode'] . '" target="_blank" ><b>' . $row['employeeName'] .'</b></a></td>';
+                             echo '<td style="font-size:18px;padding-bottom:10px;" colspan="3">' . $row['designation'] . '</td></tr><tr><td width="185px"><a href="employeeProfile.php?empID=' . $row['employeeCode'] . '" target="_blank" ><img class="image_wrapper image_fl" width="140px" height="160px" src="images/profile/'.$row['employeeCode'] . '.jpg" alt="Image 1" /><b>' . $row['employeeName'] .'</b></a></td>';
                             while($row=mysqli_fetch_array($result)) {
                                if($last == $row['divisionName']) {
-                                    echo '<td style="padding-right:2px;"><img class="image_wrapper image_fl" src="images/profile/'.$row['employeeCode'] . '.jpg" alt="Image 1" width="140px" height="160px" /><a href="employeeProfile.php?empID=' . $row['employeeCode'] . '" target="_blank" ><b>' . $row['employeeName'] .'<br />' . $row['designation']. '</b></a></td>';
+                                    echo '<td style="padding-right:2px;"><a href="employeeProfile.php?empID=' . $row['employeeCode'] . '" target="_blank" ><img class="image_wrapper image_fl" src="images/profile/'.$row['employeeCode'] . '.jpg" alt="Image 1" width="140px" height="160px" /><b>' . $row['employeeName'] .'<br />' . $row['designation']. '</b></a></td>';
                                     if(($i%3)==0)
                                         echo '</tr><tr>';
                                    $i++;
@@ -115,7 +115,7 @@ $(document).ready(function() {
                                else {
                                    echo '</tr><tr><td style="font-size:18px;padding-bottom:10px;padding-top:10px;" colspan="3">' . $row['divisionName'] . '</td></tr><tr>';
                                    $i = 1;
-                                   echo '<td ><img class="image_wrapper image_fl" src="images/profile/'.$row['employeeCode'] . '.jpg" alt="Image 1" width="140px" height="160px" /><a href="employeeProfile.php?empID=' . $row['employeeCode'] . '" target="_blank" ><b>' . $row['employeeName'] .'<br />' . $row['designation']. '</b></a></td>';
+                                   echo '<td ><a href="employeeProfile.php?empID=' . $row['employeeCode'] . '" target="_blank" ><img class="image_wrapper image_fl" src="images/profile/'.$row['employeeCode'] . '.jpg" alt="Image 1" width="140px" height="160px" /><b>' . $row['employeeName'] .'<br />' . $row['designation']. '</b></a></td>';
                                     if(($i%3)==0)
                                         echo '</tr><tr>';
                                    $i++;

@@ -72,7 +72,7 @@ $(document).ready(function() {
         	<div id="templatemo_menu">
                 <ul>
                   <li><a href="index.php" target="_parent">Home</a></li>
-                    <li><a href="employees.php" target="_parent"  class="current">>Staff</a></li>
+                    <li><a href="employees.php" target="_parent"  class="current">Staff</a></li>
                     <li><a href="announcements.php" target="_parent" >Notice Board</a></li>
                     <li><a href="documents.php" target="_parent" >Documents</a></li>
                     <li><a href="attendance.php" target="_parent">Attendance</a></li>
@@ -114,10 +114,10 @@ $(document).ready(function() {
                             echo '<table><tr>';
                             $row=mysqli_fetch_array($result);
                             $last = $row['designation'];
-                             echo '<td style="font-size:18px;padding-bottom:10px;">' . $row['designation'] . '</td></tr><tr><td><img class="image_wrapper image_fl"  width="140px" height="160px" src="images/profile/'.$row['employeeCode'] . '.jpg" alt="Image 1" /><a href="employeeProfile.php?empID=' . $row['employeeCode'] . '" target="_blank" ><h5>' . $row['employeeName'] .'</h5></a></td>';
+                             echo '<td style="font-size:18px;padding-bottom:10px;">' . $row['designation'] . '</td></tr><tr><td><a href="employeeProfile.php?empID=' . $row['employeeCode'] . '" target="_blank" ><img class="image_wrapper image_fl"  width="140px" height="160px" src="images/profile/'.$row['employeeCode'] . '.jpg" alt="Image 1" /><h5>' . $row['employeeName'] .'</h5></a></td>';
                             while($row=mysqli_fetch_array($result)) {
                                if($last == $row['designation']) {
-                                    echo '<td><img class="image_wrapper image_fl" src="images/profile/'.$row['employeeCode'] . '.jpg" alt="Image 1" width="140px" height="160px" /><a href="employeeProfile.php?empID=' . $row['employeeCode'] . '" target="_blank" ><h5>' . $row['employeeName'] .'</h5></a></td>';
+                                    echo '<td><a href="employeeProfile.php?empID=' . $row['employeeCode'] . '" target="_blank" ><img class="image_wrapper image_fl" src="images/profile/'.$row['employeeCode'] . '.jpg" alt="Image 1" width="140px" height="160px" /><h5>' . $row['employeeName'] .'</h5></a></td>';
                                     if(($i%4)==0)
                                         echo '</tr><tr>';
                                    $i++;
@@ -126,7 +126,7 @@ $(document).ready(function() {
                                else {
                                    echo '<tr><td  style="font-size:18px;padding-bottom:10px;padding-top:10px;">' . $row['designation'] . '</td></tr><tr>';
                                    $i = 1;
-                                   echo '<td><img class="image_wrapper image_fl"   width="140px" height="160px" src="images/profile/'.$row['employeeCode'] . '.jpg" alt="Image 1"  /><a href="employeeProfile.php?empID=' . $row['employeeCode'] . '" target="_blank" ><h5>' . $row['employeeName'] .'</h5></a></td>';
+                                   echo '<td><a href="employeeProfile.php?empID=' . $row['employeeCode'] . '" target="_blank" ><img class="image_wrapper image_fl"   width="140px" height="160px" src="images/profile/'.$row['employeeCode'] . '.jpg" alt="Image 1"  /><h5>' . $row['employeeName'] .'</h5></a></td>';
                                     if(($i%4)==0)
                                         echo '</tr><tr>';
                                    $i++;
