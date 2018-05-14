@@ -1,19 +1,17 @@
 <?php 
     session_start();
     if(!isset($_SESSION['user']))
-        echo "<script>document.location='index.php';</script>";
+        echo "<script>document.location='login.php';</script>";
    if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > 1800)) {
         // last request was more than 30 minutes ago
         session_unset();     // unset $_SESSION variable for the run-time 
         session_destroy();   // destroy session data in storage
-        echo "<script>document.location='index.php';</script>";
+        echo "<script>document.location='login.php';</script>";
     }
     else {
         $_SESSION['LAST_ACTIVITY'] = time();   
    }
-     $conn = require_once('databaseconnection.php');
-     $topicID = $_GET['topicID'];
-     $quote = $_GET['quote'];
+    $conn = require_once('databaseconnection.php');
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -28,7 +26,8 @@
 <!--<link href="css_pirobox/white/style.css" media="screen" title="white" rel="stylesheet" type="text/css" />
 <link href="css_pirobox/black/style.css" media="screen" title="black" rel="stylesheet" type="text/css" />-->
 <!--////// END  \\\\\\\-->
-<link rel="shortcut icon" href="images/logo1.png" type="image/x-icon"/>
+ <link rel="shortcut icon" href="images/logo1.png" type="image/x-icon"/>
+
 <!--////// INCLUDE THE JS AND PIROBOX OPTION IN YOUR HEADER  \\\\\\\-->
 <script type="text/javascript" src="js/jquery.min.js"></script>
 <script type="text/javascript" src="js/piroBox.1_2.js"></script>
@@ -49,7 +48,7 @@ $(document).ready(function() {
 </script>
 <!--////// END  \\\\\\\-->
 </head>
-<body>
+    <body onload="loadPrivilegedUsers()">
 
 <div id="templatemo_body_wrapper">
 <div id="templatemo_wrapper">
@@ -59,110 +58,139 @@ $(document).ready(function() {
     	<span id="header_icon"></span>
     	<div id="header_content">
         	<div id="site_title">
-				    <p>Welcome to NCESS Family</p>         </div>
+				    <p>Welcome to NCESS Intranet</p>         </div>
            
 		 
 		</div>
     </div> <!-- end of header -->
     
     <div id="templatemo_main_top"></div>
-    <div id="templatemo_main"><span id="main_top"></span><span id="main_bottom"></span>
-    	
+    <div id="templatemo_main"><span id="main_top"  style="height: 164px;"></span><span id="main_bottom" style="height: 164px;"></span>
         <div id="templatemo_sidebar">
-        
-        	<div id="templatemo_menu">
-                <ul>
-                  <li><a href="index.php" target="_parent">Home</a></li>
-                    <li><a href="employees.php" target="_parent">Staff</a></li>
-                    <li><a href="announcements.php" target="_parent" >Notice Board</a></li>
-                    <li><a href="documents.php" target="_parent">Documents</a></li>
-                    <li><a href="attendance.php" target="_parent">Attendance</a></li>
-                    <li><a href="eGovernance.php" target="_parent">e-Governance</a></li>
-                    <li><a href=http://ncess.gov.in/notifications/awards.html" target="_parent">Awards</a></li>
-                    <li><a href="publications.php" target="_parent">Research Publications</a></li>
-                    <li><a href="http://ncess.gov.in/facilities/laboratories.html" target="_parent">Laboratories</a></li>
-                    <li><a href="http://192.168.17.11:8001/" target="_parent">Online Library</a></li>
-                    <li><a href="directory.php" target="_parent">Contact Directory</a></li>
-                    <li><a href="email.php" target="_parent">Email Address Book</a></li>
-                    <li><a href="profile.php" target="_parent">Profile Updations</a></li>
-                    <li><a href="discussion.php" target="_parent" class="current">Discussion Forum</a></li>
-                    <li><a href="reports.php" target="_parent">Reports</a></li>
-                    <li><a href="feedback.php" target="_parent">Feedback</a></li>
-              </ul>  	
+            <div id="templatemo_menu" style="min-height: 275px;">
+                <?php
+                        if($_SESSION['user'] == 'admin')
+                            $sql ="SELECT * FROM adminmenu WHERE status =1 " ;
+                        else 
+                            $sql ="SELECT * FROM adminmenu A JOIN adminmenu_privileges B ON A.menuID = B.menuID  AND ". $_SESSION['loggedUserID'] . " = users WHERE A.status =1 " ;
+                         $result = mysqli_query($conn,$sql);
+                        if(mysqli_num_rows($result)>0) {
+                            echo "<ul>";
+                            while($row = mysqli_fetch_array($result)) {
+                                        echo "<li><a href='". $row['page'] . "' target='_parent'>".$row['menu']. "</a></li>";
+                            }
+                            echo '</ul>';
+                        }
+                
+                   ?>  	
             </div> 
-            
-           
-           
-            
-            <div class="cleaner"></div>
-        </div> <!-- end of sidebar -->
+        
+        </div> 
         
         <div id="templatemo_content">
-           
-            <?php
-                $sql = "SELECT * FROM discussion_topics WHERE topicID=". $topicID ;
-                $res = mysqli_query($conn,$sql); 
-                if(mysqli_num_rows($res)>0) {
-                    $data = mysqli_fetch_array($res);
-                    echo '<div class="content_box" style="padding-bottom:5px;overflow-y:scroll;min-height:550px;" ><h5>'.$data['title'] .'</h5>';
-                    echo $data['topic'] . '<br /><br />';
-                }
-                $sql = "SELECT * FROM discussion_posts WHERE topicID=" . $topicID;
-                $res = mysqli_query($conn,$sql); 
-                $no = mysqli_num_rows($res);
-                if($no>0) {
-                        while($data = mysqli_fetch_array($res)) {
-                            echo '<div class="content_box" style="padding-bottom:20px;height:auto;" ><p><b>'.$data['postedBy'].'</b>&nbsp;'.$data['postedOn'].'</p><p>'.$data['comment'].'</p> ';
-                            $sql1 = "SELECT * FROM discussion_quotes WHERE approvalStatus=1 AND postID=" . $data['postID'];
-                            $re = mysqli_query($conn,$sql1);
-                            if(mysqli_num_rows($re)) {
-                                while($row = mysqli_fetch_array($re)) {
-                                    echo '<p style="padding-left:10px;"><b>'.$data['postedBy'].'</b>&nbsp;'.$data['postedOn'].'</p><p style="padding-left:10px;">'. $row['quote'].'</p>';
+            <h5>Discussion Posts</h5>
+            <form method="post" enctype="multipart/form-data" onsubmit="setSelected()">
+                <table>
+                     
+                    <tr>
+                        <td>
+                           <?php
+                                $sql = "SELECT * FROM discussion_topics A JOIN discussion_posts B ON A.topicID=B.topicID WHERE approvalStatus=0 ORDER BY A.topicID";
+                                $result = mysqli_query($conn,$sql);
+                                if(mysqli_num_rows($result)) {
+                                    echo '<table id="tblPost"><tr  style="background-color:green;color:white;height:25px;font-weight:bold;"><td><input type="checkbox" name="chkAll" id="chkAll" onchange="checkAll()" />Select</td><td>Topic</td><td>Posted by</td></tr>';
+                                    $topic ='';
+                                    $i = 1;
+                                    while($data = mysqli_fetch_array($result)) {
+                                        if($topic != $data['topicID'])
+                                            echo '<tr  style="background-color:#424066;color:white;"><td colspan="3">'.$data['topic'].'</td></tr>';
+                                        echo '<tr><td><input type="checkbox" name="chkSelect[]" id="chkAll'.$i.'" /><input type="hidden" name="txtSelect[]" id="txtSelect'.$i.'" /></td><td width="410px">'. $data['comment'] . '<input type="hidden" name="txtID" id="txtID[]" value="'.$data['postID'].'" /></td><td>'.$data['postedBy'].'</td></tr>';
+                                    }
+                                    echo '<tr><td colspan="3" align="right"><input type="submit" name="btnApprove" value="Approve" style="background-color:green;" /><input type="submit" name="btnReject" value="Reject" style="background-color:#FF4747;" /></td></tr></table>';
                                 }
-                            }
-                            echo '<span style="float:right;"><a href="post.php?topicID='.$topicID.'&quote='.$data['postID'].'#comment">Quote</a></span></div>';
-                        } 
-                    }
-  echo '</div>';
-            ?>
-            <div class="content_box"  style="padding-bottom: 5px;"><a name="comment"> <h5>Add  Comments</h5></a>
-                <form method="POST">
-                    <textarea name="txtComment" rows="5" cols="80"></textarea>
-                    <input type="submit" name="btnSend" value="Send" />
+                            ?>
+                        </td>
+                    </tr>
                     <?php
-                        if(isset($_POST['btnSend'])) {
-                            if($quote == 0)
-                                $sql = "INSERT INTO discussion_posts(topicID,comment,postedBy,postedOn,approvalStatus) VALUES(" . $topicID . ",'" .
-                                    $_POST['txtComment'] . "','" . $_SESSION['user'] . "',CURRENT_TIMESTAMP,0)";
-                            else 
-                                $sql = "INSERT INTO discussion_quotes(postID,quote,postedBy,postedOn,approvalStatus) VALUES(" . $quote . ",'" .
-                                    $_POST['txtComment'] . "','" . $_SESSION['user'] . "',CURRENT_TIMESTAMP,0)";
-                            $result = mysqli_query($conn,$sql);
-                            if($result)
-                                echo 'Your comments are send for verification!';
-                            else
-                                echo 'Failed to send!';
+                        if(isset($_POST['btnApprove'])) {
+                            $selected = $_POST['txtSelect'];
+                            $id = $_POST['txtID'];
+                            for($i=0;$i < sizeof($selected);$i++){
+                                $sql = "UPDATE discussion_posts SET approvalStatus=1 WHERE postID=" . $id[$i];
+                                $result = mysqli_query($conn,$sql);
+                            }
                         }
+                        elseif(isset($_POST['btnReject'])) {
+                            $selected = $_POST['txtSelect'];
+                            $id = $_POST['txtID'];
+                            for($i=0;$i < sizeof($selected);$i++){
+                                $sql = "DELETE FROM discussion_posts WHERE postID=" . $id[$i];
+                                $result = mysqli_query($conn,$sql);
+                            }
+                        }
+                        echo '<script>document.location="post.php";</script>';
                     ?>
-                </form>
-            </div>
+                </table>
+            </form>
+              
         </div>
         
         <div class="cleaner"></div>    
     </div>
     
-    <div id="templatemo_main_bottom">
+    <div id="templatemo_main_bottom" >
     </div>
 
 </div> <!-- end of wrapper -->
 </div>
-
+    <script type="text/javascript">
+        function deleteTopics(e) {
+            $id =  e.parentElement.children[1].value;
+            if (window.XMLHttpRequest) {
+              // code for IE7+, Firefox, Chrome, Opera, Safari
+              xmlhttp = new XMLHttpRequest();
+          } else {
+              // code for IE6, IE5
+              xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+          }
+          xmlhttp.onreadystatechange = function() {
+              if (this.readyState == 4 && this.status == 200) {
+                  alert(this.responseText) ;document.location='admTopics.php';
+              }
+          };
+          xmlhttp.open("GET","delete.php?id="+$id+"&table=post");
+          xmlhttp.send();
+        }
+        function checkAll() {
+          $checked = document.getElementById('chkAll').checked;
+          $tbl = document.getElementById('tblPost');
+          for (var i = 1; i<=$tbl.rows.length ; i++) {
+              if($tbl.rows[i].cells.length >1) {
+              chk = $tbl.rows[i].cells[0].children[0];
+                chk.checked = $checked;
+            }
+         }
+      }
+      function setSelected() {
+          $tbl = document.getElementById('tblPost'); 
+          for($i = 1 ; $i <= $tbl.rows.length; $i++)
+		{
+                    if($tbl.rows[$i].cells.length >1) {
+			chk = $tbl.rows[$i].cells[0].children[0];
+                        
+			if(chk.checked)
+				document.getElementById('txtSelect' + $i).value = 1;
+			else
+				document.getElementById('txtSelect' + $i ).value = 0;	
+                        }
+		}
+      }
+    </script>
 <div id="templatemo_footer_wrapper">
 	<div id="templatemo_footer">
-        Copyright © 2018 <a href="#">NCESS</a> | Contact Us : adm@ncess.gov.in | Ext : 1669 
+       Copyright © 2018 <a href="#">NCESS</a> | Contact Us : adm@ncess.gov.in | Ext : 1669 
         
     </div>
 </div>
-   
-</body>
+    </body>
 </html>

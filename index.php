@@ -383,9 +383,9 @@ button:hover {
                 <p>Official Website of NCESS.</p>
                 </div>
                 <div style='float: right;width:300px;'>
-            	<a href="http://192.168.17.11:8001/" target="_blank"><img class="image_wrapper image_fl" src="images/library.ico" alt="Image 1" />
-                <h5>Online Library</h5></a>
-                <p>Access our online library here.</p>
+                    <a href="projects.php" target="_blank"><img class="image_wrapper image_fl" src="images/project_2013.ico" alt="Image 1" />
+                <h5>Ongoing Projects</h5></a>
+                <p>View all ongoing projects of NCESS here.</p>
                 </div>
             </div>
             <div class="content_box">
@@ -439,7 +439,7 @@ button:hover {
                 <p>All recent awards are available here</p>
               </div>
             </div>
-            <div class="content_box" style="height: 10px;">
+            <div class="content_box">
                <!-- <div style='float: left;width:300px;'>
                     <a href="http://ncess.gov.in" target="_blank"><img class="image_wrapper image_fl" src="images/logo2.png" alt="Image 1" />
                 <h5>NCESS Website</h5></a>
@@ -450,23 +450,27 @@ button:hover {
                 <h5>Contact Directory</h5></a>
                 <p>Contact details of all staff are available here</p>
               </div>
-               <div style='float: right;width:300px;'>
-                     <a href="feedback.php" target="_parent"><img class="image_wrapper image_fl" src="images/app.ico" alt="Image 1" />
-                <h5>Feedback</h5></a>
-                  <p>Enter your valuable comments / suggestions for improving the NCESS  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;Intranet portal.</p>
-              </div>
+                <div style='float: right;width:300px;'>
+            	<a href="http://192.168.17.11:8001/" target="_blank"><img class="image_wrapper image_fl" src="images/library.ico" alt="Image 1" />
+                <h5>Online Library</h5></a>
+                <p>Access our online library here.</p>
+                </div>
                
           </div>
            
             
             
-             <div class="content_box" >
+             <div class="content_box"  style="height: 10px;">
                  <div style='float: left;width:300px;padding-bottom: 2px;'>
                      <a href="discussion.php" target="_parent"><img class="image_wrapper image_fl" src="images/char.ico" alt="Image 1" />
                 <h5>Discussion Forum</h5></a>
                 <p>You can discuss about various topics here.</p>
               </div>
-                 
+               <div style='float: right;width:300px;'>
+                     <a href="feedback.php" target="_parent"><img class="image_wrapper image_fl" src="images/app.ico" alt="Image 1" />
+                <h5>Feedback</h5></a>
+                  <p>Enter your valuable comments / suggestions for improving the NCESS  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;Intranet portal.</p>
+              </div>  
           </div>
             
             <div class="content_box" style="height:250px;">

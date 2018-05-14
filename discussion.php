@@ -104,7 +104,7 @@ $(document).ready(function() {
                     while($data = mysqli_fetch_array($res)) {
                         echo '<div class="content_box" ><h5>'.$data['title'] .'</h5>
                 <p>'.$data['topic'].'</p><br /><span align="right"><a href="post.php?topicID='.$data[0].'&quote=0">';
-                        if ($data['comments_no']==0) echo 'Add New Comment'; else echo $data['comments_no'] .' Comments';
+                        if ($data['comments_no']==0) echo '<a href="post.php?topicID='.$data[0].'&quote=0#comment">Add New Comment'; else echo $data['comments_no'] .' Comments';
                         echo '</a></span></div>';
                     }
                 }

@@ -7,7 +7,7 @@
         $sql = "UPDATE adminmenu_privileges SET status=0 WHERE privilegeID=" . $id;
         break;
     case 'topics':
-        $sql = "UPDATE discussion_topics SET status=0 WHERE topicsID=" . $id;
+        $sql = "UPDATE discussion_topics SET status=0 WHERE topicID=" . $id;
         break;
     default:
         break;

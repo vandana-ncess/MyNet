@@ -83,27 +83,9 @@ $(document).ready(function() {
                         }
                 
                    ?>  	
-            </div> <!-- end of templatemo_menu 
+            </div> 
         
-        	<div class="sidebar_box">
-            	<div class="sb_title">Staff Login</div>
-                <div class="sb_content">
-                	<div id="login_form">
-                        <form method="post" action="#">
-                        	<p><span>User Name:</span>
-                            <input type="text" id="username" name="username" class="login_input" />
-                            </p>
-                            <p><span>Password:</span>
-                            <input type="password" id="password" name="password" class="login_input" />
-                            </p>
-                            <input type="submit" name="submit" id="login_submit" value=" " />
-                        </form>
-					</div>                  
-                </div>
-                <div class="sb_bottom"></div>            
-            </div>-->
-          
-        </div> <!-- end of sidebar -->
+        </div> 
         
         <div id="templatemo_content">
             <h5>Discussion Topics</h5>
@@ -120,7 +102,7 @@ $(document).ready(function() {
                                 if(mysqli_num_rows($result)) {
                                     echo '<table><tr  style="background-color:#424066;color:white;height:25px;"><td>Topic</td><td>Delete</td>';
                                     while($data = mysqli_fetch_array($result)) {
-                                        echo '<tr><td>'. $data['topic'] . '</td><td><img src="images/erase.png"  onclick="delete()" style="cursor:pointer;"></td></tr>';
+                                        echo '<tr><td>'. $data['topic'] . '</td><td><img src="images/erase.png"  onclick="deleteTopics(this)" style="cursor:pointer;"><input type="hidden" name="txtID" id="txtID" value="'.$data['topicID'].'" /></td></tr>';
                                     }
                                     echo '</table>';
                                 }
@@ -141,8 +123,8 @@ $(document).ready(function() {
 </div> <!-- end of wrapper -->
 </div>
     <script type="text/javascript">
-        function loadPrivilegedUsers() {
-            $menuID = document.getElementById('ddlMenu').value;
+        function deleteTopics(e) {
+            $id =  e.parentElement.children[1].value;
             if (window.XMLHttpRequest) {
               // code for IE7+, Firefox, Chrome, Opera, Safari
               xmlhttp = new XMLHttpRequest();
@@ -152,94 +134,13 @@ $(document).ready(function() {
           }
           xmlhttp.onreadystatechange = function() {
               if (this.readyState == 4 && this.status == 200) {
-                  document.getElementById("tblUsers").innerHTML = this.responseText ;
+                  alert(this.responseText) ;document.location='admTopics.php';
               }
           };
-          xmlhttp.open("GET","getPrivilegedUsers.php?menuID="+$menuID);
+          xmlhttp.open("GET","delete.php?id="+$id+"&table=topics");
           xmlhttp.send();
         }
-        function loadDesignation()
-      {
-          $catID = document.getElementById('ddlCategory').value;
-          if (window.XMLHttpRequest) {
-            // code for IE7+, Firefox, Chrome, Opera, Safari
-            xmlhttp = new XMLHttpRequest();
-        } else {
-            // code for IE6, IE5
-            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-        }
-        xmlhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                document.getElementById("ddlDesignation").innerHTML = this.responseText ;
-                loadEmployee();
-            }
-        };
-        xmlhttp.open("GET","getDesignation.php?catID="+$catID);
-        xmlhttp.send();
-      }
-      function loadEmp()
-      {
-          document.getElementById('btnSave').style.display = "none";
-          $menuID = document.getElementById('ddlMenu').value;
-          $catID = document.getElementById('ddlCategory').value;
-          $desigID = document.getElementById('ddlDesignation').value;
-          $divID = document.getElementById('ddlDivision').value;
-          $empName = document.getElementById('txtEmployee').value;
-          $str = "";
-          if($catID>0)
-              $str = $str + " AND A.categoryID=" + $catID;
-          if($desigID>0)
-               $str = $str + " AND A.designationID=" + $desigID;
-          if($divID>=0)
-              $str = $str + " AND A.divisionID =" + $divID;
-          if($empName != '')
-              $str = $str + " AND employeeName like '%" + $empName + "%'";
-          if (window.XMLHttpRequest) {
-            // code for IE7+, Firefox, Chrome, Opera, Safari
-            xmlhttp = new XMLHttpRequest();
-        } else {
-            // code for IE6, IE5
-            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-        }
-        xmlhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                document.getElementById('btnSave').style.display = "block";
-                document.getElementById("tblEmp").innerHTML = this.responseText ;
-               
-            }
-        };
-        xmlhttp.open("GET","getUser.php?str="+$str+"&menuID="+$menuID);
-        xmlhttp.send();
-      }
-      function checkAll() {
-          $checked = document.getElementById('chkAll').checked;
-          $tbl = document.getElementById('tblEmp');
-          for (var i = 1; i<$tbl.rows.length ; i++) {
-              chk = $tbl.rows[i].cells[0].children[0];
-                chk.checked = $checked;
-         }
-      }
-      function setSelected() {
-          $tbl = document.getElementById('tblEmp'); 
-          for($i = 1 ; $i <= $tbl.rows.length; $i++)
-		{
-			chk = $tbl.rows[$i].cells[0].children[0];
-                        
-			if(chk.checked)
-				document.getElementById('txtSelect' + $i).value = 1;
-			else
-				document.getElementById('txtSelect' + $i ).value = 0;	
-		}
-      }
-      function copyEmail() {
-          $tbl = document.getElementById('tblDirectory');
-          $mail = '';
-          for (var i = 1; i<$tbl.rows.length ; i++) {
-              if($tbl.rows[i].cells[0].children[0].checked && $tbl.rows[i].cells[2].innerHTML != '')
-                $mail = $mail + $tbl.rows[i].cells[2].innerHTML + ",";
-         }
-         document.getElementById('txtEmail').value = $mail;
-      }
+        
     </script>
 <div id="templatemo_footer_wrapper">
 	<div id="templatemo_footer">

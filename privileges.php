@@ -215,7 +215,7 @@ $(document).ready(function() {
           }
           xmlhttp.onreadystatechange = function() {
               if (this.readyState == 4 && this.status == 200) {
-                  document.getElementById("tblUsers").innerHTML = this.responseText ;
+                  alert(this.responseText) ;
               }
           };
           xmlhttp.open("GET","delete.php?id="+$id+"&table=privileges");

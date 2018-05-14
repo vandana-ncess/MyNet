@@ -67,7 +67,7 @@ $(document).ready(function() {
     <div id="templatemo_main_top"></div>
     <div id="templatemo_main"><span id="main_top"  style="height: 164px;"></span><span id="main_bottom" style="height: 164px;"></span>
         <div id="templatemo_sidebar">
-            <div id="templatemo_menu" style="height:320px;">
+            <div id="templatemo_menu" style="height:auto;">
                 <?php
                         if($_SESSION['user'] == 'admin')
                             $sql ="SELECT * FROM adminmenu WHERE status =1 " ;
