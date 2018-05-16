@@ -553,3 +553,51 @@ ul.breadcrumb li a:hover {
 .search {
     border-radius: 6px;
 }
+.accordion {
+    background-color: #8BD878;
+    color: green;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+    transition: 0.4s;
+    font-weight: bold;
+    margin-left: 2px;
+}
+
+.active, .accordion:hover {
+    background-color: #ccc;
+    color:red;
+}
+
+.accordion:after {
+    content: '\002B';
+    color: #red;
+    font-weight: bold;
+    float: right;
+    margin-left: 5px;
+}
+
+.active:after {
+    content: "\2212";
+}
+
+.panel {
+    padding: 0 18px;
+    background-color: white;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+}
+.mainPjct {
+    background-color: #eee;
+    color: green;
+    font-weight: bold;
+    height: 25px;
+}
+.border_bottom {
+    border-bottom: 1px solid #ddd;
+}

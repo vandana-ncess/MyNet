@@ -383,9 +383,9 @@ button:hover {
                 <p>Official Website of NCESS.</p>
                 </div>
                 <div style='float: right;width:300px;'>
-                    <a href="projects.php" target="_blank"><img class="image_wrapper image_fl" src="images/project_2013.ico" alt="Image 1" />
+                    <a href="planprojects.php" target="_parent"><img class="image_wrapper image_fl" src="images/project_2013.ico" alt="Image 1" />
                 <h5>Ongoing Projects</h5></a>
-                <p>View all ongoing projects of NCESS here.</p>
+                <p>View all ongoing plan projects of NCESS here.</p>
                 </div>
             </div>
             <div class="content_box">
