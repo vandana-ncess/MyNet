@@ -88,47 +88,42 @@ $(document).ready(function() {
         </div> 
         
         <div id="templatemo_content">
-            <h5>Discussion Topics</h5>
-            <form method="post" enctype="multipart/form-data" onsubmit="setSelected()">
+            <h5>Plan Project Areas</h5>
+            <form method="post">
                 <table>
                     <tr>
-                        <td>Title</td> <td><input type="text" name="txtTitle" style="width:450px;" /></td>
-                    </tr>
-                    <tr>
-                        <td>Topic</td><td><input type="text" name="txtTopic" style="width:450px;" /></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2" align="right"><input type="submit" name="btnSave" value="Add" /> </td>
-                    </tr>
+                        <td><input type="text" name="txtTitle" style="width:450px;" /></td><td><input type="submit" name="btnSave" value="Add" /> </td>
+                    </tr> 
                     <tr>
                         <td colspan="2">
                             <?php
-                                $sql = "SELECT * FROM discussion_topics WHERE status=1";
+                                $sql = "SELECT * FROM main_projects WHERE status=1";
                                 $result = mysqli_query($conn,$sql);
                                 if(mysqli_num_rows($result)) {
-                                    echo '<table><tr  style="background-color:#424066;color:white;height:25px;"><td>Title</td><td>Topic</td><td>Delete</td>';
+                                    echo '<table><tr  style="background-color:#424066;color:white;height:25px;"><td>Project Area</td><td>Delete</td>';
                                     while($data = mysqli_fetch_array($result)) {
-                                        echo '<tr><td width="130px">'. $data['title'] . '</td><td>'. $data['topic'] . '</td><td><img src="images/erase.png"  onclick="deleteTopics(this)" style="cursor:pointer;"><input type="hidden" name="txtID" id="txtID" value="'.$data['topicID'].'" /></td></tr>';
+                                        echo '<tr><td>'. $data['title'] . '</td><td><img src="images/erase.png"  onclick="deleteTopics(this)" style="cursor:pointer;"><input type="hidden" name="txtID" id="txtID" value="'.$data['mainPjctID'].'" /></td></tr>';
                                     }
                                     echo '</table>';
                                 }
                             ?>
+                            
                         </td>
                     </tr>
                 </table>
             </form>
             <?php
                 if(isset($_POST['btnSave'])) {
-                    $sql = "INSERT INTO discussion_topics(title,topic,status) VALUES('". $_POST['txtTitle']. "','" . $_POST['txtTopic'] . "',1)";
+                    $sql = "INSERT INTO main_projects(title,status) VALUES('" . $_POST['txtTitle'] . "',1)";
                     $result = mysqli_query($conn,$sql);
                     if($result) {
                         echo 'Saved successfully!';
-                        echo '<script>document.location="admTopics.php";</script>';
+                        echo '<script>document.location="admMainProjects.php";</script>';
                     }
                     else
                         echo 'Failed to save!';
                 }
-            ?>  
+            ?>
         </div>
         
         <div class="cleaner"></div>    
@@ -151,10 +146,10 @@ $(document).ready(function() {
           }
           xmlhttp.onreadystatechange = function() {
               if (this.readyState == 4 && this.status == 200) {
-                  alert(this.responseText) ;document.location='admTopics.php';
+                  alert(this.responseText) ;document.location='admMainProjects.php';
               }
           };
-          xmlhttp.open("GET","delete.php?id="+$id+"&table=topics");
+          xmlhttp.open("GET","delete.php?id="+$id+"&table=mainproject");
           xmlhttp.send();
         }
         

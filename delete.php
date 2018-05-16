@@ -9,6 +9,9 @@
     case 'topics':
         $sql = "UPDATE discussion_topics SET status=0 WHERE topicID=" . $id;
         break;
+    case 'mainproject':
+        $sql = "UPDATE main_projects SET status=0 WHERE mainPjctID=" . $id;
+        break;
     default:
         break;
 }
