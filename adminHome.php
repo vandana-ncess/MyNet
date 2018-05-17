@@ -173,7 +173,7 @@ $(document).ready(function() {
                 elseif($_POST['ddlType'] == 'notice') {
                     $filename = "notice_" .date('Y-m-d_H-i-s') . ".".$ext;
                     $target = 'documents/'.$filename;
-                    $sql = "INSERT INTO noticeboard(title,keyword,filename) VALUES('". $_POST['txtTitle'] . "','" . $_POST['txtDesc']. "','" . $filename . "')"; 
+                    $sql = "INSERT INTO noticeboard(title,keyword,filename,status) VALUES('". $_POST['txtTitle'] . "','" . $_POST['txtDesc']. "','" . $filename . "',1)"; 
                     echo $sql;
                 }
                 

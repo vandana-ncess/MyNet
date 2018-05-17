@@ -12,6 +12,14 @@
         $_SESSION['LAST_ACTIVITY'] = time();   
    }
     $conn = require_once('databaseconnection.php');
+   if(isset($_GET['id'])) {
+     $id=$_GET['id'];
+     $sql = "SELECT * FROM projects WHERE projectID = " . $id . " AND status=1 ORDER BY divisionID";
+     $editResult = mysqli_query($conn,$sql);
+     if(mysqli_num_rows($editResult)>0)
+         $editData = mysqli_fetch_array($editResult);
+   }
+   else $id= 0;
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -101,11 +109,17 @@ $(document).ready(function() {
                     <td style="padding-left: 10px;">Project Area</td><td>
                         <select name="ddlArea"  style="width:220px;" >
                             <?php
+                            if($id > 0) $mainID = $editData['mainPjctID']; else $mainID=0;
                                 $sql = "SELECT * FROM main_projects WHERE status=1";
                                 $result = mysqli_query($conn,$sql);
+                                $selected="";
                                 if(mysqli_num_rows($result)>0){
                                     while($data = mysqli_fetch_array($result)) {
-                                        echo '<option value="'.$data['mainPjctID'].'">' . $data['title'].'</option>'; 
+                                        if($mainID == $data['mainPjctID'])
+                                            $selected = "selected";
+                                        echo '<option value="'.$data['mainPjctID'].'" '.$selected.'>' . $data['title'].'</option>'; 
+                                                                                $selected = "";
+
                                     }
                                 }
                             ?>
@@ -116,11 +130,14 @@ $(document).ready(function() {
                     <td>Research Group</td><td>
                         <select name="ddlGrp"  style="width:200px;" >
                             <?php
+                            if($id > 0) $mainID = $editData['divisionID']; else $mainID=0;
                                 $sql = "SELECT * FROM division WHERE divisionStatus=1 AND divisionName<> ''";
                                 $result = mysqli_query($conn,$sql);
                                 if(mysqli_num_rows($result)>0){
                                     while($data = mysqli_fetch_array($result)) {
-                                        echo '<option value="'.$data['divisionID'].'">' . $data['divisionName'].'</option>'; 
+                                         if($mainID == $data['divisionID'])
+                                            $selected = "selected";
+                                        echo '<option value="'.$data['divisionID'].'" '.$selected.'>' . $data['divisionName'].'</option>'; 
                                     }
                                 }
                             ?>
@@ -128,18 +145,21 @@ $(document).ready(function() {
                     </td>
                     <td style="padding-left: 10px;">Project Leader</td><td ><select name="ddlPjctLeader"  style="width:220px;" >
                             <?php
+                                if($id > 0) {$mainID = $editData['projectLeader']; $tit = $editData['projectTitle']; }else $mainID=0;
                                 $sql = "SELECT employeeCode,employeeName FROM employee WHERE employeeStatus=1 AND categoryID=1 ORDER BY employeeName";
                                 $result = mysqli_query($conn,$sql);
                                 if(mysqli_num_rows($result)>0){
                                     while($data = mysqli_fetch_array($result)) {
-                                        echo '<option value="'.$data['employeeCode'].'">' . $data['employeeName'].'</option>'; 
+                                        if($mainID == $data['employeeCode'])
+                                            $selected = "selected";
+                                        echo '<option value="'.$data['employeeCode'].'" '.$selected.'>' . $data['employeeName'].'</option>'; 
                                     }
                                 }
                             ?>
                         </select></td>
                 </tr>
                 <tr>
-                    <td>Project Title</td><td colspan="3"><input type="text" name="txtTitle" id="txtTitle" style="width:520px;" required /></td>
+                    <td>Project Title</td><td colspan="3"><input type="text" name="txtTitle" id="txtTitle" style="width:520px;" <?php if($id > 0) echo ' value="' . $tit .'"'; ?> required /></td>
                 </tr>
                 <tr>
                     <td colspan="4" style="padding-top: 20px;">
@@ -188,7 +208,21 @@ $(document).ready(function() {
                     <td colspan="4" align="right"><input type="button" name="btnAdd" value="Add" onclick="AddInvestigators()" /></td>
                 </tr>
                 <tr>
-                    <td colspan="4"><table id="tblInvestigators" ></table> </td>
+                    <td colspan="4"><table id="tblInvestigators" >
+                        <?php 
+                            if($id > 0){
+                                $subSql = "SELECT * FROM project_investigators A JOIN employee B ON A.investigatorID=B.employeeCode WHERE projectID=" . $editData['projectID'];
+                                $res = mysqli_query($conn,$subSql);
+                                if(mysqli_num_rows($res) > 0) {
+                                    echo '<tr style="background-color:green;color:black;"><td>Investigators</td><td>Delete</td></tr>';
+                                    while($invest = mysqli_fetch_array($res)) {
+                                        echo "<tr><td><input type='hidden' name='txtInvID' value='". $invest['pjctInvID']."' />" . $invest['employeeName'] . '</td><td><img src="images/erase.png"  onclick="deleteInvestigator('.$data['projInvID'].')" style="cursor:pointer;"></td></tr>';
+                                    }
+                                }
+                           
+                            }
+                        ?>
+                    </table> </td>
                 </tr>
                 <tr>
                     <td colspan="4" align="right"><input type="submit" name="btnSave" value="Save" /></td>
@@ -292,8 +326,13 @@ $(document).ready(function() {
                     var cell3 = row.insertCell(1); 
                     ddl = document.getElementById('ddlEmployee');
                      cell1.innerHTML=ddl.options[ddl.selectedIndex].text;
-                    cell3.innerHTML="<img src='images/erase.png' /><input type='hidden' name='txtID[]' value='" + ddl.value + "' />";
+                    cell3.innerHTML="<img src='images/erase.png' onclick='deleteInvestigator(this)' /><input type='hidden' name='txtID[]' value='" + ddl.value + "' />";
             }
+            
+            function deleteInvestigator($id) {
+                    
+            }
+           
      </script>
 <div id="templatemo_footer_wrapper">
 	<div id="templatemo_footer">

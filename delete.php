@@ -12,6 +12,9 @@
     case 'mainproject':
         $sql = "UPDATE main_projects SET status=0 WHERE mainPjctID=" . $id;
         break;
+    case 'subproject':
+        $sql = "UPDATE projects SET status=0 WHERE projectID=" . $id;
+        break;
     default:
         break;
 }

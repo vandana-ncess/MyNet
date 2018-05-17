@@ -123,7 +123,7 @@ for (i = 0; i < acc.length; i++) {
             <div class="panel">
               <?php
                 $sql = "SELECT * FROM main_projects A JOIN projects B ON A.mainPjctID = B.mainPjctID  "
-                        . " JOIN employee D ON B.projectLeader = D.employeeCode WHERE B.divisionID=1 ORDER BY A.mainPjctID,projectID";
+                        . " JOIN employee D ON B.projectLeader = D.employeeCode WHERE B.divisionID=1 AND A.status=1 AND B.status=1 ORDER BY A.mainPjctID,projectID";
                 $result = mysqli_query($conn,$sql);
                 $lastTheme='';
                 if(mysqli_num_rows($result)>0) {
@@ -131,7 +131,7 @@ for (i = 0; i < acc.length; i++) {
                     while($data = mysqli_fetch_array($result)) {
                         if($lastTheme != $data['title']) 
                             echo '<tr><td colspan="3" class="mainPjct">'.$data['title'].'</td></tr>';
-                        echo '<tr class="border_bottom"><td class="border_bottom">' . $data['projectTitle'].'</td><td class="border_bottom">'.$data['employeeName'].'</td><td class="border_bottom">';
+                        echo '<tr class="border_bottom"><td class="tdText">' . $data['projectTitle'].'</td><td class="border_bottom">'.$data['employeeName'].'</td><td class="border_bottom">';
                         $subSql = "SELECT * FROM project_investigators A JOIN employee B ON A.investigatorID=B.employeeCode WHERE projectID=" . $data['projectID'];
                         $res = mysqli_query($conn,$subSql);
                         if(mysqli_num_rows($res) > 0) {
@@ -150,15 +150,15 @@ for (i = 0; i < acc.length; i++) {
             <div class="panel">
              <?php
                 $sql = "SELECT * FROM main_projects A JOIN projects B ON A.mainPjctID = B.mainPjctID  "
-                        . " JOIN employee D ON B.projectLeader = D.employeeCode WHERE B.divisionID=2 ORDER BY A.mainPjctID,projectID";
+                        . " JOIN employee D ON B.projectLeader = D.employeeCode WHERE B.divisionID=2 AND A.status=1 AND B.status=1 ORDER BY A.mainPjctID,projectID";
                 $result = mysqli_query($conn,$sql);
                 $lastTheme='';
                 if(mysqli_num_rows($result)>0) {
-                    echo '<table ><thead><tr><th>Project Title</th><th>Project Leader</th><th>Investigators</th></tr></thead><tbody>';
+                    echo '<table ><thead><tr><th>Project Title</th><th width="100px">Project Leader</th><th>Investigators</th></tr></thead><tbody>';
                     while($data = mysqli_fetch_array($result)) {
                         if($lastTheme != $data['title']) 
                             echo '<tr><td colspan="3" class="mainPjct">'.$data['title'].'</td></tr>';
-                        echo '<tr class="border_bottom"><td class="border_bottom">' . $data['projectTitle'].'</td><td class="border_bottom">'.$data['employeeName'].'</td><td class="border_bottom">';
+                        echo '<tr class="border_bottom"><td class="tdText">' . $data['projectTitle'].'</td><td class="border_bottom">'.$data['employeeName'].'</td><td class="border_bottom">';
                         $subSql = "SELECT * FROM project_investigators A JOIN employee B ON A.investigatorID=B.employeeCode WHERE projectID=" . $data['projectID'];
                         $res = mysqli_query($conn,$subSql);
                         if(mysqli_num_rows($res) > 0) {
@@ -177,7 +177,7 @@ for (i = 0; i < acc.length; i++) {
             <div class="panel">
               <?php
                 $sql = "SELECT * FROM main_projects A JOIN projects B ON A.mainPjctID = B.mainPjctID  "
-                        . " JOIN employee D ON B.projectLeader = D.employeeCode WHERE B.divisionID=4 ORDER BY A.mainPjctID,projectID";
+                        . " JOIN employee D ON B.projectLeader = D.employeeCode WHERE B.divisionID=4 AND A.status=1 AND B.status=1 ORDER BY A.mainPjctID,projectID";
                 $result = mysqli_query($conn,$sql);
                 $lastTheme='';
                 if(mysqli_num_rows($result)>0) {
@@ -185,7 +185,7 @@ for (i = 0; i < acc.length; i++) {
                     while($data = mysqli_fetch_array($result)) {
                         if($lastTheme != $data['title']) 
                             echo '<tr><td colspan="3" class="mainPjct">'.$data['title'].'</td></tr>';
-                        echo '<tr class="border_bottom"><td class="border_bottom">' . $data['projectTitle'].'</td><td class="border_bottom">'.$data['employeeName'].'</td><td class="border_bottom">';
+                        echo '<tr class="border_bottom"><td class="tdText">' . $data['projectTitle'].'</td><td class="border_bottom">'.$data['employeeName'].'</td><td class="border_bottom">';
                         $subSql = "SELECT * FROM project_investigators A JOIN employee B ON A.investigatorID=B.employeeCode WHERE projectID=" . $data['projectID'];
                         $res = mysqli_query($conn,$subSql);
                         if(mysqli_num_rows($res) > 0) {
@@ -204,7 +204,7 @@ for (i = 0; i < acc.length; i++) {
             <div class="panel">
               <?php
                 $sql = "SELECT * FROM main_projects A JOIN projects B ON A.mainPjctID = B.mainPjctID  "
-                        . " JOIN employee D ON B.projectLeader = D.employeeCode WHERE B.divisionID=3 ORDER BY A.mainPjctID,projectID";
+                        . " JOIN employee D ON B.projectLeader = D.employeeCode WHERE B.divisionID=3 AND A.status=1 AND B.status=1 ORDER BY A.mainPjctID,projectID";
                 $result = mysqli_query($conn,$sql);
                 $lastTheme='';
                 if(mysqli_num_rows($result)>0) {
@@ -212,7 +212,7 @@ for (i = 0; i < acc.length; i++) {
                     while($data = mysqli_fetch_array($result)) {
                         if($lastTheme != $data['title']) 
                             echo '<tr><td colspan="3" class="mainPjct">'.$data['title'].'</td></tr>';
-                        echo '<tr class="border_bottom"><td class="border_bottom">' . $data['projectTitle'].'</td><td class="border_bottom">'.$data['employeeName'].'</td><td class="border_bottom">';
+                        echo '<tr class="border_bottom"><td class="tdText">' . $data['projectTitle'].'</td><td class="border_bottom" width="120px">'.$data['employeeName'].'</td><td class="border_bottom">';
                         $subSql = "SELECT * FROM project_investigators A JOIN employee B ON A.investigatorID=B.employeeCode WHERE projectID=" . $data['projectID'];
                         $res = mysqli_query($conn,$subSql);
                         if(mysqli_num_rows($res) > 0) {

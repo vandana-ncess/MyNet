@@ -1,113 +1,156 @@
-﻿<!DOCTYPE html>
+<?php 
+    session_start();
+    if(!isset($_SESSION['user']))
+        echo "<script>document.location='index.php';</script>";
+   if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > 1800)) {
+        // last request was more than 30 minutes ago
+        session_unset();     // unset $_SESSION variable for the run-time 
+        session_destroy();   // destroy session data in storage
+        echo "<script>document.location='index.php';</script>";
+    }
+    else {
+        $_SESSION['LAST_ACTIVITY'] = time();   
+   }
+     $conn = require_once('databaseconnection.php');
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Carousel - Jssor Slider</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>NCESS Intranet</title>
+<link href="templatemo_style.css" rel="stylesheet" type="text/css" />
+<!--////// CHOOSE ONE OF THE 3 PIROBOX STYLES  \\\\\\\-->
+<link href="css_pirobox/white/style.css" media="screen" title="shadow" rel="stylesheet" type="text/css" />
+<!--<link href="css_pirobox/white/style.css" media="screen" title="white" rel="stylesheet" type="text/css" />
+<link href="css_pirobox/black/style.css" media="screen" title="black" rel="stylesheet" type="text/css" />-->
+<!--////// END  \\\\\\\-->
+
+<!--////// INCLUDE THE JS AND PIROBOX OPTION IN YOUR HEADER  \\\\\\\-->
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/piroBox.1_2.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+
+<script type="text/javascript">
+    
+$(document).ready(function() {
+	$().piroBox({
+			my_speed: 600, //animation speed
+			bg_alpha: 0.5, //background opacity
+			radius: 4, //caption rounded corner
+			scrollImage : false, // true == image follows the page, false == image remains in the same open position
+			pirobox_next : 'piro_next', // Nav buttons -> piro_next == inside piroBox , piro_next_out == outside piroBox
+			pirobox_prev : 'piro_prev',// Nav buttons -> piro_prev == inside piroBox , piro_prev_out == outside piroBox
+			close_all : '.piro_close',// add class .piro_overlay(with comma)if you want overlay click close piroBox
+			slideShow : 'slideshow', // just delete slideshow between '' if you don't want it.
+			slideSpeed : 4 //slideshow duration in seconds(3 to 6 Recommended)
+	});
+});
+
+</script>
+
+<!--////// END  \\\\\\\-->
 </head>
-<body style="margin:0;padding:0;font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; background-color: #262626;">
+<body>
 
-    <!-- #region Jssor Slider Begin -->
-    <!-- Generator: Jssor Slider Maker -->
-    <!-- Source: https://www.jssor.com -->
-    <script src="../js/jssor.slider.min.js" type="text/javascript"></script>
-    <script type="text/javascript">
-        jssor_1_slider_init = function() {
-
-            var jssor_1_options = {
-              $AutoPlay: 1,
-              $AutoPlaySteps: 4,
-              $SlideDuration: 160,
-              $SlideWidth: 200,
-              $SlideSpacing: 3,
-              $ArrowNavigatorOptions: {
-                $Class: $JssorArrowNavigator$,
-                $Steps: 5
-              },
-              $BulletNavigatorOptions: {
-                $Class: $JssorBulletNavigator$
-              }
-            };
-
-            var jssor_1_slider = new $JssorSlider$("jssor_1", jssor_1_options);
-
-            /*#region responsive code begin*/
-
-            var MAX_WIDTH = 980;
-
-            function ScaleSlider() {
-                var containerElement = jssor_1_slider.$Elmt.parentNode;
-                var containerWidth = containerElement.clientWidth;
-
-                if (containerWidth) {
-
-                    var expectedWidth = Math.min(MAX_WIDTH || containerWidth, containerWidth);
-
-                    jssor_1_slider.$ScaleWidth(expectedWidth);
-                }
-                else {
-                    window.setTimeout(ScaleSlider, 30);
-                }
-            }
-
-            ScaleSlider();
-
-            $Jssor$.$AddEvent(window, "load", ScaleSlider);
-            $Jssor$.$AddEvent(window, "resize", ScaleSlider);
-            $Jssor$.$AddEvent(window, "orientationchange", ScaleSlider);
-            /*#endregion responsive code end*/
-        };
-    </script>
-    <style>
-        /* jssor slider loading skin spin css */
-        .jssorl-009-spin img {
-            animation-name: jssorl-009-spin;
-            animation-duration: 1.6s;
-            animation-iteration-count: infinite;
-            animation-timing-function: linear;
-        }
-
-        @keyframes jssorl-009-spin {
-            from {
-                transform: rotate(0deg);
-            }
-
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-
-        .jssorb057 .i {position:absolute;cursor:pointer;}
-        .jssorb057 .i .b {fill:none;stroke:#fff;stroke-width:2000;stroke-miterlimit:10;stroke-opacity:0.4;}
-        .jssorb057 .i:hover .b {stroke-opacity:.7;}
-        .jssorb057 .iav .b {stroke-opacity: 1;}
-        .jssorb057 .i.idn {opacity:.3;}
-
-        .jssora073 {display:block;position:absolute;cursor:pointer;}
-        .jssora073 .a {fill:#ddd;fill-opacity:.7;stroke:#000;stroke-width:160;stroke-miterlimit:10;stroke-opacity:.7;}
-        .jssora073:hover {opacity:.8;}
-        .jssora073.jssora073dn {opacity:.4;}
-        .jssora073.jssora073ds {opacity:.3;pointer-events:none;}
-    </style>
-    <div id="jssor_1" style="position:relative;margin:0 auto;top:0px;left:0px;width:980px;height:150px;overflow:hidden;visibility:hidden;">
-        <!-- Loading Screen -->
-        <div data-u="loading" class="jssorl-009-spin" style="position:absolute;top:0px;left:0px;width:100%;height:100%;text-align:center;background-color:rgba(0,0,0,0.7);">
-            <img style="margin-top:-19px;position:relative;top:50%;width:38px;height:38px;" src="../svg/loading/static-svg/spin.svg" />
-        </div>
-        <div data-u="slides" style="cursor:default;position:relative;top:0px;left:0px;width:980px;height:150px;overflow:hidden;">
-            <div>
-                 <?php  for($i=1;$i<=20;$i++) {
-                          echo '<div>
-                <img src="../img/gallery/200x150/'+ $i+'.jpg" height="50px" width="70px" /></div>' ;
-                        } ?>
+<div id="templatemo_body_wrapper">
+<div id="templatemo_wrapper">
+   
+	<div id="tempaltemo_header">
+            <?php if(isset($_SESSION['user'])) { ?><p align="right" style="padding-right: 50px;color:#fff;"><b><?php        echo 'Welcome ' . $_SESSION['user']; ?></b>&nbsp; <a href="logout.php" style="color: #fff;">Logout</a></p>;<?php } ?>
+    	<span id="header_icon"></span>
+    	<div id="header_content">
+        	<div id="site_title">
+			<p>Welcome to NCESS Family</p>  	           
+           </div>
+		 
+		</div>
+    </div> <!-- end of header -->
+    
+    <div id="templatemo_main_top"></div>
+    <div id="templatemo_main" style="width: 984px;"><span id="main_top"></span><span id="main_bottom"></span>
+    	
+        <div id="templatemo_sidebar">
+        
+        	<div id="templatemo_menu">
+                <ul>
+                  <li><a href="index.php" target="_parent">Home</a></li>
+                    <li><a href="employees.php" target="_parent">Staff</a></li>
+                    <li><a href="announcements.php" target="_parent">Notice Board</a></li>
+                    <li><a href="documents.php" target="_parent">Documents</a></li>
+                    <li><a href="attendance.php" target="_parent">Attendance</a></li>
+                    <li><a href="eGovernance.php" target="_parent">e-Governance</a></li>
+                    <li><a href=http://ncess.gov.in/notifications/awards.html" target="_parent">Awards</a></li>
+                    <li><a href="publications.php" target="_parent">Research Publications</a></li>
+                    <li><a href="planprojects.php" target="_parent"  class="current">Projects</a></li>
+                    <li><a href="http://ncess.gov.in/facilities/laboratories.html" target="_parent">Laboratories</a></li>
+                    <li><a href="http://192.168.17.11:8001/" target="_parent">Online Library</a></li>
+                    <li><a href="directory.php" target="_parent">Contact Directory</a></li>
+                    <li><a href="email.php" target="_parent">Email Address Book</a></li>
+                    <li><a href="profile.php" target="_parent">Profile Updations</a></li>
+                    <li><a href="discussion.php" target="_parent">Discussion Forum</a></li>
+                    <li><a href="reports.php" target="_parent">Reports</a></li>
+                    <li><a href="feedback.php" target="_parent">Feedback</a></li>
+              </ul>    	  	
+            </div> 
+            
            
-            </div>
            
-        </div>
-        <!-- Bullet Navigator -->
-       
+            
+            <div class="cleaner"></div>
+        </div> <!-- end of sidebar -->
+        
+        <div id="templatemo_content"  >
+            <h3>Plan Projects</h3>
+  <button class="accordion">Crustal Processes (CrP) Group</button>
+            <div class="panel">
+              asdsd
+            </div> 
+            <button class="accordion">Coastal Processes (CoP) Group</button>
+            <div class="panel">
+             fgdhdfg
+            </div> 
+            <button class="accordion">Atmospheric Processes (AtP) Group</button>
+            <div class="panel">
+              sgsg
+            </div> 
+             <button class="accordion">Hydrological Processes (HyP) Group</button>
+            <div class="panel">
+              <span style="text-align: justify"></span><br />
+            </div> 
+            
+</div>
+<div class="cleaner"></div>    
     </div>
-    <script type="text/javascript">jssor_1_slider_init();</script>
-    <!-- #endregion Jssor Slider End -->
+    
+    <div id="templatemo_main_bottom">
+    </div>
+
+</div> <!-- end of wrapper -->
+</div>
+
+<div id="templatemo_footer_wrapper">
+	<div id="templatemo_footer">
+        Copyright © 2018 <a href="#">NCESS</a> | 
+        
+    </div>
+</div>
+ <script>
+var acc = document.getElementsByClassName("accordion");
+var i;
+
+for (i = 0; i < acc.length; i++) {
+  acc[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var panel = this.nextElementSibling;
+    if (panel.style.maxHeight){
+      panel.style.maxHeight = null;
+    } else {
+      panel.style.maxHeight = panel.scrollHeight + "px";
+    } 
+  });
+}
+</script>
+
 </body>
 </html>
+
