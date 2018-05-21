@@ -88,9 +88,13 @@ $(document).ready(function() {
         <div id="templatemo_content">
            <!-- <div align="right" >Search <input type="text" name="txtSearch" id="txtSearch" /><img src="images/search.ico" style="padding-left: 3px;cursor: pointer;" onclick="search()"/></a></div>
         -->	
-        <div class="content_box" style="padding-bottom: 150px;padding-top: 20px;">
-                <div >
+        <div class="content_box" style="padding-bottom: 170px;padding-top: 20px;">
+                <div style='float: left;width:300px;'>
                     <a href="downloads.php" target="_parent"><h5>Requisition Forms</h5><img class="image_wrapper image_fl" src="images/downloads.ico" alt="Image 1" /></a>
+                
+                
+                </div><div style='float: right;width:300px;' >
+                    <a href="http://ncess.gov.in/publications/annual-report.html"  target="_blank"><h5>Annual Reports</h5><img class="image_wrapper image_fl" src="images/annualreport.ico" alt="Image 1" /></a>
                 
                 
                 </div>

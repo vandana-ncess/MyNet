@@ -52,6 +52,26 @@ $(document).ready(function() {
 	});
 });
 </script>
+<link href="1/thumbs2.css" rel="stylesheet" />
+    <link href="1/thumbnail-slider.css" rel="stylesheet" type="text/css" />
+    <script src="1/thumbnail-slider.js" type="text/javascript"></script>
+    <style>
+        body {font: normal 0.9em Arial;color: #222;}
+        header {display:block; font-size:1.2em; margin-bottom:100px;}
+        header a, header span {
+            display: inline-block;
+            padding: 4px 8px;
+            margin-right: 10px;
+            border: 2px solid #000;
+            background: #DDD;
+            color: #000;
+            text-decoration: none;
+            text-align: center;
+            height: 20px;
+        }
+        header span {background:white;}
+        a {color: #1155CC;}
+    </style>
 <style>
 *{margin:0px; padding:0px; font-family:Helvetica, Arial, sans-serif;}
 
@@ -139,6 +159,7 @@ button:hover {
     to {transform: scale(1)}
 }
 </style>
+
 <script type="text/javascript">
     function login() {
         var request = false;
@@ -365,14 +386,14 @@ button:hover {
               </div>
           </div>
             <div class="content_box" style="height:20px;">
-               <div style='float: left;width:300px;'>
+               <div style='float: left;width:290px;'>
             	<a href="attendance.php"><img class="image_wrapper image_fl" src="images/attendance.ico" alt="Image 1" />
                 <h5>Staff Attendance</h5></a>
                 <p>Get Staff attendance details here. </p>
-              </div><div style='float: left;width:300px;'>
+              </div><div style='float: left;width:320px;'>
                     <a href="documents.php" target="_parent"><img class="image_wrapper image_fl" src="images/folder1.ico" alt="Image 1" />
                 <h5>Documents</h5></a>
-                <p>Get different documents like various requisition forms,circulars, Minutes & Agendas here.</p>
+                <p>Get different documents like various requisition forms, circulars, Minutes & Agendas here.</p>
                 </div>
               
           </div>
@@ -460,7 +481,7 @@ button:hover {
            
             
             
-             <div class="content_box"  style="height: 10px;">
+             <div class="content_box"  style="height: 20px;">
                  <div style='float: left;width:300px;padding-bottom: 2px;'>
                      <a href="discussion.php" target="_parent"><img class="image_wrapper image_fl" src="images/char.ico" alt="Image 1" />
                 <h5>Discussion Forum</h5></a>
@@ -469,7 +490,7 @@ button:hover {
                <div style='float: right;width:300px;'>
                      <a href="feedback.php" target="_parent"><img class="image_wrapper image_fl" src="images/app.ico" alt="Image 1" />
                 <h5>Feedback</h5></a>
-                  <p>Enter your valuable comments / suggestions for improving the NCESS  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;Intranet portal.</p>
+                  <p>Enter your valuable comments / suggestions for improving the   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  NCESS Intranet portal.</p>
               </div>  
           </div>
             
@@ -484,125 +505,22 @@ button:hover {
             </div>
             <div class="content_box last_box"  style="height:170px;padding-bottom:10px;">
             	<h4 style="color:#999900; ">NCESS Gallery</h4>
-              <div id="gallery">  
-                   <script src="../js/jssor.slider.min.js" type="text/javascript"></script>
-    <script type="text/javascript">
-        jssor_1_slider_init = function() {
-
-            var jssor_1_options = {
-              $AutoPlay: 1,
-              $AutoPlaySteps: 4,
-              $SlideDuration: 160,
-              $SlideWidth: 200,
-              $SlideSpacing: 3,
-              $ArrowNavigatorOptions: {
-                $Class: $JssorArrowNavigator$,
-                $Steps: 5
-              },
-              $BulletNavigatorOptions: {
-                $Class: $JssorBulletNavigator$
-              }
-            };
-
-            var jssor_1_slider = new $JssorSlider$("jssor_1", jssor_1_options);
-
-            /*#region responsive code begin*/
-
-            var MAX_WIDTH = 980;
-
-            function ScaleSlider() {
-                var containerElement = jssor_1_slider.$Elmt.parentNode;
-                var containerWidth = containerElement.clientWidth;
-
-                if (containerWidth) {
-
-                    var expectedWidth = Math.min(MAX_WIDTH || containerWidth, containerWidth);
-
-                    jssor_1_slider.$ScaleWidth(expectedWidth);
-                }
-                else {
-                    window.setTimeout(ScaleSlider, 30);
-                }
-            }
-
-            ScaleSlider();
-
-            $Jssor$.$AddEvent(window, "load", ScaleSlider);
-            $Jssor$.$AddEvent(window, "resize", ScaleSlider);
-            $Jssor$.$AddEvent(window, "orientationchange", ScaleSlider);
-            /*#endregion responsive code end*/
-        };
-    </script>
-    <style>
-        /* jssor slider loading skin spin css */
-        .jssorl-009-spin img {
-            animation-name: jssorl-009-spin;
-            animation-duration: 1.6s;
-            animation-iteration-count: infinite;
-            animation-timing-function: linear;
-        }
-
-        @keyframes jssorl-009-spin {
-            from {
-                transform: rotate(0deg);
-            }
-
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-
-        .jssorb057 .i {position:absolute;cursor:pointer;}
-        .jssorb057 .i .b {fill:none;stroke:#fff;stroke-width:2000;stroke-miterlimit:10;stroke-opacity:0.4;}
-        .jssorb057 .i:hover .b {stroke-opacity:.7;}
-        .jssorb057 .iav .b {stroke-opacity: 1;}
-        .jssorb057 .i.idn {opacity:.3;}
-
-        .jssora073 {display:block;position:absolute;cursor:pointer;}
-        .jssora073 .a {fill:#ddd;fill-opacity:.7;stroke:#000;stroke-width:160;stroke-miterlimit:10;stroke-opacity:.7;}
-        .jssora073:hover {opacity:.8;}
-        .jssora073.jssora073dn {opacity:.4;}
-        .jssora073.jssora073ds {opacity:.3;pointer-events:none;}
-    </style>
-    <div id="jssor_1" style="position:relative;margin:0 auto;top:0px;left:0px;width:980px;height:150px;overflow:hidden;visibility:hidden;">
-        <!-- Loading Screen -->
-        <div data-u="loading" class="jssorl-009-spin" style="position:absolute;top:0px;left:0px;width:100%;height:100%;text-align:center;background-color:rgba(0,0,0,0.7);">
-            <img style="margin-top:-19px;position:relative;top:50%;width:38px;height:38px;" src="../svg/loading/static-svg/spin.svg" />
-        </div>
-        <div data-u="slides" style="cursor:default;position:relative;top:0px;left:0px;width:980px;height:150px;overflow:hidden;">
-            <?php
+                 <div style="float:left;">
+            <div id="thumbnail-slider">
+                <div class="inner">
+                    <ul>
+                        <?php
             for($i=1;$i<=77;$i++) {
-            echo '<div>
-                <img data-u="image" src="images/Website Gallery/'.$i.'.jpg" />
-            </div>';}
+            echo ' <li>
+                <a class="thumb" href="images/Website Gallery/'.$i.'.jpg" /></a></li>
+            ';}
             ?>
-           
-           
-        </div>
-        <!-- Bullet Navigator -->
-        <div data-u="navigator" class="jssorb057" style="position:absolute;bottom:12px;right:12px;" data-autocenter="1" data-scale="0.5" data-scale-bottom="0.75">
-            <div data-u="prototype" class="i" style="width:16px;height:16px;">
-                <svg viewBox="0 0 16000 16000" style="position:absolute;top:0;left:0;width:100%;height:100%;">
-                    <circle class="b" cx="8000" cy="8000" r="5000"></circle>
-                </svg>
+                   
+                    </ul>
+                </div>
             </div>
         </div>
-        <!-- Arrow Navigator -->
-        <div data-u="arrowleft" class="jssora073" style="width:50px;height:50px;top:0px;left:30px;" data-autocenter="2" data-scale="0.75" data-scale-left="0.75">
-            <svg viewBox="0 0 16000 16000" style="position:absolute;top:0;left:0;width:100%;height:100%;">
-                <path class="a" d="M4037.7,8357.3l5891.8,5891.8c100.6,100.6,219.7,150.9,357.3,150.9s256.7-50.3,357.3-150.9 l1318.1-1318.1c100.6-100.6,150.9-219.7,150.9-357.3c0-137.6-50.3-256.7-150.9-357.3L7745.9,8000l4216.4-4216.4 c100.6-100.6,150.9-219.7,150.9-357.3c0-137.6-50.3-256.7-150.9-357.3l-1318.1-1318.1c-100.6-100.6-219.7-150.9-357.3-150.9 s-256.7,50.3-357.3,150.9L4037.7,7642.7c-100.6,100.6-150.9,219.7-150.9,357.3C3886.8,8137.6,3937.1,8256.7,4037.7,8357.3 L4037.7,8357.3z"></path>
-            </svg>
-        </div>
-        <div data-u="arrowright" class="jssora073" style="width:50px;height:50px;top:0px;right:30px;" data-autocenter="2" data-scale="0.75" data-scale-right="0.75">
-            <svg viewBox="0 0 16000 16000" style="position:absolute;top:0;left:0;width:100%;height:100%;">
-                <path class="a" d="M11962.3,8357.3l-5891.8,5891.8c-100.6,100.6-219.7,150.9-357.3,150.9s-256.7-50.3-357.3-150.9 L4037.7,12931c-100.6-100.6-150.9-219.7-150.9-357.3c0-137.6,50.3-256.7,150.9-357.3L8254.1,8000L4037.7,3783.6 c-100.6-100.6-150.9-219.7-150.9-357.3c0-137.6,50.3-256.7,150.9-357.3l1318.1-1318.1c100.6-100.6,219.7-150.9,357.3-150.9 s256.7,50.3,357.3,150.9l5891.8,5891.8c100.6,100.6,150.9,219.7,150.9,357.3C12113.2,8137.6,12062.9,8256.7,11962.3,8357.3 L11962.3,8357.3z"></path>
-            </svg>
-        </div>
-    </div>
-    <script type="text/javascript">jssor_1_slider_init();</script>
-
-              </div><a href="gallery.php" target="_blank"><strong>View All</strong></a>
+              <a href="gallery.php" target="_blank"><strong>View All</strong></a>
              </div>
         </div>
         
