@@ -133,19 +133,20 @@ elseif($report == 'late') {
     }
     $holidays=array($arr);
     $holidays = array("04-30");
-    $holSql = "SELECT COUNT(*) As cnt FROM holidays where date BETWEEN '". $start . "' AND '" . $end . "'";
+    $holSql = "SELECT DATE_FORMAT(date,'%m-%d') As cnt FROM holidays where date BETWEEN '". $start . "' AND '" . $end . "' AND link<>''";
     $holRes = mysqli_query($conn, $holSql);
      $rows = [];
     if(mysqli_num_rows($holRes) >0)
     {
-       
+       $i=0;
         while($row = mysqli_fetch_array($holRes))
         {
-            $rows[] = $row;
+            $rows[$i] = $row['cnt'];
+            $i++;
         }
     }
     
-    $days =  getWorkingDays($start,$end,$holidays);
+    $days =  getWorkingDays($start,$end,$rows);
    // $days = $days - $holDays;
     if($mode == 'division') {
         if($_SESSION['division'] < 0)
