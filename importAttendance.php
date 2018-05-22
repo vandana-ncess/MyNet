@@ -150,7 +150,7 @@ if(isset($_POST['importSubmit'])){
                 }
                 else {
                     while(($line = fgetcsv($csvFile)) !== FALSE){
-                      $sql = "INSERT INTO employee_attendance (employeeID, date, status, intime, outtime) VALUES (".$line[0].",'".$line[1]."','".$line[4]."','".$line[2]."','".$line[3]."')";
+                      $sql = "INSERT INTO employee_attendance (employeeID, date, status, intime, outtime,open_closed_status) VALUES (".$line[0].",'".$line[1]."','".$line[4]."','".$line[2]."','".$line[3]."','".$line[5]."')";
                       $result = mysqli_query($conn,$sql);
                     }
                 }

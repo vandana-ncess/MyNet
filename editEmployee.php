@@ -116,12 +116,21 @@ $(document).ready(function() {
         <div id="templatemo_sidebar">
         
         	<div id="templatemo_menu">
-                <ul>
-                    <li><a href="adminHome.php" target="_parent" class="current">OM/RTI/Court</a></li>
-                    <li><a href="admMinutes.php" target="_parent">Minutes & Agenda</a></li>
-                    <li><a href="importAttendance.php" target="_parent">Attendance</a></li>
-                    <li><a href="adminEmployee.php" target="_parent">Employee</a></li>
-                </ul>   	  	
+                <?php
+                        if($_SESSION['user'] == 'admin')
+                            $sql ="SELECT * FROM adminmenu WHERE status =1 " ;
+                        else 
+                            $sql ="SELECT * FROM adminmenu A JOIN adminmenu_privileges B ON A.menuID = B.menuID  AND ". $_SESSION['loggedUserID'] . " = users WHERE A.status =1 " ;
+                         $result = mysqli_query($conn,$sql);
+                        if(mysqli_num_rows($result)>0) {
+                            echo "<ul>";
+                            while($row = mysqli_fetch_array($result)) {
+                                        echo "<li><a href='". $row['page'] . "' target='_parent'>".$row['menu']. "</a></li>";
+                            }
+                            echo '</ul>';
+                        }
+                
+                   ?>     	  	
             </div> 
            
            

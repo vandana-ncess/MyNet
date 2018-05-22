@@ -99,14 +99,14 @@ $(document).ready(function() {
         <div class="card-body" style="box-sizing: border-box;">
           <div class="table-responsive">
               <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0" style="box-sizing: border-box;color: black;">
-                  <thead  style="background-color: blueviolet;"><tr><th>Emp Code</th><th>Name</th><th>Designation</th><th>Division</th></tr></thead><tbody>
+                  <thead  style="background-color: blueviolet;"><tr><th>Emp Code</th><th>Name</th><th>Designation</th><th>Division</th><th></th></tr></thead><tbody>
           <?php
             $sql="SELECT A.*,designation,divisionName FROM employee A JOIN designation B ON A.designationID=B.designationID JOIN division C ON "
                     . " A.divisionID = C.divisionID WHERE employeeStatus = 1";
             $result = mysqli_query($conn,$sql);
             if(mysqli_num_rows($result)>0) {
                                 while($row = mysqli_fetch_array($result)) {
-                    echo '<tr><td><a href="editEmployee.php?empID=' .$row['employeeCode'] .'">' . $row['employeeCode'] . '</td><td>' . $row['employeeName'] . '</td><td>' . $row['designation']. '</td><td>' . $row['divisionName']. '</td></tr>';
+                    echo '<tr><td><a href="editEmployee.php?empID=' .$row['employeeCode'] .'">' . $row['employeeCode'] . '</td><td>' . $row['employeeName'] . '</td><td>' . $row['designation']. '</td><td>' . $row['divisionName']. '</td><td><img src="images/erase.png"  onclick="deleteEmployee(' . $row['employeeCode'] . ')" style="cursor:pointer;" /></td></tr>';
                 }
             }
           ?>   </tbody></table></div></div></div></div>     
@@ -127,6 +127,25 @@ $(document).ready(function() {
         
     </div>
 </div>
+     <script type="text/javascript">
+        function deleteEmployee($id) {
+            if (window.XMLHttpRequest) {
+              // code for IE7+, Firefox, Chrome, Opera, Safari
+              xmlhttp = new XMLHttpRequest();
+          } else {
+              // code for IE6, IE5
+              xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+          }
+          xmlhttp.onreadystatechange = function() {
+              if (this.readyState == 4 && this.status == 200) {
+                  alert(this.responseText) ;document.location='adminEmployee.php';
+              }
+          };
+          xmlhttp.open("GET","delete.php?id="+$id+"&table=employee");
+          xmlhttp.send();
+        }
+        
+    </script>
 <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- Core plugin JavaScript-->
