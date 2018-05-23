@@ -21,6 +21,9 @@
     case 'investigator':
         $sql = "DELETE FROM project_investigators WHERE projInvID=" . $id;
         break;
+    case 'news':
+        $sql = "UPDATE events SET status=0 WHERE eventID=" . $id;
+        break;
     default:
         break;
 }

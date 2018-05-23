@@ -116,7 +116,9 @@ $(document).ready(function() {
                                 if(mysqli_num_rows($result)>0){
                                     while($data = mysqli_fetch_array($result)) {
                                         if($mainID == $data['mainPjctID'])
-                                            $selected = "selected";
+                                            $selected = "selected"; 
+                                        else
+                                            $selected = ""; 
                                         echo '<option value="'.$data['mainPjctID'].'" '.$selected.'>' . $data['title'].'</option>'; 
                                                                                 $selected = "";
 
@@ -137,6 +139,8 @@ $(document).ready(function() {
                                     while($data = mysqli_fetch_array($result)) {
                                          if($mainID == $data['divisionID'])
                                             $selected = "selected";
+                                         else
+                                            $selected = ""; 
                                         echo '<option value="'.$data['divisionID'].'" '.$selected.'>' . $data['divisionName'].'</option>'; 
                                     }
                                 }
@@ -152,6 +156,8 @@ $(document).ready(function() {
                                     while($data = mysqli_fetch_array($result)) {
                                         if($mainID == $data['employeeCode'])
                                             $selected = "selected";
+                                        else
+                                            $selected = ""; 
                                         echo '<option value="'.$data['employeeCode'].'" '.$selected.'>' . $data['employeeName'].'</option>'; 
                                     }
                                 }
@@ -216,7 +222,8 @@ $(document).ready(function() {
                                 if(mysqli_num_rows($res) > 0) {
                                     echo '<tr style="background-color:green;color:black;"><td>Investigators</td><td>Delete</td></tr>';
                                     while($invest = mysqli_fetch_array($res)) {
-                                        echo "<tr><td><input type='hidden' name='txtInvID' value='". $invest['pjctInvID']."' />" . $invest['employeeName'] . '</td><td><img src="images/erase.png"  onclick="deleteInvestigator('.$data['projInvID'].')" style="cursor:pointer;"></td></tr>';
+                                        echo "<tr><td><input type='hidden' name='txtInvID[]' value='". $invest['projInvID']."' /><input type='hidden' name='txtID[]' value='" . $invest['employeeCode'] .
+                                                "' />". $invest['employeeName'] . '</td><td><img src="images/erase.png"  onclick="deleteInvestigator('.$invest['projInvID'].')" style="cursor:pointer;"></td></tr>';
                                     }
                                 }
                            
@@ -225,22 +232,40 @@ $(document).ready(function() {
                     </table> </td>
                 </tr>
                 <tr>
-                    <td colspan="4" align="right"><input type="submit" name="btnSave" value="Save" /></td>
+                    <td colspan="4" align="right"><input type="submit" name="btnSave" <?php if($id > 0) echo 'value="Update"'; else echo 'value="Save"'; ?> /></td>
                 </tr>
             </table>
             </form>
          <?php
             if(isset($_POST['btnSave'])) {
-                $sql = "INSERT INTO projects(mainPjctID,projectTitle,projectType,projectLeader,divisionID,status) VALUES(".$_POST['ddlArea'] .",'" . $_POST['txtTitle'] . "','" .
-                        $_POST['ddlType'] . "','" . $_POST['ddlPjctLeader'] . "'," . $_POST['ddlGrp'] . ",1)";
-                $result = mysqli_query($conn,$sql);
-                if($result) {
-                    $id = mysqli_insert_id($conn);
-                    $invID = $_POST['txtID'];
-                    for($i = 0; $i < sizeof($invID) ; $i++) {
-                        $sql = "INSERT INTO project_investigators(projectID,investigatorID) VALUES(" . $id . "," . $invID[$i] . ")";
-                        $result = mysqli_query($conn,$sql);
+                if($_POST['btnSave'] == 'Save') {
+                    $sql = "INSERT INTO projects(mainPjctID,projectTitle,projectType,projectLeader,divisionID,status) VALUES(".$_POST['ddlArea'] .",'" . $_POST['txtTitle'] . "','" .
+                            $_POST['ddlType'] . "','" . $_POST['ddlPjctLeader'] . "'," . $_POST['ddlGrp'] . ",1)";
+                    $result = mysqli_query($conn,$sql);
+                    if($result) {
+                        $id = mysqli_insert_id($conn);
+                        $invID = $_POST['txtID'];
+                        for($i = 0; $i < sizeof($invID) ; $i++) {
+                            $sql = "INSERT INTO project_investigators(projectID,investigatorID) VALUES(" . $id . "," . $invID[$i] . ")";
+                            $result = mysqli_query($conn,$sql);
+                        }
                     }
+                }
+                else {
+                   $sql = "UPDATE projects SET projectTitle = '" .  $_POST['txtTitle'] . "' , projectType='" .$_POST['ddlType']. "', projectLeader= '". $_POST['ddlPjctLeader'] . 
+                           "', divisionID = " . $_POST['ddlGrp'] . " WHERE projectID=" . $id;
+                   echo $sql;
+                    $result = mysqli_query($conn,$sql);
+                    if($result) {
+                        $invID = $_POST['txtID'];
+                        $investigatorID = $_POST['txtInvID'];
+                        for($i = 0; $i < sizeof($invID) ; $i++) {
+                            if($investigatorID[$i] == 0) {
+                                $sql = "INSERT INTO project_investigators(projectID,investigatorID) VALUES(" . $id . "," . $invID[$i] . ")";
+                                $result = mysqli_query($conn,$sql);
+                            }
+                        }
+                    } 
                 }
                 if($result)
                     echo "Saved successfully!";
@@ -326,12 +351,35 @@ $(document).ready(function() {
                     var cell3 = row.insertCell(1); 
                     ddl = document.getElementById('ddlEmployee');
                      cell1.innerHTML=ddl.options[ddl.selectedIndex].text;
-                    cell3.innerHTML="<img src='images/erase.png' onclick='deleteInvestigator(this)' /><input type='hidden' name='txtID[]' value='" + ddl.value + "' />";
+                    cell3.innerHTML="<img src='images/erase.png' onclick='deleteInvestigator(this)' /><input type='hidden' name='txtID[]' value='" + 
+                            ddl.value + "' /><input type='hidden' name='txtInvID[]' value='0' />";
             }
             
             function deleteInvestigator($id) {
-                    
-            }
+               if($id > 0) {
+                
+                    if (window.XMLHttpRequest) {
+                        // code for IE7+, Firefox, Chrome, Opera, Safari
+                        xmlhttp = new XMLHttpRequest();
+                    } else {
+                        // code for IE6, IE5
+                        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+                    }
+                    xmlhttp.onreadystatechange = function() {
+                        if (this.readyState == 4 && this.status == 200) {
+                            alert(this.responseText) ;document.location='admProjects.php';
+                        }
+                    };
+                    xmlhttp.open("GET","delete.php?id="+$id+"&table=investigator");
+                    xmlhttp.send();
+                }
+                else
+                {
+                    $ind = $id.parentNode.parentNode.rowIndex;
+                    document.getElementById('tblInvestigators').deleteRow($ind);
+                }
+        }   
+           
            
      </script>
 <div id="templatemo_footer_wrapper">

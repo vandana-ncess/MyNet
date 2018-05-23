@@ -117,6 +117,21 @@ $(document).ready(function() {
                 <tr>
                    <td /> <td><input type="submit" name="btnUpload" id="btnUpload" value="Save" /></td>
                 </tr>
+                    <tr>
+                        <td colspan="2">
+                            <?php
+                                $sql = "SELECT * FROM events WHERE status=1";
+                                $res = mysqli_query($conn,$sql);
+                                if(mysqli_num_rows($res)>0) {
+                                    echo '<table><tr><td>News&Events</td><td>Delete</td></tr>';
+                                    while($data=mysqli_fetch_array($res)) {
+                                        echo '<tr><td>'.$data['eventName'].'</td><td><img src="images/erase.png"  onclick="deleteNews('.$data['eventID'].')" style="cursor:pointer;"></td></tr>';
+                                    }
+                                    echo '</table>';
+                                }
+                            ?>
+                        </td>
+                    </tr>
             </table>
             </form>
           <?php
@@ -140,7 +155,25 @@ $(document).ready(function() {
 
 </div> <!-- end of wrapper -->
 </div>
-
+    <script type="text/javascript">
+        function deleteNews($id) {
+               if (window.XMLHttpRequest) {
+                        // code for IE7+, Firefox, Chrome, Opera, Safari
+                        xmlhttp = new XMLHttpRequest();
+                    } else {
+                        // code for IE6, IE5
+                        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+                    }
+                    xmlhttp.onreadystatechange = function() {
+                        if (this.readyState == 4 && this.status == 200) {
+                            alert(this.responseText) ;document.location='news.php';
+                        }
+                    };
+                    xmlhttp.open("GET","delete.php?id="+$id+"&table=news");
+                    xmlhttp.send();
+                }
+             
+    </script>
 <div id="templatemo_footer_wrapper">
 	<div id="templatemo_footer">
        Copyright © 2018 <a href="#">NCESS</a> | Contact Us : adm@ncess.gov.in | Ext : 1669 
