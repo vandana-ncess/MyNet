@@ -106,7 +106,7 @@ $(document).ready(function() {
                                 $sql = "SELECT * FROM discussion_topics WHERE status=1";
                                 $result = mysqli_query($conn,$sql);
                                 if(mysqli_num_rows($result)) {
-                                    echo '<table><tr  style="background-color:#424066;color:white;height:25px;"><td>Title</td><td>Topic</td><td>Delete</td>';
+                                    echo '<table class="tbl"><thead><tr><th>Title</th><th>Topic</th><th>Delete</th></tr></thead>';
                                     while($data = mysqli_fetch_array($result)) {
                                         echo '<tr><td width="130px">'. $data['title'] . '</td><td>'. $data['topic'] . '</td><td><img src="images/erase.png"  onclick="deleteTopics(this)" style="cursor:pointer;"><input type="hidden" name="txtID" id="txtID" value="'.$data['topicID'].'" /></td></tr>';
                                     }

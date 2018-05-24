@@ -115,7 +115,7 @@ $(document).ready(function() {
                         . " JOIN employee D ON A.projectLeader = D.employeeCode WHERE mainPjctID = " . $_POST['ddlProjects'] . " AND A.status=1 ORDER BY A.divisionID";
                         $result = mysqli_query($conn,$sql);
                         if(mysqli_num_rows($result)>0) {
-                            echo '<tr><td colspan="3"><table ><thead><tr><th>Project Title</th><th width="100px">Project Leader</th><th>Investigators</th><th>Research Area</th><th>Delete</th></tr></thead><tbody>';
+                            echo '<tr><td colspan="3"><table class="tbl"><thead><tr><th>Project Title</th><th width="100px">Project Leader</th><th>Investigators</th><th>Research Area</th><th>Delete</th></tr></thead><tbody>';
                             while($data = mysqli_fetch_array($result)) {
                                 echo '<tr class="border_bottom"><td class="tdText">' . $data['projectTitle'].'</td><td class="border_bottom">'.$data['employeeName'].'</td><td class="border_bottom">';
                                 $subSql = "SELECT * FROM project_investigators A JOIN employee B ON A.investigatorID=B.employeeCode WHERE projectID=" . $data['projectID'];

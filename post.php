@@ -89,7 +89,7 @@ $(document).ready(function() {
         
         <div id="templatemo_content">
             <h5>Discussion Posts</h5>
-            <form method="post" enctype="multipart/form-data" onsubmit="setSelected()">
+            <form method="post" onsubmit="setSelected()">
                 <table>
                      
                     <tr>
@@ -103,8 +103,23 @@ $(document).ready(function() {
                                     $i = 1;
                                     while($data = mysqli_fetch_array($result)) {
                                         if($topic != $data['topicID'])
-                                            echo '<tr  style="background-color:#424066;color:white;"><td colspan="3">'.$data['topic'].'</td></tr>';
-                                        echo '<tr><td><input type="checkbox" name="chkSelect[]" id="chkAll'.$i.'" /><input type="hidden" name="txtSelect[]" id="txtSelect'.$i.'" /></td><td width="410px">'. $data['comment'] . '<input type="hidden" name="txtID" id="txtID[]" value="'.$data['postID'].'" /></td><td>'.$data['postedBy'].'</td></tr>';
+                                            echo '<tr  style="background-color:#424066;color:white;"><td colspan="4">'.$data['topic'].'</td></tr>';
+                                        echo '<tr><td><input type="checkbox" name="chkSelect[]" id="chkAll'.$i.'" /><input type="hidden" name="txtSelect[]" id="txtSelect'.$i.'" /></td><td width="410px">'. $data['comment'] . '<input type="hidden" name="txtID[]" id="txtID[]" value="'.$data['postID'].'" /></td><td>'.$data['postedBy'].'</td></tr>';
+                                        $subSql = "SELECT * FROM discussion_quotes WHERE postID=" . $data['postID'] . " AND approvalStatus=0";
+                                        $subResult = mysqli_query($conn, $subSql);
+                                                                                $i++;
+
+                                        if(mysqli_num_rows($subResult)>0) {
+                                            while($row=mysqli_fetch_array($subResult)) {
+                                                echo '<tr><td><input type="checkbox" name="chkSelect[]" id="chkAll'.$i.'" /><input type="hidden" '
+                                                        . 'name="txtSelect[]" id="txtSelect'.$i.'" /></td><td width="410px" colspan="2"  style="padding-left:20px;">'. $row['quote'] . 
+                                                        '<input type="hidden" name="txtID[]" id="txtID[]" value="'.$row['quoteID'].'" /></td><td>'.
+                                                        $row['postedBy'].'</td><td><input type="hidden" name="txtQuote[]" id="txtQuote" value="quote" /></td></tr>';
+                                                                                        $i++;
+
+                                            }
+                                        }
+                                        
                                     }
                                     echo '<tr><td colspan="3" align="right"><input type="submit" name="btnApprove" value="Approve" style="background-color:green;" /><input type="submit" name="btnReject" value="Reject" style="background-color:#FF4747;" /></td></tr></table>';
                                 }
@@ -115,10 +130,18 @@ $(document).ready(function() {
                         if(isset($_POST['btnApprove'])) {
                             $selected = $_POST['txtSelect'];
                             $id = $_POST['txtID'];
-                            for($i=0;$i < sizeof($selected);$i++){
-                                $sql = "UPDATE discussion_posts SET approvalStatus=1 WHERE postID=" . $id[$i];
-                                $result = mysqli_query($conn,$sql);
+                            
+                            for($i=0;$i < sizeof($id);$i++){                               
+                                if($selected[$i]==1) {
+                                  $sql = "UPDATE discussion_posts SET approvalStatus=1 WHERE postID=" . $id[$i];
+                                  $result = mysqli_query($conn,$sql);
+                                }
+                                else  if($selected[$i]==3) {
+                                    $sql = "UPDATE discussion_quotes SET approvalStatus=1 WHERE quoteID=" . $id[$i];
+                                    $result = mysqli_query($conn,$sql);
+                                }
                             }
+                             echo '<script>document.location="post.php";</script>';
                         }
                         elseif(isset($_POST['btnReject'])) {
                             $selected = $_POST['txtSelect'];
@@ -127,8 +150,8 @@ $(document).ready(function() {
                                 $sql = "DELETE FROM discussion_posts WHERE postID=" . $id[$i];
                                 $result = mysqli_query($conn,$sql);
                             }
+                            echo '<script>document.location="post.php";</script>';
                         }
-                        echo '<script>document.location="post.php";</script>';
                     ?>
                 </table>
             </form>
@@ -173,16 +196,29 @@ $(document).ready(function() {
       }
       function setSelected() {
           $tbl = document.getElementById('tblPost'); 
+          $j = 1;
           for($i = 1 ; $i <= $tbl.rows.length; $i++)
 		{
-                    if($tbl.rows[$i].cells.length >1) {
+                    if($tbl.rows[$i].cells.length ==3) {
 			chk = $tbl.rows[$i].cells[0].children[0];
                         
 			if(chk.checked)
-				document.getElementById('txtSelect' + $i).value = 1;
+				document.getElementById('txtSelect' + $j).value = 1;
 			else
-				document.getElementById('txtSelect' + $i ).value = 0;	
-                        }
+				document.getElementById('txtSelect' + $j ).value = 0;	
+                                                $j++;  
+
+                    }
+                    else if($tbl.rows[$i].cells.length ==4) {
+			chk = $tbl.rows[$i].cells[0].children[0];
+                        
+			if(chk.checked)
+				document.getElementById('txtSelect' + $j).value = 3;
+			else
+				document.getElementById('txtSelect' + $j ).value = 2;	
+                                             $j++;  
+ 
+                    }
 		}
       }
     </script>

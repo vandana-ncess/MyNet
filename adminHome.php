@@ -110,7 +110,7 @@ $(document).ready(function() {
             <table>
                 <tr>
                     <td>Document Type</td><td>
-                        <select name="ddlType"  >
+                        <select name="ddlType" id="ddlType" onchange="loadCircular()" >
                             <option value="circular">Circular</option>
                             <option value="rti">RTI</option>
                             <option value="court_order">Court Order</option>
@@ -138,6 +138,11 @@ $(document).ready(function() {
                 </tr>
                 <tr>
                     <td>Upload File</td><td colspan="2"><input type="file"  name="file" /> </td><td><input type="submit" name="btnUpload" id="btnUpload" value="Upload" /></td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <table id="tblCircular" class="tbl" ></table>
+                    </td>
                 </tr>
             </table>
             </form>
@@ -199,7 +204,42 @@ $(document).ready(function() {
 
 </div> <!-- end of wrapper -->
 </div>
-
+    <script type="text/javascript">
+        function loadCircular() {
+            if(document.getElementById('ddlType').value=='notice') {
+                if (window.XMLHttpRequest) {
+                        // code for IE7+, Firefox, Chrome, Opera, Safari
+                        xmlhttp = new XMLHttpRequest();
+                    } else {
+                        // code for IE6, IE5
+                        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+                    }
+                    xmlhttp.onreadystatechange = function() {
+                        if (this.readyState == 4 && this.status == 200) {
+                            document.getElementById('tblCircular').innerHTML= this.responseText ;
+                        }
+                    };
+                    xmlhttp.open("GET","getNoticeBoard.php");
+                    xmlhttp.send();
+                }
+        }
+        function deleteNoticeBoard($id) {
+            if (window.XMLHttpRequest) {
+                        // code for IE7+, Firefox, Chrome, Opera, Safari
+                        xmlhttp = new XMLHttpRequest();
+                    } else {
+                        // code for IE6, IE5
+                        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+                    }
+                    xmlhttp.onreadystatechange = function() {
+                        if (this.readyState == 4 && this.status == 200) {
+                            alert(this.responseText) ;document.location='adminHome.php';
+                        }
+                    };
+                    xmlhttp.open("GET","delete.php?id="+$id+"&table=notice");
+                    xmlhttp.send();
+       }   
+    </script>
 <div id="templatemo_footer_wrapper">
 	<div id="templatemo_footer">
        Copyright © 2018 <a href="#">NCESS</a> | Contact Us : adm@ncess.gov.in | Ext : 1669 

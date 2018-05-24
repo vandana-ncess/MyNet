@@ -608,3 +608,14 @@ ul.breadcrumb li a:hover {
     text-align: justify;
     text-justify: inter-word;
 }
+
+.tbl {
+    
+}
+
+.tbl thead {
+    background-color: #424066;
+    color:white;
+    text-align: left;
+    height: 30px;
+}

@@ -214,13 +214,13 @@ $(document).ready(function() {
                     <td colspan="4" align="right"><input type="button" name="btnAdd" value="Add" onclick="AddInvestigators()" /></td>
                 </tr>
                 <tr>
-                    <td colspan="4"><table id="tblInvestigators" >
+                    <td colspan="4"><table id="tblInvestigators" class="tbl" width="400px">
                         <?php 
                             if($id > 0){
                                 $subSql = "SELECT * FROM project_investigators A JOIN employee B ON A.investigatorID=B.employeeCode WHERE projectID=" . $editData['projectID'];
                                 $res = mysqli_query($conn,$subSql);
                                 if(mysqli_num_rows($res) > 0) {
-                                    echo '<tr style="background-color:green;color:black;"><td>Investigators</td><td>Delete</td></tr>';
+                                    echo '<thead><tr><th>Investigators</th><th>Delete</th></tr></thead>';
                                     while($invest = mysqli_fetch_array($res)) {
                                         echo "<tr><td><input type='hidden' name='txtInvID[]' value='". $invest['projInvID']."' /><input type='hidden' name='txtID[]' value='" . $invest['employeeCode'] .
                                                 "' />". $invest['employeeName'] . '</td><td><img src="images/erase.png"  onclick="deleteInvestigator('.$invest['projInvID'].')" style="cursor:pointer;"></td></tr>';
@@ -351,7 +351,7 @@ $(document).ready(function() {
                     var cell3 = row.insertCell(1); 
                     ddl = document.getElementById('ddlEmployee');
                      cell1.innerHTML=ddl.options[ddl.selectedIndex].text;
-                    cell3.innerHTML="<img src='images/erase.png' onclick='deleteInvestigator(this)' /><input type='hidden' name='txtID[]' value='" + 
+                    cell3.innerHTML="<img src='images/erase.png' onclick='deleteInvestigator(this)' style='cursor:pointer;' /><input type='hidden' name='txtID[]' value='" + 
                             ddl.value + "' /><input type='hidden' name='txtInvID[]' value='0' />";
             }
             

@@ -24,6 +24,12 @@
     case 'news':
         $sql = "UPDATE events SET status=0 WHERE eventID=" . $id;
         break;
+    case 'notice':
+        $sql = "UPDATE noticeboard SET status=0 WHERE id=" . $id;
+        break;
+    case 'esf':
+        $sql = "UPDATE esf SET status=0 WHERE id=" . $id;
+        break;
     default:
         break;
 }

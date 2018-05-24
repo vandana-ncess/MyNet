@@ -123,14 +123,31 @@ $(document).ready(function() {
                 <tr>
                     <td /><td align="right"><input type="submit" name="btnUpload" id="btnUpload" value="Save" /></td>
                 </tr>
+                 <tr>
+                    <td colspan="4">
+                        <table id="tblCircular" class="tbl" >
+                            <?php
+                                $sql = "SELECT * FROM esf WHERE status=1";
+                                $result = mysqli_query($conn,$sql);
+                                if(mysqli_num_rows($result)>0) {
+                                    echo '<thead><tr><th>ESF News</th><th>Delete</th></tr></thead>';
+                                    while($data= mysqli_fetch_array($result)) {
+                                        echo '<tr><td>'.$data['matter'].'</td><td><img src="images/erase.png" onclick="deleteESF('.$data['id']. ')" style="cursor:pointer;" /></td></tr>';
+                                    }
+                                }
+                            ?>                            
+                        </table>
+                    </td>
+                </tr>
             </table>
             </form>
           <?php
             if(isset($_POST['btnUpload'])){
                 $sql = "INSERT INTO esf(matter,title,speaker,date,status) VALUES('". $_POST['txtTitle'] . "','" . $_POST['txtDesc']. "','" . $_POST['txtSpeaker']. "','" . $_POST['txtVenue']. "',1)"; 
                 $result = mysqli_query($conn,$sql);
-                if($result)
-                    echo "Successfully Uploaded!";
+                if($result) {
+                    echo '<script>alert("Successfully Uploaded!");document.location="esfAdmin.php";</script>';
+                }    
                     else {
                         echo 'Upload failed!';
                     }
@@ -153,5 +170,23 @@ $(document).ready(function() {
         
     </div>
 </div>
-
+ <script type="text/javascript">
+        
+        function deleteESF($id) {
+            if (window.XMLHttpRequest) {
+                        // code for IE7+, Firefox, Chrome, Opera, Safari
+                        xmlhttp = new XMLHttpRequest();
+                    } else {
+                        // code for IE6, IE5
+                        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+                    }
+                    xmlhttp.onreadystatechange = function() {
+                        if (this.readyState == 4 && this.status == 200) {
+                            alert(this.responseText) ;document.location='esfAdmin.php';
+                        }
+                    };
+                    xmlhttp.open("GET","delete.php?id="+$id+"&table=esf");
+                    xmlhttp.send();
+       }   
+    </script>
 </html>
