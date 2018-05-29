@@ -12,7 +12,13 @@
         $_SESSION['LAST_ACTIVITY'] = time();   
    }
     $conn =  require_once('databaseconnection.php'); 
-    
+    if($_SESSION['user'] != 'admin') {
+        $sql = "SELECT * FROM report_privileges where employeeCode='" . $_SESSION['loggedUserID'] . "'";
+        $result = mysqli_query($conn,$sql);
+        if(mysqli_num_rows($result)==0) {
+            echo '<script>alert("You are not authorised to view Reports, Kindly contact the System Administrator!");document.location="index.php";</script>';
+        }
+    }
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -179,24 +185,17 @@ if (datefield.type!="date"){ //if browser doesn't support input type="date", ini
         <div id="templatemo_sidebar">
         
         	<div id="templatemo_menu">
-                <ul>
-                  <li><a href="index.php" target="_parent">Home</a></li>
-                    <li><a href="employees.php" target="_parent">Staff</a></li>
-                    <li><a href="announcements.php" target="_parent" >Notice Board</a></li>
-                    <li><a href="documents.php" target="_parent"  class="current">Documents</a></li>
-                    <li><a href="attendance.php" target="_parent">Attendance</a></li>
-                    <li><a href="eGovernance.php" target="_parent">e-Governance</a></li>
-                    <li><a href=http://ncess.gov.in/notifications/awards.html" target="_parent">Awards</a></li>
-                    <li><a href="publications.php" target="_parent">Research Publications</a></li>
-                    <li><a href="http://ncess.gov.in/facilities/laboratories.html" target="_parent">Laboratories</a></li>
-                    <li><a href="http://192.168.17.11:8001/" target="_parent">Online Library</a></li>
-                    <li><a href="directory.php" target="_parent">Contact Directory</a></li>
-                    <li><a href="email.php" target="_parent">Email Address Book</a></li>
-                    <li><a href="profile.php" target="_parent">Profile Updations</a></li>
-                    <li><a href="discussion.php" target="_parent">Discussion Forum</a></li>
-                    <li><a href="reports.php" target="_parent">Reports</a></li>
-                    <li><a href="feedback.php" target="_parent">Feedback</a></li>
-              </ul>    	   	
+                 <?php
+                        $menuSql= "SELECT * FROM menu WHERE status=1";
+                        $menuRes = mysqli_query($conn,$menuSql);
+                        if(mysqli_num_rows($menuRes) > 0) {
+                            echo '<ul>';
+                            while ($menuData= mysqli_fetch_array($menuRes)) {
+                                echo '<li><a href="'.$menuData['menuPage'] . '" target="_parent">' . $menuData['menu'] . '</a></li>';
+                            }
+                            echo '</ul>'; 
+                        }
+                    ?>	 	
             </div> 
            
            

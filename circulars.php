@@ -1,5 +1,6 @@
 <?php 
     session_start();
+    $conn = require_once('databaseconnection.php');
     if(!isset($_SESSION['user']))
         echo "<script>document.location='index.php';</script>";
    if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > 1800)) {
@@ -74,24 +75,17 @@ $(document).ready(function() {
         <div id="templatemo_sidebar">
         
         	<div id="templatemo_menu">
-                <ul>
-                  <li><a href="index.php" target="_parent">Home</a></li>
-                    <li><a href="employees.php" target="_parent" >Staff</a></li>
-                    <li><a href="announcements.php" target="_parent" >Notice Board</a></li>
-                    <li><a href="documents.php" target="_parent" class="current">Documents</a></li>
-                    <li><a href="attendance.php" target="_parent">Attendance</a></li>
-                    <li><a href="eGovernance.php" target="_parent">e-Governance</a></li>
-                    <li><a href=http://ncess.gov.in/notifications/awards.html" target="_parent">Awards</a></li>
-                    <li><a href="publications.php" target="_parent">Research Publications</a></li>
-                    <li><a href="http://ncess.gov.in/facilities/laboratories.html" target="_parent">Laboratories</a></li>
-                    <li><a href="http://192.168.17.11:8001/" target="_parent">Online Library</a></li>
-                    <li><a href="directory.php" target="_parent">Contact Directory</a></li>
-                    <li><a href="email.php" target="_parent">Email Address Book</a></li>
-                    <li><a href="profile.php" target="_parent">Profile Updations</a></li>
-                    <li><a href="discussion.php" target="_parent">Discussion Forum</a></li>
-                    <li><a href="reports.php" target="_parent">Reports</a></li>
-                    <li><a href="feedback.php" target="_parent">Feedback</a></li>
-              </ul>    	   	
+                <?php
+                        $menuSql= "SELECT * FROM menu WHERE status=1";
+                        $menuRes = mysqli_query($conn,$menuSql);
+                        if(mysqli_num_rows($menuRes) > 0) {
+                            echo '<ul>';
+                            while ($menuData= mysqli_fetch_array($menuRes)) {
+                                echo '<li><a href="'.$menuData['menuPage'] . '" target="_parent">' . $menuData['menu'] . '</a></li>';
+                            }
+                            echo '</ul>'; 
+                        }
+                    ?>   	   	
             </div> <!-- end of templatemo_menu 
         
         	<div class="sidebar_box">
@@ -130,7 +124,7 @@ $(document).ready(function() {
             <table>
                 <tr>
                     <td>
-                    <div  style="width:400px;padding-left: 50px;">    
+                    <div  style="width:95%;padding-left: 50px;">    
                     	
             
                     <?php
@@ -139,25 +133,20 @@ $(document).ready(function() {
                             echo '<table class="folder">';
                             for($i=0;$i<5;$i++){
                                 echo '<tr><td>';
-                                echo '<a href="circulars.php?year='. $year . '"><img class="image_wrapper image_fl" src="images/normal_folder.ico" alt="Image 1" /><h5>' . $year . '</h5></a>  </td></tr>';
+                                echo '<a href="circulars.php?year='. $year . '"><img class="image_wrapper image_fl" src="images/normal_folder.ico" alt="Image 1" /><h6>' . $year . '</h6></a>  </td></tr>';
                                 $year--;
                             }
                             echo '</table>';
                         }
                         else {
-                            $conn = require_once('databaseconnection.php');
                             $sql = "SELECT * FROM circulars where year=". $yr;
                             $result = mysqli_query($conn,$sql);
                             if(mysqli_num_rows($result)>0) {
-                                $i = 1;
-                                echo '<div  style="overflow-y: scroll;min-height:650px;" ><table id="tblDocument" ><tr>';
+                                echo '<div  style="overflow-y: scroll;min-height:650px;" ><table id="tblDocument" >';
                                 while($row=mysqli_fetch_array($result)) {
-                                    echo '<td style="padding-right:20px;"><a href="documents/circulars/' . $row['fileName'] . '" target="_blank" ><h5>' . $row['title'] .'</h5><img class="image_wrapper image_fl" src="images/file.ico" alt="Image 1" /></a></td>';
-                                    if(($i%3)==0)
-                                        echo '</tr><tr>';
-
-                                    $i++;
-                            } echo '</tr></table></div>';
+                                    echo '<tr><td ><a href="documents/circulars/' . $row['fileName'] . '" target="_blank" ><img class="image_wrapper image_fl1" src="images/pdf_document.ico" alt="Image 1" /><h6>' . $row['title'] .'</h6></a></td></tr>';
+                                    
+                            } echo '</table></div>';
                         }
                        
                             
@@ -167,8 +156,8 @@ $(document).ready(function() {
                     </div>
              
                     </td>
-                    <td valign="top"><div class="sidebar_box" style="float: right;padding-top: 20px;width: 100px;vertical-align: top;">
-                            <div ><a style="font-size: 16px;" href="">View Archives</a></div>
+                   <!-- <td valign="top"><div class="sidebar_box" style="float: right;padding-top: 20px;width: 100px;vertical-align: top;">
+                            <div ><a style="font-size: 16px;" href="">View Archives</a></div>-->
                 
             
                         

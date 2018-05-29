@@ -278,7 +278,7 @@ $(document).ready(function() {
                         }
                         $result = mysqli_query($conn,$sql);
                         if($result) {
-                            echo "<script>alert('Saved successfully!');document.location='editEmployee.php?empID=" . $_POST['txtEmpCode'] ."';</script>";
+                            echo "<script>alert('Saved successfully!');document.location='editEmployee.php?empID=" . $empID ."';</script>";
                         }    
                         else {
                             echo "Failed to save!";
