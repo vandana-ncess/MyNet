@@ -1,4 +1,4 @@
-﻿<?php 
+<?php 
     session_start();
     if(!isset($_SESSION['user']))
         echo "<script>document.location='index.php';</script>";
@@ -9,7 +9,11 @@
         echo "<script>document.location='index.php';</script>";
     }
     else {
-        $_SESSION['LAST_ACTIVITY'] = time();   
+        $_SESSION['LAST_ACTIVITY'] = time(); 
+    if(isset($_GET['date']))
+        $date =  $_GET['date'] ;
+    else
+        $date = date('Y-m-d');
    }
 ?>
 <!DOCTYPE html>
@@ -24,7 +28,8 @@ if(mysqli_num_rows($result)>0)
     $emp_no = $data['empNo'];
     $emp_last=$data['last'];
 }
-$sql = "SELECT COUNT(*) as empNo FROM employee_attendance A JOIN employee B ON A.employeeID = B.employeeID WHERE date = '" . date('Y-m-d') . "' AND intime <> '' AND outtime='';";
+$sql = "SELECT COUNT(*) as empNo FROM employee_attendance A JOIN employee B ON A.employeeID = B.employeeID WHERE date = '" . $date . "' AND status='P';";
+echo $sql;
 $result = mysqli_query($conn,$sql);
 if(mysqli_num_rows($result)>0)
 {
@@ -38,7 +43,7 @@ if(mysqli_num_rows($result)>0)
     $data = mysqli_fetch_array($result);
     $pre_last=$data['last'];
 }
-$sql = "SELECT COUNT(*) as empNo FROM employee_leave WHERE startDate <= '" .date('Y-m-d'). "' AND endDate >= '" . date('Y-m-d') . "';";
+$sql = "SELECT COUNT(*) as empNo FROM employee_leave WHERE startDate <= '". $date. "' AND endDate >= '" .$date . "';";
 $result = mysqli_query($conn,$sql);
 if(mysqli_num_rows($result)>0)
 {
@@ -52,7 +57,7 @@ if(mysqli_num_rows($result)>0)
     $data = mysqli_fetch_array($result);
     $leave_last=$data['last'];
 }
-$sql = "SELECT COUNT(*) as empNo FROM employee_tour WHERE startDate <= '" .date('Y-m-d'). "' AND endDate >= '" . date('Y-m-d') . "';";
+$sql = "SELECT COUNT(*) as empNo FROM employee_tour WHERE startDate <= '" .$date. "' AND endDate >= '" . $date . "';";
 $result = mysqli_query($conn,$sql);
 if(mysqli_num_rows($result)>0)
 {
@@ -120,7 +125,7 @@ $(document).ready(function() {
     </div> <!-- end of header -->
     
     <div id="templatemo_main_top"></div>
-    <div id="templatemo_main" style="padding-right: 0px;width:930px;"><span id="main_top"></span><span id="main_bottom"></span>
+    <div id="templatemo_main" style="padding-right: 0px;width:930px;padding-top: 0px;"><span id="main_top"></span><span id="main_bottom"></span>
     	
         <div id="templatemo_sidebar">
         
@@ -147,51 +152,55 @@ $(document).ready(function() {
         <div id="templatemo_content" style="float: left;padding-left: 30px;width: 655px;">
             
         	<div class="content_box" style="border: 1px;vertical-align: middle; padding-bottom: 0px;padding-left: 10px;width: 685px;">
+                    <a  <?php $newdate = strtotime ( '-1 day' , strtotime ( $date ) ) ;
+                    $newdate = date ( 'Y-m-d' , $newdate ); echo 'href="attendance.php?date='. $newdate.'"'?>><img src="images/back.ico" height="40px" /></a>
+                    <a  <?php $newdate = strtotime ( '+1 day' , strtotime ( $date ) ) ;
+                    $newdate = date ( 'Y-m-d' , $newdate ); if($date == date('Y-m-d')) echo "style='visibility: hidden;' "; echo 'href="attendance.php?date='. $newdate.'"' ?>><img src="images/control_double_right.ico" height="40px" /></a>
                 <div  style="vertical-align: middle; width:93%;padding-left: 10px;padding-top: 10px;background-color: blueviolet;height: 40px;color: white;font-family: sans-serif;font-size: 20px;">
-            	Today's Attendance Summary</div>
+                    Attendance Summary  <?php echo '  '. date('D, d M',strtotime($date)); ?></div>
                     <table class="attendance" style="width: 645px;">
                         <tr style="background-color:   #F9CFAE;">
                             <td>Total Employees</td><td><?php echo $emp_no; ?></td><td>Last Updated On : <?php echo $pre_last; ?></td>
-                            <td><a href="rptToday.php?report=employee&mode=single" target="_blank"> View Details <a/></td>
+                            <td><a <?php echo 'href="rptToday.php?report=employee&mode=single&date=' . $date . '"'; ?> target="_blank"> View Details <a/></td>
                         </tr>
                         <tr style="background-color:   #B6F9AE;">
                             <td>Employees Present</td><td><?php echo $pre_no; ?></td><td>Last Updated On : <?php echo $pre_last; ?></td>
-                            <td><a href="rptToday.php?report=attendance&mode=single" target="_blank"> View Details <a/></td>
+                            <td><a <?php echo 'href="rptToday.php?report=attendance&mode=single&date=' . $date . '"'; ?> target="_blank"> View Details <a/></td>
                         </tr>
                         <tr style="background-color:   #F98A9D;">
                             <td>Employees Absent</td><td><?php echo ($emp_no-($pre_no+$leave_no+$tour_no)); ?></td><td>Last Updated On : <?php echo $pre_last; ?></td>
-                            <td><a href="rptToday.php?report=absentee&mode=single" target="_blank"> View Details <a/></td>
+                            <td><a <?php echo 'href="rptToday.php?report=absentee&mode=single&date=' . $date . '"'; ?> target="_blank"> View Details <a/></td>
                         </tr>
                         <tr style="background-color:   #9A95C3;">
                             <td>Employee(s) on Leave</td><td><?php echo $leave_no; ?></td><td>Last Updated On : <?php echo $leave_last; ?></td>
-                            <td><a href="rptToday.php?report=leave&mode=single" target="_blank"> View Details <a/></td>
+                            <td><a <?php echo 'href="rptToday.php?report=leave&mode=single&date=' . $date . '"'; ?> target="_blank"> View Details <a/></td>
                         </tr>
                         <tr style="background-color:   #E0E472;">
                             <td>Employee(s) on Tour</td><td><?php echo $tour_no; ?></td>
                             <td>Last Updated On : <?php echo $tour_last; ?></td>
-                            <td><a href="rptToday.php?report=tour&mode=single" target="_blank"> View Details <a/></td>
+                            <td><a <?php echo 'href="rptToday.php?report=tour&mode=single&date=' . $date . '"'; ?> target="_blank"> View Details <a/></td>
                         </tr>
                         <tr style="background-color:   #FFB4FA;">
                             <?php
-                                $sql = "SELECT COUNT(*) as cnt FROM employee A JOIN employee_attendance B ON A.employeeID=B.employeeID WHERE TIME_FORMAT(intime,'%H:%i:%s')>TIME_FORMAT('09:31:00','%H:%i:%s') AND date =' " . date('Y-m-d') ."'";
+                                $sql = "SELECT COUNT(*) as cnt FROM employee A JOIN employee_attendance B ON A.employeeID=B.employeeID WHERE TIME_FORMAT(intime,'%H:%i:%s')>TIME_FORMAT('09:01:01','%H:%i:%s') AND date =' " . $date."'";
                                 $result = mysqli_query($conn,$sql);
                                 $row = mysqli_fetch_array($result);
                                 $late_no = $row['cnt'];
                             ?>
                             <td>Late Comers</td><td><?php echo $late_no; ?></td>
                             <td>Last Updated On : <?php echo $pre_last; ?></td>
-                            <td><a href="rptToday.php?report=late&mode=single" target="_blank"> View Details <a/></td>
+                            <td><a <?php echo 'href="rptToday.php?report=late&mode=single&date=' . $date . '"'; ?> target="_blank"> View Details <a/></td>
                         </tr>
                         <tr style="background-color:   #C8F3F0;">
                             <?php
-                                $sql = "SELECT COUNT(*) as cnt FROM employee A JOIN employee_attendance B ON A.employeeID=B.employeeID WHERE TIME_FORMAT(outtime,'%H:%i:%s')<TIME_FORMAT('17:30:00','%H:%i:%s') AND date =' " . date('Y-m-d') ."'";
+                                $sql = "SELECT COUNT(*) as cnt FROM employee A JOIN employee_attendance B ON A.employeeID=B.employeeID WHERE TIME_FORMAT(outtime,'%H:%i:%s')<TIME_FORMAT('17:30:00','%H:%i:%s') AND date =' " . $date."'";
                                 $result = mysqli_query($conn,$sql);
                                 $row = mysqli_fetch_array($result);
                                 $late_no = $row['cnt'];
                             ?>
                             <td>Early Goers</td><td><?php echo $late_no; ?></td>
                             <td>Last Updated On : <?php echo $pre_last; ?></td>
-                            <td><a href="rptToday.php?report=early&mode=single" target="_blank"> View Details <a/></td>
+                            <td><a <?php echo 'href="rptToday.php?report=early&mode=single&date=' . $date . '"'; ?> target="_blank"> View Details <a/></td>
                         </tr>
                     </table>
                 
@@ -200,7 +209,7 @@ $(document).ready(function() {
             <div class="content_box" style="padding-bottom: 0px;padding-left: 2px;">
                 <div class="card mb-3" style="box-sizing: border-box;">
         <div class="card-header" style="box-sizing: border-box;background-color: blueviolet;color: #fff;font-size: 18;">
-            <i class="fa fa-table" style="box-sizing: border-box;"></i> Today's Attendance List</div>
+            <i class="fa fa-table" style="box-sizing: border-box;"></i> Attendance List <?php echo '  '. date('D, d M',strtotime($date)); ?></div>
         <div class="card-body" style="box-sizing: border-box;">
           <div class="table-responsive">
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0" style="box-sizing: border-box;color: black;">
@@ -231,14 +240,14 @@ $(document).ready(function() {
               </tfoot>
               <tbody>
                 <?php
-                    $_SESSION['start'] =  date('Y-m-d');
-                    $_SESSION['end'] =  date('Y-m-d');
+                    $_SESSION['start'] =  $date;
+                    $_SESSION['end'] =  $date;
                     $sql = "SELECT A.employeeID as empID,A.employeeCode,employeeName,divisionName,designation,B.intime,"
                             . "B.outtime,leaveType,shortname,place, H.outtime as gateout, H.intime as gatein,B.status,open_closed_status,TIME_FORMAT(B.outtime,'%H:%i:%s')-TIME_FORMAT(B.intime,'%H:%i:%s') as timediff   FROM employee A JOIN employee_attendance B ON A.employeeID = B.employeeID JOIN division C on "
                             . "A.divisionID = C.divisionID JOIN designation D ON A.designationID = D.designationID LEFT JOIN gate_register H ON A.employeeCode = H.employeeCode "
-                            . " AND H.date = '" . date('Y-m-d') . "' AND H.outtime <> '' LEFT JOIN employee_tour F ON A.employeeCode = F.employeeCode AND "
-                            . "F.startDate <= '" . date('Y-m-d') . "' AND F.endDate >= '" .  date('Y-m-d') . "' LEFT JOIN employee_leave E ON A.employeeCode  = E.employeeCode"
-                            . " AND E.startDate <= '" . date('Y-m-d') . "' AND E.endDate >= ' " . date('Y-m-d') . "' LEFT JOIN leave_type G ON E.leaveTypeID = G.leaveTypeID WHERE A.employeeStatus=1 AND b.date ='" . date('Y-m-d') . "';";
+                            . " AND H.date = '" . $date . "' AND H.outtime <> '' LEFT JOIN employee_tour F ON A.employeeCode = F.employeeCode AND "
+                            . "F.startDate <= '" . $date . "' AND F.endDate >= '" .  $date . "' LEFT JOIN employee_leave E ON A.employeeCode  = E.employeeCode"
+                            . " AND E.startDate <= '" . $date . "' AND E.endDate >= ' " . $date . "' LEFT JOIN leave_type G ON E.leaveTypeID = G.leaveTypeID WHERE A.employeeStatus=1 AND b.date ='" . $date . "';";
                     $result = mysqli_query($conn,$sql);
                     if(mysqli_num_rows($result) > 0)
                     {

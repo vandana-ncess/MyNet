@@ -53,34 +53,31 @@ $(document).ready(function() {
 	});
 });
 </script>
-<script type="text/javascript">
-    var datefield=document.createElement("input")
-    datefield.setAttribute("type", "date")
-    if (datefield.type!="date"){ //if browser doesn't support input type="date", load files for jQuery UI Date Picker
-        document.write('<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />\n')
-        document.write('<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"><\/script>\n')
-        document.write('<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"><\/script>\n') 
-    }
-</script>
- <style>
-.ui-datepicker-trigger { vertical-align: middle; }
- /* {} is the value according to your need */
-</style>
-<script>
-if (datefield.type!="date"){ //if browser doesn't support input type="date", initialize date picker widget:
-    jQuery(function($){ //on document.ready
-        $('#datepicker1').datepicker({ dateFormat: 'yy-mm-dd',showOn: "both",
-        buttonImage: "images/calendar.ico",
-        buttonImageOnly: true,
-        showOn: "both" });
-        $('#datepicker2').datepicker({ dateFormat: 'yy-mm-dd',showOn: "button",
-        buttonImage: "images/calendar.ico",
-        buttonImageOnly: true,
-        showOn: "both" });
-        
-    })
-}
-</script>
+<link rel="stylesheet" href="css/jquery-ui-themes-1.12.1/themes/base/jquery-ui.css">
+  <script src="js/jquery-1.12.4.js"></script>
+  <script src="js/jquery-ui-1.12.1/jquery-ui.js"></script>
+  <script>
+  $( function() {
+      var currentDate = new Date();  
+
+    $( "#datepicker1" ).datepicker({
+      showOn: "both",
+      buttonImage: "images/calendar.ico",
+      buttonImageOnly: true,
+      buttonText: "Select date"
+    });
+    $( "#datepicker2" ).datepicker({
+      showOn: "both",
+      buttonImage: "images/calendar.ico",
+      buttonImageOnly: true,
+      buttonText: "Select date"
+    });
+    $("#datepicker1").datepicker("setDate",currentDate);
+     $("#datepicker2").datepicker("setDate",currentDate);
+  } );
+  </script>
+ 
+
   <script type="text/javascript">
       function loadDesignation()
       {
@@ -270,8 +267,9 @@ if (datefield.type!="date"){ //if browser doesn't support input type="date", ini
                        
                     </tr>
                     <tr>
-                        <td ><span class="mandatory">* </span>From Date</td><td style="padding-left: 10px;"><input type="date" name="datepicker1" id='datepicker1'  style="width:170px;height: 18px;"   > </input></td>
-                        <td style="padding-left: 10px;"><span class="mandatory">* </span>To Date</td><td style="padding-left: 10px;"><input type="date" name="datepicker2" id='datepicker2'   style="width:182px;height: 18px;"  /></td>
+                        <td ><span class="mandatory">* </span>From Date</td><td style="padding-left: 10px;"><input type="text" name="datepicker1" id='datepicker1'  style="width:120px;height: 18px;"   > 
+                            </input></td>
+                        <td style="padding-left: 10px;"><span class="mandatory">* </span>To Date</td><td style="padding-left: 10px;"><input type="text" name="datepicker2" id='datepicker2'   style="width:182px;height: 18px;"  /></td>
 
                     </tr>
                     <tr >
@@ -302,8 +300,8 @@ if (datefield.type!="date"){ //if browser doesn't support input type="date", ini
             
         }
         else {
-            $_SESSION['start'] = $_POST['datepicker1'];
-            $_SESSION['end'] = $_POST['datepicker2'];
+            $_SESSION['start'] = date('Y-m-d',strtotime($_POST['datepicker1']));
+            $_SESSION['end'] = date('Y-m-d',strtotime($_POST['datepicker2']));
             if($_POST['rdoDivision']=='Division') {
                 $_SESSION['division'] = $_POST['ddlDivision'];
                 $_SESSION['div'] = $_POST['txtDiv'];

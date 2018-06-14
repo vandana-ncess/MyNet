@@ -106,7 +106,7 @@ $(document).ready(function() {
                                    $last = $row['divisionName'];
                                }
                                else {
-                                   echo '</tr><tr><td style="font-size:18px;padding-bottom:10px;padding-top:10px;" colspan="3">' . $row['divisionName'] . '</td></tr><tr>';
+                                   echo '</tr><tr><td style="font-size:18px;padding-bottom:15px;padding-top:45px;" colspan="3">' . $row['divisionName'] . '</td></tr><tr>';
                                    $i = 1;
                                    echo '<td ><a href="employeeProfile.php?empID=' . $row['employeeCode'] . '" target="_blank" ><img class="image_wrapper image_fl" src="images/profile/'.$row['employeeCode'] . '.jpg" alt="Image 1" width="140px" height="160px" /><b>' . $row['employeeName'] .'<br />' . $row['designation']. '</b></a></td>';
                                     if(($i%3)==0)

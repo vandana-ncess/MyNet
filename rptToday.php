@@ -24,12 +24,13 @@ else{
     
 $title = '';
 if($mode == 'single') {
+    $date = $_GET['date'];
     switch ($report)
     {
         case 'leave':
             $title='Leave Register Report';
             $sql1 = "SELECT MAX(lastUpdated) as last FROM employee_leave";
-            $sql = "SELECT employeeName,designation, leaveType, DATE_FORMAT(startDate,'%d-%m-%Y'),DATE_FORMAT(endDate,'%d-%m-%Y') FROM employee_leave A  JOIN employee C on A.employeeCode =C.employeeCode JOIN designation E ON C.designationID = E.designationID JOIN leave_type B ON A.leaveTypeID = B.leaveTypeID WHERE '" . date('Y-m-d') . "' "
+            $sql = "SELECT employeeName,designation, leaveType, DATE_FORMAT(startDate,'%d-%m-%Y'),DATE_FORMAT(endDate,'%d-%m-%Y') FROM employee_leave A  JOIN employee C on A.employeeCode =C.employeeCode JOIN designation E ON C.designationID = E.designationID JOIN leave_type B ON A.leaveTypeID = B.leaveTypeID WHERE '" . $date . "' "
                     . "BETWEEN startDate AND endDate";
             $col = array('Name','Designation','Leave Type','From','To');
             $smallTable = array(50,50,45,23,23);
@@ -37,7 +38,7 @@ if($mode == 'single') {
         case 'tour':
             $title='Tour Register Report';
             $sql1="SELECT MAX(lastUpdated) as last FROM employee_tour";
-            $sql = "SELECT employeeName,designation, place, DATE_FORMAT(startDate,'%d-%m-%Y'),DATE_FORMAT(endDate,'%d-%m-%Y'),remarks FROM employee_tour A  JOIN employee C on A.employeeCode =C.employeeCode JOIN designation E ON C.designationID = E.designationID WHERE '" . date('Y-m-d') . "' "
+            $sql = "SELECT employeeName,designation, place, DATE_FORMAT(startDate,'%d-%m-%Y'),DATE_FORMAT(endDate,'%d-%m-%Y'),remarks FROM employee_tour A  JOIN employee C on A.employeeCode =C.employeeCode JOIN designation E ON C.designationID = E.designationID WHERE '" . $date . "'"
                     . "BETWEEN startDate AND endDate";
             $col = array('Name','Designation','Place','From','To','Purpose');    
             $smallTable = array(40,40,40,23,23,30);
@@ -45,16 +46,16 @@ if($mode == 'single') {
         case 'attendance':
             $title='Attendance Register Report';
             $sql1 = "SELECT MAX(lastUpdated) as last FROM employee_attendance";
-            $sql = "SELECT employeeName, divisionName,designation,intime FROM employee_attendance A  JOIN employee C on A.employeeID =C.employeeID JOIN division D ON C.divisionID=D.divisionID JOIN designation E ON C.designationID = E.designationID WHERE date = '" . date('Y-m-d') . "' AND status ='P'" ;
-            $col = array('Name','Division','Designation','Time In');    
-            $smallTable = array(75,110,70,20);
+            $sql = "SELECT employeeName, divisionName,designation,intime,outtime FROM employee_attendance A  JOIN employee C on A.employeeID =C.employeeID JOIN division D ON C.divisionID=D.divisionID JOIN designation E ON C.designationID = E.designationID WHERE date = '" . $date . "' AND status ='P' ORDER BY C.categoryID,level " ;
+            $col = array('Name','Division','Designation','Time In','Time Out');    
+            $smallTable = array(75,107,53,21,21);
             break;
         case 'absentee':
            $title='Absentee Report';
             $sql1 = "SELECT MAX(lastUpdated) as last FROM employee_attendance";
             $sql = "SELECT employeeName,divisionName,designation FROM employee_attendance A JOIN employee B on A.employeeID =B.employeeID JOIN designation E ON B.designationID = E.designationID "
                     . "JOIN division F ON B.divisionID=F.divisionID LEFT JOIN employee_leave C ON "
-                    . "B.employeeCode = C.employeeCode AND A.date BETWEEN startDate AND endDate WHERE A.status = 'A' AND leaveTypeID IS NULL AND A.date = '" . date('Y-m-d') ."' ORDER BY B.categoryID,level";
+                    . "B.employeeCode = C.employeeCode AND A.date BETWEEN startDate AND endDate WHERE A.status = 'A' AND leaveTypeID IS NULL AND A.date = '" . $date ."' ORDER BY B.categoryID,level";
             $col = array('Name','Division','Designation'); 
             $smallTable = array(50,85,60);
             break; 
@@ -62,7 +63,7 @@ if($mode == 'single') {
             $title='Late Comers Report';
             $sql1 = "SELECT MAX(lastUpdated) as last FROM employee_attendance";
             $sql = "SELECT employeeName,divisionName,designation,intime FROM employee B JOIN employee_attendance A on A.employeeID =B.employeeID JOIN designation E ON B.designationID = E.designationID "
-                    . "JOIN division F ON B.divisionID=F.divisionID WHERE TIME_FORMAT(intime,'%H:%i:%s')>TIME_FORMAT('09:31:00','%H:%i:%s')  AND A.status<>'H' AND A.date = '" . date('Y-m-d') ."' ORDER BY TIME_FORMAT(intime,'%H:%i:%s') desc";
+                    . "JOIN division F ON B.divisionID=F.divisionID WHERE TIME_FORMAT(intime,'%H:%i:%s')>TIME_FORMAT('09:01:01','%H:%i:%s')  AND A.status<>'H' AND A.date = '" . $date ."' ORDER BY TIME_FORMAT(intime,'%H:%i:%s') desc";
             $col = array('Name','Division','Designation',"In Time"); 
             $smallTable = array(75,115,55,30);
             break; 
@@ -70,7 +71,7 @@ if($mode == 'single') {
             $title='Early Goers Report';
             $sql1 = "SELECT MAX(lastUpdated) as last FROM employee_attendance";
             $sql = "SELECT employeeName,designation,intime,outtime FROM employee B JOIN employee_attendance A on A.employeeID =B.employeeID JOIN designation E ON B.designationID = E.designationID "
-                    . "JOIN division F ON B.divisionID=F.divisionID WHERE TIME_FORMAT(outtime,'%H:%i:%s')<TIME_FORMAT('17:30:00','%H:%i:%s')  AND A.status<>'H' AND A.date = '" . date('Y-m-d') ."' ORDER BY TIME_FORMAT(outtime,'%H:%i:%s') desc";
+                    . "JOIN division F ON B.divisionID=F.divisionID WHERE TIME_FORMAT(outtime,'%H:%i:%s')<TIME_FORMAT('17:30:00','%H:%i:%s')  AND A.status<>'H' AND A.date = '" . $date ."' ORDER BY TIME_FORMAT(outtime,'%H:%i:%s') ASC";
             $col = array('Name','Designation',"In Time",'Out Time'); 
             $smallTable = array(60,65,30,30);
             break; 
@@ -94,12 +95,12 @@ if($mode == 'single') {
     
     $pdf->Line(10,40,$len,40);
      $pdf->SetFont('times','',$body_font);
-            $pdf->cell(0,10,"Date : " . date('d-m-Y'),0,0,'L');
+            $pdf->cell(0,10,"Date : " . $date,0,0,'L');
             $res = mysqli_query($conn,$sql1);
             $data=mysqli_fetch_array($res);
             $last = $data['last'];
            $pdf->Ln(1);  
-            $pdf->cell(0,10,"Last Updated On : " . date('d-m-Y h:i:s',strtotime($last)) ,0,0,'R');
+           // $pdf->cell(0,10,"Last Updated On : " . date('d-m-Y h:i:s',strtotime($last)) ,0,0,'R');
    
     /* $conn=mysqli_connect("localhost","root","");
     mysqli_select_db($conn,"ncess_intranet");
@@ -182,8 +183,8 @@ elseif($report == 'late') {
             ."' GROUP BY employeeID) AS F ON A.employeeID=F.employeeID LEFT JOIN (SELECT employeeID,COUNT(*) as open_status FROM employee_attendance "
                 . " WHERE open_closed_status='Open' AND date BETWEEN '"  . $start . "' AND '" . $end . "' AND status <> 'H' GROUP BY employeeID) AS G "
                 . " ON A.employeeID = G.employeeID LEFT JOIN "
-            . " (SELECT employeeID,COUNT(*) as in_cnt,SEC_TO_TIME(SUM(TIME_TO_SEC(TIMEDIFF(TIME_FORMAT(intime,'%H:%i:%s'),TIME_FORMAT('09:31:00','%H:%i:%s'))))) "
-            . "as intime_short FROM employee_attendance WHERE TIME_FORMAT(intime,'%H:%i:%s')>TIME_FORMAT('09:31:00','%H:%i:%s') AND date BETWEEN '" 
+            . " (SELECT employeeID,COUNT(*) as in_cnt,SEC_TO_TIME(SUM(TIME_TO_SEC(TIMEDIFF(TIME_FORMAT(intime,'%H:%i:%s'),TIME_FORMAT('09:01:01','%H:%i:%s'))))) "
+            . "as intime_short FROM employee_attendance WHERE TIME_FORMAT(intime,'%H:%i:%s')>TIME_FORMAT('09:01:01','%H:%i:%s') AND date BETWEEN '" 
             . $start . "' AND '" . $end . "' AND status <> 'H' GROUP BY employeeID) AS D ON A.employeeID=D.employeeID LEFT JOIN "
             . "(SELECT employeeID,COUNT(*) as out_cnt,SEC_TO_TIME(SUM(TIME_TO_SEC(TIMEDIFF(TIME_FORMAT('17:30:00','%H:%i:%s'),TIME_FORMAT(outtime,'%H:%i:%s'))))) "
             . "as outtime_short FROM employee_attendance WHERE TIME_FORMAT(outtime,'%H:%i:%s') <TIME_FORMAT('17:30:00','%H:%i:%s') AND date BETWEEN '"
@@ -198,11 +199,11 @@ elseif($report == 'late') {
 
          
            
-                $sql1 = "SELECT employeeCode, employeeName,designation, COUNT(intime) AS cnt,SEC_TO_TIME(SUM(TIME_TO_SEC(TIMEDIFF(TIME_FORMAT(intime,'%H:%i:%s'),TIME_FORMAT('09:31:00','%H:%i:%s'))))) as late,open_status "
+                $sql1 = "SELECT employeeCode, employeeName,designation, COUNT(intime) AS cnt,SEC_TO_TIME(SUM(TIME_TO_SEC(TIMEDIFF(TIME_FORMAT(intime,'%H:%i:%s'),TIME_FORMAT('09:01:01','%H:%i:%s'))))) as late,open_status "
                         . "FROM employee_attendance A JOIN employee B ON A.employeeID=B.employeeID JOIN designation E ON B.designationID = E.designationID LEFT JOIN (SELECT employeeID,COUNT(*) as open_status FROM employee_attendance "
                 . " WHERE open_closed_status='Open' AND date BETWEEN '"  . $start . "' AND '" . $end . "' AND status <> 'H' GROUP BY employeeID) AS G "
                 . " ON B.employeeID = G.employeeID "
-                    . " WHERE TIME_FORMAT(intime,'%H:%i:%s')>TIME_FORMAT('09:31:00','%H:%i:%s') AND A.date BETWEEN '" . $start . "' AND '" . $end . "' "
+                    . " WHERE TIME_FORMAT(intime,'%H:%i:%s')>TIME_FORMAT('09:01:01','%H:%i:%s') AND A.date BETWEEN '" . $start . "' AND '" . $end . "' "
                     . $whr . "  AND status <> 'H' " . $whr. "  GROUP BY A.employeeID ORDER BY late DESC" ;
                 $col1 = array('Emp Code','Employee Name','Designation','No. of Days', 'Short Fall','Days with Open Status'); 
                 $sql2 = "SELECT employeeCode, employeeName,designation, COUNT(outtime) AS cnt,SEC_TO_TIME(SUM(TIME_TO_SEC(TIMEDIFF(TIME_FORMAT('17:30:00','%H:%i:%s'),TIME_FORMAT(outtime,'%H:%i:%s'))))) as late,open_status "
