@@ -28,8 +28,7 @@ if(mysqli_num_rows($result)>0)
     $emp_no = $data['empNo'];
     $emp_last=$data['last'];
 }
-$sql = "SELECT COUNT(*) as empNo FROM employee_attendance A JOIN employee B ON A.employeeID = B.employeeID WHERE date = '" . $date . "' AND status='P';";
-echo $sql;
+$sql = "SELECT COUNT(*) as empNo FROM  employee B JOIN employee_attendance A ON A.employeeID = B.employeeID WHERE date = '" . $date . "' AND intime<> '';";
 $result = mysqli_query($conn,$sql);
 if(mysqli_num_rows($result)>0)
 {
@@ -152,11 +151,17 @@ $(document).ready(function() {
         <div id="templatemo_content" style="float: left;padding-left: 30px;width: 655px;">
             
         	<div class="content_box" style="border: 1px;vertical-align: middle; padding-bottom: 0px;padding-left: 10px;width: 685px;">
+                    <div style="width: 90%;margin-bottom: 20px;height:30px;"> 
+                        <div style="width: 75%;float: left;vertical-align: middle;">
                     <a  <?php $newdate = strtotime ( '-1 day' , strtotime ( $date ) ) ;
-                    $newdate = date ( 'Y-m-d' , $newdate ); echo 'href="attendance.php?date='. $newdate.'"'?>><img src="images/back.ico" height="40px" /></a>
-                    <a  <?php $newdate = strtotime ( '+1 day' , strtotime ( $date ) ) ;
-                    $newdate = date ( 'Y-m-d' , $newdate ); if($date == date('Y-m-d')) echo "style='visibility: hidden;' "; echo 'href="attendance.php?date='. $newdate.'"' ?>><img src="images/control_double_right.ico" height="40px" /></a>
-                <div  style="vertical-align: middle; width:93%;padding-left: 10px;padding-top: 10px;background-color: blueviolet;height: 40px;color: white;font-family: sans-serif;font-size: 20px;">
+                    $newdate = date ( 'Y-m-d' , $newdate ); echo 'href="attendance.php?date='. $newdate.'"'?>><img src="images/back.ico" height="40px" style="vertical-align: middle;"  align="middle" />Previous</a>
+                        </div>
+                        <div style="width: 15%;float: right;vertical-align: middle;"><a  <?php $newdate = strtotime ( '+1 day' , strtotime ( $date ) ) ;
+                    $newdate = date ( 'Y-m-d' , $newdate ); if($date == date('Y-m-d')) echo "style='visibility: hidden;' "; echo 'href="attendance.php?date='. $newdate.'"' ?>>Next<img style="vertical-align: middle;"  src="images/control_double_right.ico" height="40px"  align="middle" /></a>
+               
+                        </div>
+                    </div>
+                    <div  style="width:93%;padding-left: 10px;padding-top: 10px;background-color: blueviolet;height: 40px;color: white;font-family: sans-serif;font-size: 20px;">
                     Attendance Summary  <?php echo '  '. date('D, d M',strtotime($date)); ?></div>
                     <table class="attendance" style="width: 645px;">
                         <tr style="background-color:   #F9CFAE;">
@@ -180,25 +185,33 @@ $(document).ready(function() {
                             <td>Last Updated On : <?php echo $tour_last; ?></td>
                             <td><a <?php echo 'href="rptToday.php?report=tour&mode=single&date=' . $date . '"'; ?> target="_blank"> View Details <a/></td>
                         </tr>
-                        <tr style="background-color:   #FFB4FA;">
-                            <?php
+                         <?php
+                            $sql = "SELECT COUNT(*) as cnt FROM employee_attendance WHERE date='". $date . "' AND status='H'";
+                            $result = mysqli_query($conn,$sql);
+                            $row = mysqli_fetch_array($result);
+                            if($row['cnt'] > 0) {
+                                $late_no = 0;
+                                $early_no = 0;
+                            }
+                            else {
                                 $sql = "SELECT COUNT(*) as cnt FROM employee A JOIN employee_attendance B ON A.employeeID=B.employeeID WHERE TIME_FORMAT(intime,'%H:%i:%s')>TIME_FORMAT('09:01:01','%H:%i:%s') AND date =' " . $date."'";
                                 $result = mysqli_query($conn,$sql);
                                 $row = mysqli_fetch_array($result);
                                 $late_no = $row['cnt'];
+                                $sql = "SELECT COUNT(*) as cnt FROM employee A JOIN employee_attendance B ON A.employeeID=B.employeeID WHERE TIME_FORMAT(outtime,'%H:%i:%s')<TIME_FORMAT('17:30:00','%H:%i:%s') AND date =' " . $date."'";
+                                $result = mysqli_query($conn,$sql);
+                                $row = mysqli_fetch_array($result);
+                                $early_no = $row['cnt'];
+                            }
                             ?>
+                        <tr style="background-color:   #FFB4FA;">
+                           
                             <td>Late Comers</td><td><?php echo $late_no; ?></td>
                             <td>Last Updated On : <?php echo $pre_last; ?></td>
                             <td><a <?php echo 'href="rptToday.php?report=late&mode=single&date=' . $date . '"'; ?> target="_blank"> View Details <a/></td>
                         </tr>
                         <tr style="background-color:   #C8F3F0;">
-                            <?php
-                                $sql = "SELECT COUNT(*) as cnt FROM employee A JOIN employee_attendance B ON A.employeeID=B.employeeID WHERE TIME_FORMAT(outtime,'%H:%i:%s')<TIME_FORMAT('17:30:00','%H:%i:%s') AND date =' " . $date."'";
-                                $result = mysqli_query($conn,$sql);
-                                $row = mysqli_fetch_array($result);
-                                $late_no = $row['cnt'];
-                            ?>
-                            <td>Early Goers</td><td><?php echo $late_no; ?></td>
+                            <td>Early Goers</td><td><?php echo $early_no; ?></td>
                             <td>Last Updated On : <?php echo $pre_last; ?></td>
                             <td><a <?php echo 'href="rptToday.php?report=early&mode=single&date=' . $date . '"'; ?> target="_blank"> View Details <a/></td>
                         </tr>
@@ -265,7 +278,7 @@ $(document).ready(function() {
                                else 
                                    echo "<span style='color:red;'>A</span>";
                            }
-                           else {
+                           else if($row['status'] == 'P') {
                                if($row['gateout'] !== null && $row['gatein'] == null)
                                    echo "<span style='color:red;'>A</span>";
                                else if($row['outtime'] != '' && $row['leaveType'] != '')
@@ -282,6 +295,7 @@ $(document).ready(function() {
                                else
                                    echo "<span style='color:green;'>P</span>";
                            }
+                           else if($row['status'] == 'H') echo "<span style='color:red;'>A</span>";
                            echo "</td></tr>";
                         }
                         

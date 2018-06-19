@@ -22,14 +22,15 @@
 
  <link rel="shortcut icon" href="images/logo1.png" type="image/x-icon"/>
 <link href="vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet" />
- <link rel="stylesheet" href="css/jquery-ui-themes-1.12.1/themes/base/jquery-ui.css">
+
+<link rel="stylesheet" href="css/jquery-ui-themes-1.12.1/themes/base/jquery-ui.css">
   <script src="js/jquery-1.12.4.js"></script>
   <script src="js/jquery-ui-1.12.1/jquery-ui.js"></script>
   <script> 
   $( function() {
     var currentDate = new Date();  
     
-    var dateFormat = "mm/dd/yy",
+    var dateFormat = "dd/mm/yy",
       from = $( "#from" )
         .datepicker({
     showOn: "both",
@@ -125,8 +126,9 @@
         xmlhttp.send();
       }
    </script>
+<!--////// END  \\\\\\\-->
 </head>
- <body onload="loadDesignation()">
+    <body onload="loadDesignation()">
 
 <div id="templatemo_body_wrapper">
 <div id="templatemo_wrapper">
@@ -166,8 +168,8 @@
         </div> <!-- end of sidebar -->
         
         <div id="templatemo_content">
-            <form method="post" action=""> 
-<table  class="tab" style="padding-left: 10px;">
+            <form method="post" action="">
+            <table  class="tab" style="padding-left: 10px;">
                     <tr>
                         <td >Division</td> <td>Category</td><td  >Designation</td>
                     </tr>
@@ -214,7 +216,7 @@
                         <td colspan="2" ><select id="ddlEmployee" name="ddlEmployee" style="width: 400px;"  ><option value="0"></option>
 
                             </select></td>
-                        <td><select name="ddlLeave" style="width: 200px;">
+                        <td><select name="ddlLeave" id="ddlLeave" style="width: 200px;">
                              <?php
                                     $sql = "SELECT leaveTypeID,leaveType FROM leave_type WHERE status=1";
                                     $result = mysqli_query($conn,$sql);
@@ -228,7 +230,7 @@
                             </select> </td>
                     </tr>
                     <tr>
-                        <td colspan="2"><span class="mandatory">* </span>From Date<span class="mandatory" style="padding-left: 50px;">* </span>To Date<span  style="padding-left:70px;">Duration(Days)</span></td><td>Status</td>
+                        <td colspan="2"><span class="mandatory">* </span>From Date<span class="mandatory" style="padding-left: 70px;">* </span>To Date<span  style="padding-left:80px;">Duration(Days)</span></td><td>Status</td>
                      </tr>
                     <tr >    
                         <td colspan="2"><input type="text" name="from" id='from'  style="width:110px;height: 18px;"   > 
@@ -236,18 +238,51 @@
                             <td>
                                 <select name="ddlStatus" id="ddlStatus" style="width:200px;">
                                     <option value="Awaiting Approval">Awaiting Approval</option>
-                                    <option value="Approved">Approved</option>
+                                    <option value="Approved and Forwaded">Approved and Forwaded</option>
+                                    <option value="Sanctioned">Sanctioned</option>
                                     <option value="Rejected">Rejected</option>
                                     <option value="Cancelled">Cancelled</option>
                                 </select>
                             </td>
                     </tr>
                     <tr >
-                        <td colspan="3" align="right"><input type="submit" name="btnSave" id="btnSave" value="Save" style="width:100px; border-radius: 12px;" /></td> 
+                        <td colspan="3" align="right">
+                            <input type="submit" name="btnSave" id="btnSave" value="Save" style="width:100px; border-radius: 12px;" />
+                            <input type="hidden" name="txtUpdateID" id="txtUpdateID"  />
+                        </td> 
                     </tr>
-</table>
- 
-        
+                
+                    <tr >
+                        <td colspan="3">
+                            <div class="content_box" style="padding-bottom: 0px;padding-left: 2px;width: 100%;">
+                <div class="card mb-3" style="box-sizing: border-box;">
+        <div class="card-header" style="box-sizing: border-box;background-color: blueviolet;color: #fff;font-size: 14;">
+            <i class="fa fa-table" style="box-sizing: border-box;"></i> Leave History</div>
+        <div class="card-body" style="box-sizing: border-box;">
+          <div class="table-responsive">
+              <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0" style="box-sizing: border-box;color: black;">
+                  <thead style='background-color: blueviolet;'><tr><th>Employee</th><th>Leave Type</th><th>From</th><th>To</th><th>Duration</th><th>Status</th><th /></tr></thead><tbody>
+                                <?php
+                                    $sql = "SELECT leaveID,employeeName,A.employeeCode,shortname,DATE_FORMAT(startDate,'%m/%d/%Y') as start, "
+                                            . "DATE_FORMAT(endDate,'%m/%d/%Y') as end,A.leaveTypeID,duration,leaveStatus"
+                                            . " FROM employee_leave A JOIN leave_type B ON A.leaveTypeID=B.leaveTypeID JOIN employee C "
+                                            . " ON C.employeeCode=A.employeeCode WHERE updatedBy=" . $_SESSION['loggedUserID'] . " ORDER BY DATE(startDate) DESC";
+                                    $result = mysqli_query($conn,$sql);
+                                    if(mysqli_num_rows($result) > 0)
+                                    {                                               
+                                        while ($row = mysqli_fetch_array($result)) {
+                                            echo "<tr><td>".$row['employeeName']."</td><td>".$row['shortname']."<input type='hidden' id = 'txtLeave' value='".$row['leaveTypeID'].
+                                                "' /></td><td>". $row['start'] .
+                                                    "</td><td>".$row['end']."</td><td align='center'>".$row['duration']."</td><td>".$row['leaveStatus'].
+                                                    "</td><td><img src='images/edit.png' onclick='edit(this)' style='cursor:pointer;' /><input type='hidden' id = 'txtLeaveID' value='".$row['leaveID']."' /></td></tr>";
+                                        }
+                                    }
+                                ?> 
+              </tbody></table></div></div></div></div>     
+                        </td>
+                    </tr>
+            </table>
+               
             </form>
               
         </div>
@@ -260,7 +295,34 @@
 
 </div> <!-- end of wrapper -->
 </div>
-    
+   <?php
+            if(isset($_POST['btnSave'])) {
+                    if($_POST['btnSave'] == 'Save') {
+                        $sql = "INSERT INTO employee_leave(leaveTypeID,employeeCode,startDate,endDate,duration,leaveStatus,updatedBy) VALUES(" . $_POST['ddlLeave'] . 
+                                "," . $_POST['ddlEmployee']. ",'" . date('Y-m-d',strtotime($_POST['from'])) . "','" . date('Y-m-d',strtotime($_POST['to'])) . "'," . $_POST['txtDuration'] . ",'" . $_POST['ddlStatus'] .
+                                "'," . $_SESSION['loggedUserID'] . ")";
+                        $result = mysqli_query($conn,$sql);
+                        if($result){
+                            echo '<script>alert("Saved successfully!");</script>';
+                            echo '<script>document.location="adminLeave.php";</script>';
+                        }
+                        else
+                            echo 'Failed to save!';
+                    }
+                    else {
+                        $sql = "UPDATE employee_leave SET leaveTypeID = " . $_POST['ddlLeave'] . ", employeeCode=" . $_POST['ddlEmployee'] . ", startDate ='" .
+                             date('Y-m-d',strtotime($_POST['from'])) . "', endDate='" .  date('Y-m-d',strtotime($_POST['to'])). "',duration=" . $_POST['txtDuration'].
+                                ",leaveStatus='" . $_POST['ddlStatus'] . "' WHERE leaveID=" . $_POST['txtUpdateID'];
+                        $result = mysqli_query($conn,$sql);
+                        if($result){
+                            echo '<script>alert("Updated successfully!");</script>';
+                            echo '<script>document.location="adminLeave.php";</script>';
+                        }
+                        else
+                            echo 'Failed to update!';
+                    }
+            }
+                ?>  
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- Core plugin JavaScript-->
     <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
@@ -278,5 +340,30 @@
         
     </div>
 </div>
+    <script type="text/javascript">
+        function edit(e) {
+            var emp = document.getElementById('ddlEmployee');
+            for (var i = 0; i < emp.options.length; i++) {
+                if (emp.options[i].text === e.parentElement.parentElement.cells[0].innerHTML) {
+                    emp.selectedIndex = i;
+                    break;
+                }
+            }
+            document.getElementById('ddlLeave').value = e.parentElement.parentElement.cells[1].children[0].value;
+            
+            var status = document.getElementById('ddlStatus');
+            for (var i = 0; i < status.options.length; i++) {
+                if (status.options[i].text === e.parentElement.parentElement.cells[5].innerHTML) {
+                    status.selectedIndex = i;
+                    break;
+                }
+            }
+            document.getElementById('from').value = e.parentElement.parentElement.cells[2].innerHTML;
+            document.getElementById('to').value = e.parentElement.parentElement.cells[3].innerHTML;
+            document.getElementById('txtDuration').value = e.parentElement.parentElement.cells[4].innerHTML;
+            document.getElementById('btnSave').value = "Update";
+            document.getElementById('txtUpdateID').value = e.parentElement.children[1].value;
+        }
+    </script>
     </body>
 </html>

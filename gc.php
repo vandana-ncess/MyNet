@@ -105,8 +105,8 @@ $(document).ready(function() {
         <div id="templatemo_content">
             <ul class="breadcrumb" style="padding-top: 2px;">
                 <li><a href="index.php">Home</a></li>
-                <li><a href="documents.php">Documents</a></li>
-                <li><a href="agenda.php">Agenda & Minutes</a></li>
+                <li><a href="agenda.php">Committees</a></li>
+                <li><a href="gcCommittee.php">GC Members</a></li>
                 <?php if($yr != '') echo '<li><a href="gc.php">Governing Council</a></li><li>'.  $yr.'</li>'; else echo '<li>Governing Council</li>'; ?>
             </ul>
             <table>

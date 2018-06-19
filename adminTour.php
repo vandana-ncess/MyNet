@@ -22,14 +22,15 @@
 
  <link rel="shortcut icon" href="images/logo1.png" type="image/x-icon"/>
 <link href="vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet" />
- <link rel="stylesheet" href="css/jquery-ui-themes-1.12.1/themes/base/jquery-ui.css">
+
+<link rel="stylesheet" href="css/jquery-ui-themes-1.12.1/themes/base/jquery-ui.css">
   <script src="js/jquery-1.12.4.js"></script>
   <script src="js/jquery-ui-1.12.1/jquery-ui.js"></script>
   <script> 
   $( function() {
     var currentDate = new Date();  
     
-    var dateFormat = "mm/dd/yy",
+    var dateFormat = "dd/mm/yy",
       from = $( "#from" )
         .datepicker({
     showOn: "both",
@@ -125,8 +126,9 @@
         xmlhttp.send();
       }
    </script>
+<!--////// END  \\\\\\\-->
 </head>
- <body onload="loadDesignation()">
+    <body onload="loadDesignation()">
 
 <div id="templatemo_body_wrapper">
 <div id="templatemo_wrapper">
@@ -166,8 +168,8 @@
         </div> <!-- end of sidebar -->
         
         <div id="templatemo_content">
-            <form method="post" action=""> 
-<table  class="tab" style="padding-left: 10px;">
+            <form method="post" action="">
+            <table  class="tab" style="padding-left: 10px;">
                     <tr>
                         <td >Division</td> <td>Category</td><td  >Designation</td>
                     </tr>
@@ -208,46 +210,69 @@
                     </tr>
                     <tr>
 
-                        <td> Employee</td><td /><td>Leave Type</td>
+                        <td> Employee</td><td /><td><span class="mandatory">* </span>From Date</td>
                           </tr>
                     <tr>
-                        <td colspan="2" ><select id="ddlEmployee" name="ddlEmployee" style="width: 400px;"  ><option value="0"></option>
+                        <td colspan="2" ><select id="ddlEmployee" name="ddlEmployee" style="width: 410px;"  ><option value="0"></option>
 
                             </select></td>
-                        <td><select name="ddlLeave" style="width: 200px;">
-                             <?php
-                                    $sql = "SELECT leaveTypeID,leaveType FROM leave_type WHERE status=1";
-                                    $result = mysqli_query($conn,$sql);
-                                    if(mysqli_num_rows($result) > 0)
-                                    {
-                                        while ($row = mysqli_fetch_array($result)) {
-                                            echo "<option value=" . $row['leaveTypeID'] . ">" . $row['leaveType'] . "</option>";
-                                        }
-                                    }
-                                ?>
-                            </select> </td>
+                        <td><input type="text" name="from" id='from'  style="width:110px;height: 18px;"   > 
+                            </input></td>
                     </tr>
                     <tr>
-                        <td colspan="2"><span class="mandatory">* </span>From Date<span class="mandatory" style="padding-left: 50px;">* </span>To Date<span  style="padding-left:70px;">Duration(Days)</span></td><td>Status</td>
+                        <td colspan="2"><span class="mandatory" >* </span>Place</td>
+                        <td><span class="mandatory">* </span>To Date</td>
                      </tr>
                     <tr >    
-                        <td colspan="2"><input type="text" name="from" id='from'  style="width:110px;height: 18px;"   > 
-                            </input><input type="text" name="to" id='to'   style="width:110px;height: 18px;margin-left: 10px;"  /><input type="text" name="txtDuration" id="txtDuration" style="width: 50px;margin-left: 10px;" /> </td>
+                        <td colspan="2"><input type="text" name="txtPlace" id="txtPlace" style="width: 400px;" /> </td>
                             <td>
-                                <select name="ddlStatus" id="ddlStatus" style="width:200px;">
-                                    <option value="Awaiting Approval">Awaiting Approval</option>
-                                    <option value="Approved">Approved</option>
-                                    <option value="Rejected">Rejected</option>
-                                    <option value="Cancelled">Cancelled</option>
-                                </select>
+                                <input type="text" name="to" id='to'   style="width:110px;height: 18px;"  />
                             </td>
                     </tr>
+                <tr>
+                    <td colspan="3">Purpose</td>
+                </tr>
+                <tr>
+                    <td colspan="3"><textarea name="txtPurpose" id="txtPurpose" cols="70" ></textarea> </td>
+                </tr>
                     <tr >
-                        <td colspan="3" align="right"><input type="submit" name="btnSave" id="btnSave" value="Save" style="width:100px; border-radius: 12px;" /></td> 
+                        <td colspan="3" align="right">
+                            <input type="submit" name="btnSave" id="btnSave" value="Save" style="width:100px; border-radius: 12px;" />
+                            <input type="hidden" name="txtUpdateID" id="txtUpdateID"  />
+                        </td> 
                     </tr>
-</table>
- 
-        
+                
+                    <tr >
+                        <td colspan="3">
+                            <div class="content_box" style="padding-bottom: 0px;padding-left: 2px;width: 100%;">
+                <div class="card mb-3" style="box-sizing: border-box;">
+        <div class="card-header" style="box-sizing: border-box;background-color: blueviolet;color: #fff;font-size: 14;">
+            <i class="fa fa-table" style="box-sizing: border-box;"></i> Tour History</div>
+        <div class="card-body" style="box-sizing: border-box;">
+          <div class="table-responsive">
+              <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0" style="box-sizing: border-box;color: black;">
+                  <thead style='background-color: blueviolet;height: 30px;'><tr><th>Employee</th><th>From</th><th>To</th><th>Place</th><th>Purpose</th><th /><th /></tr></thead><tbody>
+                                <?php
+                                    $sql = "SELECT tourID,employeeName,A.employeeCode,DATE_FORMAT(startDate,'%m/%d/%Y') as start, "
+                                            . "DATE_FORMAT(endDate,'%m/%d/%Y') as end,place,remarks"
+                                            . " FROM employee_tour A  JOIN employee C "
+                                            . " ON C.employeeCode=A.employeeCode WHERE updatedBy=" . $_SESSION['loggedUserID'] . " ORDER BY DATE(startDate) DESC";
+                                    $result = mysqli_query($conn,$sql);
+                                    if(mysqli_num_rows($result) > 0)
+                                    {                                               
+                                        while ($row = mysqli_fetch_array($result)) {
+                                            echo "<tr><td>".$row['employeeName']."</td><td>". $row['start'] .
+                                                    "</td><td>".$row['end']."</td><td >".$row['place']."</td><td>".$row['remarks'].
+                                                    "</td><td><img src='images/edit.png' onclick='edit(this)' style='cursor:pointer;' /><input type='hidden' id = 'txtTourID' value='".$row['tourID']."' /></td> "
+                                                    . "<td><img src='images/erase.png' onclick='deleteTour(".$row['tourID'].")' style='cursor:pointer;' /></tr>";
+                                        }
+                                    }
+                                ?> 
+              </tbody></table></div></div></div></div>     
+                        </td>
+                    </tr>
+            </table>
+               
             </form>
               
         </div>
@@ -260,7 +285,35 @@
 
 </div> <!-- end of wrapper -->
 </div>
-    
+   <?php
+            if(isset($_POST['btnSave'])) {
+                    if($_POST['btnSave'] == 'Save') {
+                        $sql = "INSERT INTO employee_tour(employeeCode,startDate,endDate,place,remarks,updatedBy) VALUES(" .
+                                 $_POST['ddlEmployee']. ",'" . date('Y-m-d',strtotime($_POST['from'])) . "','" . date('Y-m-d',strtotime($_POST['to'])) .
+                                "','" . $_POST['txtPlace'] . "','" . $_POST['txtPurpose'] .
+                                "'," . $_SESSION['loggedUserID'] . ")";
+                        $result = mysqli_query($conn,$sql);
+                        if($result){
+                            echo '<script>alert("Saved successfully!");</script>';
+                            echo '<script>document.location="adminTour.php";</script>';
+                        }
+                        else
+                            echo 'Failed to save!';
+                    }
+                    else {
+                        $sql = "UPDATE employee_tour SET employeeCode=" . $_POST['ddlEmployee'] . ", startDate ='" .
+                             date('Y-m-d',strtotime($_POST['from'])) . "', endDate='" .  date('Y-m-d',strtotime($_POST['to'])). "',place='" . $_POST['txtPlace'].
+                                "',remarks='" . $_POST['txtPurpose'] . "' WHERE tourID=" . $_POST['txtUpdateID'];
+                        $result = mysqli_query($conn,$sql);
+                        if($result){
+                            echo '<script>alert("Updated successfully!");</script>';
+                            echo '<script>document.location="adminTour.php";</script>';
+                        }
+                        else
+                            echo 'Failed to update!';
+                    }
+            }
+                ?>  
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- Core plugin JavaScript-->
     <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
@@ -278,5 +331,42 @@
         
     </div>
 </div>
+    <script type="text/javascript">
+        function edit(e) {
+            var emp = document.getElementById('ddlEmployee');
+            for (var i = 0; i < emp.options.length; i++) {
+                if (emp.options[i].text === e.parentElement.parentElement.cells[0].innerHTML) {
+                    emp.selectedIndex = i;
+                    break;
+                }
+            }
+           
+            document.getElementById('from').value = e.parentElement.parentElement.cells[1].innerHTML;
+            document.getElementById('to').value = e.parentElement.parentElement.cells[2].innerHTML;
+            document.getElementById('txtPlace').value = e.parentElement.parentElement.cells[3].innerHTML;
+            document.getElementById('txtPurpose').value = e.parentElement.parentElement.cells[4].innerHTML;
+            document.getElementById('btnSave').value = "Update";
+            document.getElementById('txtUpdateID').value = e.parentElement.children[1].value;
+        }
+        function deleteTour($id) {
+            if(confirm("Do ypou want to delete this tour?")) {
+              if (window.XMLHttpRequest) {
+                        // code for IE7+, Firefox, Chrome, Opera, Safari
+                        xmlhttp = new XMLHttpRequest();
+                    } else {
+                        // code for IE6, IE5
+                        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+                    }
+                    xmlhttp.onreadystatechange = function() {
+                        if (this.readyState == 4 && this.status == 200) {
+                            alert(this.responseText) ;document.location='adminTour.php';
+                        }
+                    };
+                    xmlhttp.open("GET","delete.php?id="+$id+"&table=tour");
+                    xmlhttp.send();
+               
+        }   
+        }     
+    </script>
     </body>
 </html>

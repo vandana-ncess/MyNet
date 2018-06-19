@@ -12,13 +12,13 @@
         $_SESSION['LAST_ACTIVITY'] = time();   
    }
      $conn = require_once('databaseconnection.php');
-     if($_SESSION['user'] != 'admin') {
-        $sql = "SELECT * FROM fc_privileges where employeeCode=" . $_SESSION['loggedUserID'];
+    if($_SESSION['user'] != 'admin') {
+        $sql = "SELECT * FROM fc_privileges where employeeCode=" . $_SESSION['loggedUserID'] ;
         $result = mysqli_query($conn,$sql);
         if(mysqli_num_rows($result)==0) {
             echo '<script>alert("You are not authorised to view this folder, Kindly contact the System Administrator!");document.location="agenda.php";</script>';
         }
-     }
+    }
     
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -26,8 +26,6 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>NCESS Intranet</title>
-<meta name="keywords" content="free css templates, web design, 2-column, html css" />
-<meta name="description" content="Web Design is a 2-column website template (HTML/CSS) provided by templatemo.com" />
 <link href="templatemo_style.css" rel="stylesheet" type="text/css" />
 <!--////// CHOOSE ONE OF THE 3 PIROBOX STYLES  \\\\\\\-->
 <link href="css_pirobox/white/style.css" media="screen" title="shadow" rel="stylesheet" type="text/css" />
@@ -87,9 +85,10 @@ $(document).ready(function() {
                             }
                             echo '</ul>'; 
                         }
-                    ?>	  	
-            </div>            
+                    ?> 	    	
+            </div>
            
+                  
            
             
             <div class="cleaner"></div>
@@ -99,35 +98,98 @@ $(document).ready(function() {
             <ul class="breadcrumb" style="padding-top: 2px;">
                 <li><a href="index.php">Home</a></li>
                 <li><a href="agenda.php">Committees</a></li>
-                <li><a href="fcCommittee.php">FC Members</a></li>
                 <li>Finance Committee</li>
             </ul>
-        	<table>
-                <tr>
-                    <td>
-                    <div  style="width:400px;padding-left: 50px;">  
-                    <?php
-                            $year = date('Y');
-                            echo '<table>';
-                            for($i=0;$i<5;$i++){
-                                echo '<tr><td>';
-                                echo '<a href="fcdocuments.php?year='. $year . '"><img class="image_wrapper image_fl" src="images/normal_folder.ico" alt="Image 1" /><h5>' . $year . '</h5></a>  </td></tr>';
-                                $year--;
-                            }
-                            echo '</table>';
-                        
-                    ?>
-                         </div>
-               </td>
-                    <td valign="top">
-                        <div class="sidebar_box" style="float: right;padding-top: 20px;width: 240px;vertical-align: top;">
-                            <input type="button" onchange="" value="View Archives" />
-                        
-            </div>
+            <a href="fc.php" style="float: right;padding-top: 10px;padding-right: 5px;font-size: 14px;">Agendas & Minutes</a>
+            <div style="background-color: white;">
+                <h3 style="padding-top: 20px;margin-bottom: 5px;padding-left: 20px;">Finance Committee Members</h3>
+                <table cellpadding="5" cellspacing="20">
+                <tbody>
+                    <tr>
+                        <td>
+                            <b>Additional Secretary & Financial Adviser /
+Joint Secretary &<br /> Financial Adviser</b><br />
+Ministry of Earth Sciences, <br />
+Prithvi Bhavan, Lodhi Road, New Delhi-110 003, India
                         </td>
-                </tr>
+                        <td>
+                            Chairman
+(Ex-Officio)
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td>
+                            <b>Additional Secretary / Joint Secretary </b><br />
+Ministry of Earth Sciences, <br />
+Prithvi Bhavan, Lodhi Road, New Delhi-110 003, India
+                        </td>
+                        <td>
+                            Member
+(Ex-Officio)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Programme Head (NCESS) </b><br />
+Ministry of Earth Sciences, <br />
+Prithvi Bhavan, Lodhi Road, New Delhi-110 003, India
+
+                        </td>
+                        <td>
+                            Member
+(Ex-Officio)
+                        </td>
+                    </tr>
+                   
+                    <tr>
+                        <td>
+                            <b>Director (Finance) / Deputy Secretary (Finance) </b><br />
+Ministry of Earth Sciences, <br />
+Prithvi Bhavan, Lodhi Road, New Delhi-110 003, India
+                        </td>
+                        <td>
+                            Member
+(Ex-Officio)
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td>
+                            <b>Director</b><br />
+National Centre for Earth Science Studies (NCESS),<br />
+Akkulam, Thiruvanathapuram,Kerala-695011, India
+                        </td>
+                        <td>
+                            Member
+(Ex-Officio)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Senior Manager</b><br />
+National Centre for Earth Science Studies (NCESS),<br />
+Akkulam, Thiruvanathapuram,Kerala-695011, India
+                        </td>
+                        <td>
+                            Member
+(Ex-Officio)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Finance Officer / Accounts Officer</b><br />
+National Centre for Earth Science Studies (NCESS),<br />
+Akkulam, Thiruvanathapuram,Kerala-695011, India
+                        </td>
+                        <td>
+                            Member
+(Ex-Officio)
+                        </td>
+                    </tr>
+                </tbody>
             </table>
-         
+            </div>
         </div>
         
         <div class="cleaner"></div>    
@@ -138,10 +200,30 @@ $(document).ready(function() {
 
 </div> <!-- end of wrapper -->
 </div>
-
+<script type="text/javascript">
+        function loadDocuments()
+        {
+            $str = document.getElementById('txtSearch').value;
+            if (window.XMLHttpRequest) {
+            // code for IE7+, Firefox, Chrome, Opera, Safari
+                xmlhttp = new XMLHttpRequest();
+            } else {
+            // code for IE6, IE5
+                xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+            }
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("tblDocument").innerHTML = this.responseText ;
+                    alert(this.responseText);
+                }
+            };
+            xmlhttp.open("GET","getDocuments.php?type=rac&str="+$str);
+            xmlhttp.send();
+        }
+    </script>
 <div id="templatemo_footer_wrapper">
 	<div id="templatemo_footer">
-       Copyright © 2018 <a href="#">NCESS</a> | Contact Us : adm@ncess.gov.in | Ext : 1669 
+        Copyright © 2018 <a href="#">NCESS</a> | Contact Us : adm@ncess.gov.in | Ext : 1669 
         
     </div>
 </div>

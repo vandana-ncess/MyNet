@@ -97,23 +97,21 @@ $(document).ready(function() {
             	<a href="circulars.php" target="_parent"><h5>OMs/Circulars</h5><img class="image_wrapper image_fl" src="images/om.ico" alt="Image 1" /></a>
                 
                 
-                </div><div style='float: right;width:300px;' >
-                    <a href="agenda.php"  target="_parent"><h5>Agenda & Minutes</h5><img class="image_wrapper image_fl" src="images/minutes.ico" alt="Image 1" /></a>
-                
-                
                 </div>
+               <div style='float: right;width:300px;'>
+            	<a href="rti.php" target="_parent"> <h5>RTIs</h5><img class="image_wrapper image_fl" src="images/rti.png" alt="Image 1" /></a>
+               
+                
+                
+              </div>  
+               
           </div>
             <div class="content_box" style="padding-bottom: 180px;padding-top: 50px;">
                 <div style='float: left;width:300px;'>
             	<a href="courtorder.php"><h5>Court Order</h5><img class="image_wrapper image_fl" src="images/law.ico" alt="Image 1" /></a>
                 
                
-              </div><div style='float: right;width:300px;'>
-            	<a href="rti.php" target="_parent"> <h5>RTIs</h5><img class="image_wrapper image_fl" src="images/rti.png" alt="Image 1" /></a>
-               
-                
-                
-              </div>  
+              </div>
           </div>
             
             

@@ -92,25 +92,21 @@ $(document).ready(function() {
         </div> <!-- end of sidebar -->
         
         <div id="templatemo_content">
-            <ul class="breadcrumb" style="padding-top: 2px;">
-                <li><a href="index.php">Home</a></li>
-                <li><a href="documents.php">Documents</a></li>
-                <li>Agenda & Minutes</li>
-            </ul>
+           
         	<div class="content_box" style="padding-bottom: 180px;padding-top: 50px;">
                 <div style='float: left;width:300px;'>
-            	<a href="gc.php" target="_parent"><h5>Governing Council</h5><img class="image_wrapper image_fl" src="images/gc.ico" alt="Image 1" /></a>
+                    <a href="gcCommittee.php" target="_parent"><h5>Governing Council</h5><img class="image_wrapper image_fl" src="images/gc.ico" alt="Image 1" /></a>
                 
                 
                 </div><div style='float: left;width:300px;'>
-            	<a href="rac.php" target="_parent"><h5>Research Advisory Council</h5><img class="image_wrapper image_fl" src="images/rac.ico" alt="Image 1" /></a>
+            	<a href="racCommittee.php" target="_parent"><h5>Research Advisory Council</h5><img class="image_wrapper image_fl" src="images/rac.ico" alt="Image 1" /></a>
                 
                 
                 </div>
           </div>
             <div class="content_box" style="padding-bottom: 180px;padding-top: 50px;">
                 <div style='float: left;width:300px;'>
-            	<a href="fc.php" target="_parent"><h5>Finance Committee</h5><img class="image_wrapper image_fl" src="images/fc.ico" alt="Image 1" /></a>
+            	<a href="fcCommittee.php" target="_parent"><h5>Finance Committee</h5><img class="image_wrapper image_fl" src="images/fc.ico" alt="Image 1" /></a>
                 
                 
                 </div><div style='float: left;width:300px;'>

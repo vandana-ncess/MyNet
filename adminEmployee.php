@@ -18,8 +18,6 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>NCESS Intranet</title>
-<meta name="keywords" content="free css templates, web design, 2-column, html css" />
-<meta name="description" content="Web Design is a 2-column website template (HTML/CSS) provided by templatemo.com" />
 <link href="templatemo_style.css" rel="stylesheet" type="text/css" />
 <!--////// CHOOSE ONE OF THE 3 PIROBOX STYLES  \\\\\\\-->
 <link href="css_pirobox/white/style.css" media="screen" title="shadow" rel="stylesheet" type="text/css" />

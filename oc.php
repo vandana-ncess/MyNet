@@ -89,8 +89,7 @@ $(document).ready(function() {
         <div id="templatemo_content">
             <ul class="breadcrumb" style="padding-top: 2px;">
                 <li><a href="index.php">Home</a></li>
-                <li><a href="documents.php">Documents</a></li>
-                <li><a href="agenda.php">Agenda & Minutes</a></li>
+                <li><a href="agenda.php">Committees</a></li>
                 <li>Internal Committees</li>
             </ul>
         <div class="content_box" style="padding-bottom: 10px;padding-top: 10px;">
@@ -139,8 +138,8 @@ $(document).ready(function() {
                     if(mysqli_num_rows($result)) {
                         $i=1;echo "<tr>";
                         while ($row = mysqli_fetch_array($result)) {
-                            echo '<td><a href="ocdocuments.php?grp=' . $row['committeeID'] . '" target="_parent"><img class="image_wrapper image_fl" src="images/normal_folder.ico" alt="Image 1" /> <h5>' . $row['committeeName'] . ' </h5></a></td>';
-                            if($i%3==0)
+                            echo '<td><a href="ocCommittee.php?grp=' . $row['committeeID'] . '" target="_parent"><img class="image_wrapper image_fl" src="images/normal_folder.ico" alt="Image 1" /> <h5>' . $row['committeeName'] . ' </h5></a></td>';
+                            if($i%2==0)
                                 echo "</tr><tr>";
                             $i++;
                         }

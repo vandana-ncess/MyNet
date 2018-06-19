@@ -9,7 +9,7 @@ $start = $_SESSION['start'];
 $end = $_SESSION['end'];
 $pdf = new FPDF( );
 $title1='';
-if($report == 'attendance' || $report == 'late') {
+if($report == 'attendance' || $report == 'late' || $report == 'leave') {
     $len = 280;
     $pdf->AddPage('L');
     $head_font=18;
@@ -30,23 +30,23 @@ if($mode == 'single') {
         case 'leave':
             $title='Leave Register Report';
             $sql1 = "SELECT MAX(lastUpdated) as last FROM employee_leave";
-            $sql = "SELECT employeeName,designation, leaveType, DATE_FORMAT(startDate,'%d-%m-%Y'),DATE_FORMAT(endDate,'%d-%m-%Y') FROM employee_leave A  JOIN employee C on A.employeeCode =C.employeeCode JOIN designation E ON C.designationID = E.designationID JOIN leave_type B ON A.leaveTypeID = B.leaveTypeID WHERE '" . $date . "' "
-                    . "BETWEEN startDate AND endDate";
-            $col = array('Name','Designation','Leave Type','From','To');
-            $smallTable = array(50,50,45,23,23);
+            $sql = "SELECT employeeName,designation, leaveType, DATE_FORMAT(startDate,'%d-%m-%Y'),DATE_FORMAT(endDate,'%d-%m-%Y'),leaveStatus FROM employee_leave A  JOIN employee C on A.employeeCode =C.employeeCode JOIN designation E ON C.designationID = E.designationID JOIN leave_type B ON A.leaveTypeID = B.leaveTypeID WHERE '" . $date . "' "
+                    . "BETWEEN startDate AND endDate ORDER BY level";
+            $col = array('Name','Designation','Leave Type','From','To','Status');
+            $smallTable = array(60,55,50,30,30,55);
             break;
         case 'tour':
             $title='Tour Register Report';
             $sql1="SELECT MAX(lastUpdated) as last FROM employee_tour";
             $sql = "SELECT employeeName,designation, place, DATE_FORMAT(startDate,'%d-%m-%Y'),DATE_FORMAT(endDate,'%d-%m-%Y'),remarks FROM employee_tour A  JOIN employee C on A.employeeCode =C.employeeCode JOIN designation E ON C.designationID = E.designationID WHERE '" . $date . "'"
-                    . "BETWEEN startDate AND endDate";
+                    . "BETWEEN startDate AND endDate ORDER BY level";
             $col = array('Name','Designation','Place','From','To','Purpose');    
             $smallTable = array(40,40,40,23,23,30);
             break;
         case 'attendance':
             $title='Attendance Register Report';
             $sql1 = "SELECT MAX(lastUpdated) as last FROM employee_attendance";
-            $sql = "SELECT employeeName, divisionName,designation,intime,outtime FROM employee_attendance A  JOIN employee C on A.employeeID =C.employeeID JOIN division D ON C.divisionID=D.divisionID JOIN designation E ON C.designationID = E.designationID WHERE date = '" . $date . "' AND status ='P' ORDER BY C.categoryID,level " ;
+            $sql = "SELECT employeeName, divisionName,designation,intime,outtime FROM employee_attendance A  JOIN employee C on A.employeeID =C.employeeID JOIN division D ON C.divisionID=D.divisionID JOIN designation E ON C.designationID = E.designationID WHERE date = '" . $date . "' AND intime<>'' ORDER BY C.categoryID,level " ;
             $col = array('Name','Division','Designation','Time In','Time Out');    
             $smallTable = array(75,107,53,21,21);
             break;
@@ -55,7 +55,7 @@ if($mode == 'single') {
             $sql1 = "SELECT MAX(lastUpdated) as last FROM employee_attendance";
             $sql = "SELECT employeeName,divisionName,designation FROM employee_attendance A JOIN employee B on A.employeeID =B.employeeID JOIN designation E ON B.designationID = E.designationID "
                     . "JOIN division F ON B.divisionID=F.divisionID LEFT JOIN employee_leave C ON "
-                    . "B.employeeCode = C.employeeCode AND A.date BETWEEN startDate AND endDate WHERE A.status = 'A' AND leaveTypeID IS NULL AND A.date = '" . $date ."' ORDER BY B.categoryID,level";
+                    . "B.employeeCode = C.employeeCode AND A.date BETWEEN startDate AND endDate WHERE A.status = 'A' AND leaveTypeID IS NULL AND A.date = '" . $date ."' AND employeeSTatus=1 ORDER BY B.categoryID,level";
             $col = array('Name','Division','Designation'); 
             $smallTable = array(50,85,60);
             break; 

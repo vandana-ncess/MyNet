@@ -227,7 +227,7 @@ $(document).ready(function() {
                         <td >Division</td><td style="padding-left: 10px;" colspan="3"><input type="hidden" name="txtDiv" id='txtDiv' /><select id="ddlDivision" name="ddlDivision" onchange="loadEmployee()" style="width: 500px;">
                                 <option value="-1">All</option>
                             <?php
-                                $sql = "SELECT divisionID,divisionName FROM division WHERE divisionStatus=1";
+                                $sql = "SELECT divisionID,divisionName FROM division WHERE divisionStatus=1 AND divisionName<>''";
                                 $result = mysqli_query($conn,$sql);
                                 if(mysqli_num_rows($result) > 0)
                                 {

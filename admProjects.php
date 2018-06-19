@@ -103,7 +103,7 @@ $(document).ready(function() {
                     <td>
                         <select name="ddlType"  style="width:200px;">
                             <option value="plan"> Plan Projects</option>
-                            <option value="external">Extenal Funded Projects</option>
+                            <option value="external">External Funded Projects</option>
                         </select>
                     </td>
                     <td style="padding-left: 10px;">Project Area</td><td>

@@ -30,6 +30,9 @@
     case 'esf':
         $sql = "UPDATE esf SET status=0 WHERE id=" . $id;
         break;
+    case 'tour':
+        $sql = "DELETE FROM employee_tour WHERE tourID=" . $id;
+        break;
     default:
         break;
 }

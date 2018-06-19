@@ -105,8 +105,7 @@ $(document).ready(function() {
         <div id="templatemo_content">
             <ul class="breadcrumb" style="padding-top: 2px;">
                 <li><a href="index.php">Home</a></li>
-                <li><a href="documents.php">Documents</a></li>
-                <li><a href="agenda.php">Agenda & Minutes</a></li>
+                <li><a href="agenda.php">Committees</a></li>
                 <li><a href="oc.php">Internal Committee</a></li>
                 <li><?php echo $row['committeeName']; ?></li>
             </ul>

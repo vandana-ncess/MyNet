@@ -379,21 +379,22 @@ button:hover {
             	<a href="employees.php" target="_parent"><img class="image_wrapper image_fl" src="images/employee.ico" alt="Image 1" />
                 <h5>Staff Details</h5></a>
                 <p>Get Full details of NCESS Staffs here.</p>
-                </div><div style='float: right;width:300px;'>
-            	<a href="announcements.php" target="_parent"><img class="image_wrapper image_fl" src="images/notice_board.ico" alt="Image 1" />
-                <h5>Notice Board</h5></a>
-                <p>All current announcements are available here.</p>
-              </div>
-          </div>
-            <div class="content_box" style="height:20px;">
-               <div style='float: left;width:290px;'>
+                </div><div style='float: right;width:290px;'>
             	<a href="attendance.php"><img class="image_wrapper image_fl" src="images/attendance.ico" alt="Image 1" />
                 <h5>Staff Attendance</h5></a>
                 <p>Get Staff attendance details here. </p>
-              </div><div style='float: left;width:320px;'>
+              </div>
+          </div>
+            <div class="content_box" style="height:20px;">
+                <div style='float: left;width:300px;'>
+                    <a href="agenda.php" target="_parent"><img class="image_wrapper image_fl" src="images/group_128.ico" alt="Image 1" style="margin-right: 15px;" />
+                <h5>Committees</h5></a>
+                    <p >Details of various committees are available here.</p>
+                </div>
+               <div style='float: right;width:300px;'>
                     <a href="documents.php" target="_parent"><img class="image_wrapper image_fl" src="images/folder1.ico" alt="Image 1" />
                 <h5>Documents</h5></a>
-                <p>Get different documents like various requisition forms, circulars, Minutes & Agendas here.</p>
+                <p>Get different documents like various requisition forms, circulars, etc. here.</p>
                 </div>
               
           </div>
@@ -435,10 +436,11 @@ button:hover {
           </div>
              <div class="content_box">
                  <div style='float: left;width:300px;'>
-            	<a href="profile.php" target="_parent"><img class="image_wrapper image_fl" src="images/profile.ico" alt="Image 1" />
-                <h5>Profile Updations</h5></a>
-                <p>View & update your profile and research publications here.</p>
+            	<a href="announcements.php" target="_parent"><img class="image_wrapper image_fl" src="images/notice_board.ico" alt="Image 1" />
+                <h5>Notice Board</h5></a>
+                <p>All current announcements are available here.</p>
               </div>
+                
                  <div style='float: right;width:300px;'>
             	<a href="reports.php" target="_parent"><img class="image_wrapper image_fl" src="images/report.ico" alt="Image 1" />
                 <h5>Reports</h5></a>
@@ -453,23 +455,24 @@ button:hover {
                     <a href="email.php" target="_blank"><img class="image_wrapper image_fl" src="images/address.ico" alt="Image 1" />
                         <h5 >Email Address Book</h5></a>
                 <p>Email IDs of all employees</p>
-                </div>
-                <div style='float: right;width:300px;'>
-            	<a href="http://ncess.gov.in/notifications/awards.html" target="_blank"><img class="image_wrapper image_fl" src="images/medal.ico" alt="Image 1" />
-                <h5>Awards</h5></a>
-                <p>All recent awards are available here</p>
+                </div> <div style='float: right;width:300px;'>
+                    <a href="directory.php" target="_parent"><img class="image_wrapper image_fl" src="images/directory.ico" alt="Image 1" />
+                <h5>Contact Directory</h5></a>
+                <p>Contact details of all staff are available here</p>
               </div>
+                
             </div>
+            
             <div class="content_box">
                <!-- <div style='float: left;width:300px;'>
                     <a href="http://ncess.gov.in" target="_blank"><img class="image_wrapper image_fl" src="images/logo2.png" alt="Image 1" />
                 <h5>NCESS Website</h5></a>
                 <p>Official Website of NCESS.</p>
                 </div>-->
-                <div style='float: left;width:300px;'>
-                    <a href="directory.php" target="_parent"><img class="image_wrapper image_fl" src="images/directory.ico" alt="Image 1" />
-                <h5>Contact Directory</h5></a>
-                <p>Contact details of all staff are available here</p>
+               <div style='float: right;width:300px;'>
+            	<a href="http://ncess.gov.in/notifications/awards.html" target="_blank"><img class="image_wrapper image_fl" src="images/medal.ico" alt="Image 1" />
+                <h5>Awards</h5></a>
+                <p>All recent awards are available here</p>
               </div>
                 <div style='float: right;width:300px;'>
             	<a href="http://192.168.17.11:8001/" target="_blank"><img class="image_wrapper image_fl" src="images/library.ico" alt="Image 1" />
@@ -479,15 +482,24 @@ button:hover {
                
           </div>
            
-            
-            
+             
              <div class="content_box"  style="height: 20px;">
-                 <div style='float: left;width:300px;padding-bottom: 2px;'>
+                  <div style='float: left;width:300px;'>
+            	<a href="profile.php" target="_parent"><img class="image_wrapper image_fl" src="images/profile.ico" alt="Image 1" />
+                <h5>Profile Updations</h5></a>
+                <p>View & update your profile and research publications here.</p>
+              </div>
+                 <div style='float: right;width:300px;padding-bottom: 2px;'>
                      <a href="discussion.php" target="_parent"><img class="image_wrapper image_fl" src="images/char.ico" alt="Image 1" />
                 <h5>Discussion Forum</h5></a>
                 <p>You can discuss about various topics here.</p>
               </div>
-               <div style='float: right;width:300px;'>
+              
+          </div>
+            
+             <div class="content_box"  style="height: 20px;">
+                
+               <div style='float: left;width:300px;'>
                      <a href="feedback.php" target="_parent"><img class="image_wrapper image_fl" src="images/app.ico" alt="Image 1" />
                 <h5>Feedback</h5></a>
                   <p>Enter your valuable comments / suggestions for improving the   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  NCESS Intranet portal.</p>

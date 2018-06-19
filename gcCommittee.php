@@ -13,7 +13,7 @@
    }
      $conn = require_once('databaseconnection.php');
     if($_SESSION['user'] != 'admin') {
-        $sql = "SELECT * FROM rac_privileges where employeeCode=" . $_SESSION['loggedUserID'] ;
+        $sql = "SELECT * FROM gc_privileges where employeeCode=" . $_SESSION['loggedUserID'] ;
         $result = mysqli_query($conn,$sql);
         if(mysqli_num_rows($result)==0) {
             echo '<script>alert("You are not authorised to view this folder, Kindly contact the System Administrator!");document.location="agenda.php";</script>';
@@ -100,37 +100,143 @@ $(document).ready(function() {
             <ul class="breadcrumb" style="padding-top: 2px;">
                 <li><a href="index.php">Home</a></li>
                 <li><a href="agenda.php">Committees</a></li>
-                <li><a href="racCommittee.php">RAC Members</a></li>
-                <li>Research Advisory Council</li>
+                <li>Governing Council</li>
             </ul>
-                        <div align="right" >Search <input type="text" name="txtSearch" id="txtSearch" /><img src="images/search.ico" style="padding-left: 3px;cursor: pointer;" onclick="loadDocuments()" /></div>
+            <a href="gc.php" style="float: right;padding-top: 10px;padding-right: 5px;font-size: 14px;">Agendas & Minutes</a>
+            <div style="background-color: white;">
+                <h3 style="padding-top: 20px;margin-bottom: 5px;padding-left: 20px;">Governing Council Members</h3>
+                <table cellpadding="5" cellspacing="20">
+                <tbody>
+                    <tr>
+                        <td>
+                            <b>Secretary</b><br />
+Ministry of Earth Sciences, <br />
+Prithvi Bhavan, Lodhi Road, New Delhi-110 003, India
+                        </td>
+                        <td>
+                            Chairman
+(Ex-Officio)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Additional Secretary & Financial Adviser /
+Joint Secretary & Financial Adviser</b><br />
+Ministry of Earth Sciences, <br />
+Prithvi Bhavan, Lodhi Road, New Delhi-110 003, India
+                        </td>
+                        <td>
+                            Member
+(Ex-Officio)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Additional Secretary / Joint Secretary </b><br />
+Ministry of Earth Sciences, <br />
+Prithvi Bhavan, Lodhi Road, New Delhi-110 003, India
+                        </td>
+                        <td>
+                            Member
+(Ex-Officio)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>RAC Chairman</b><br />
 
-            <table>
-                <tr>
-                    <td>
-                    <div  style="width:400px;padding-left: 50px;">                      
-                        <?php
-                            $year = date('Y');
-                            echo '<table>';
-                            for($i=0;$i<5;$i++){
-                                echo '<tr><td>';
-                                echo '<a href="racdocuments.php?year='. $year . '"><img class="image_wrapper image_fl" src="images/normal_folder.ico" alt="Image 1" /><h5>' . $year . '</h5></a>  </td></tr>';
-                                $year--;
-                            }
-                            echo '</table>';
-                         
-                    ?>
-               
-          </div>
-               </td>
-                    <td valign="top">
-                       <div class="sidebar_box" style="float: right;padding-top: 20px;width: 240px;vertical-align: top;">
-                            <input type="button" onchange="" value="View Archives" />
-                        
-                        </div>
-                    </td>
-                </tr>
+                        </td>
+                        <td>
+                            Member
+(Ex-Officio)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Dr. Suresh Das</b><br />
+Executive Vice President(EVP), KSCSTE &<br />
+Principal Secretary, S&T Dept, Govt. of Kerala<br />
+Sasthra Bhavan, Pattom,Thiruvananthapuram 695004, Kerala, India
+                        </td>
+                        <td>
+                            Member
+(Ex-Officio)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Dr. Anil Bhardwaj</b><br />
+Director, PRL, Ahmedabad
+                        </td>
+                        <td>
+                            Member
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Director</b><br />
+NCAOR, Goa
+                        </td>
+                        <td>
+                            Member
+(Ex-Officio)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Dr. Radhika Ramachandran</b><br />
+Director, Space Physics Laboratory,<br />
+ISRO, Thiruvananthapuram
+                        </td>
+                        <td>
+                            Member
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Director</b><br />
+                            NCS <br />
+Ministry of Earth Sciences, <br />
+Prithvi Bhavan, Lodhi Road, New Delhi-110 003, India
+                        </td>
+                        <td>
+                            Member
+(Ex-Officio)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Programme Head (NCESS) </b><br />
+Ministry of Earth Sciences, <br />
+Prithvi Bhavan, Lodhi Road, New Delhi-110 003, India
+                        </td>
+                        <td>
+                            Permanent Invitee
+(Ex-Officio)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Niti Aayog Representative</b><br />
+
+                        </td>
+                        <td>
+                           Invitee
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Director</b><br />
+National Centre for Earth Science Studies (NCESS),<br />
+Akkulam, Thiruvanathapuram,Kerala-695011, India
+                        </td>
+                        <td>
+                            Member Secretary
+                        </td>
+                    </tr>
+                </tbody>
             </table>
+            </div>
         </div>
         
         <div class="cleaner"></div>    
