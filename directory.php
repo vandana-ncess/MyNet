@@ -105,7 +105,7 @@ $(document).ready(function() {
 			</tr>
                         <tr>
                              <td align="right"  class="ht" >CoP Office</td>
-			    <td align="left" bgcolor="#CCCCCC" class="ht" >1714</td>
+			    <td align="left" bgcolor="#CCCCCC" class="ht" >1704</td>
                             <td align="right"  class="ht" >Group Head, CoP</td>
                             <td align="left" bgcolor="#CCCCCC" width="90px" class="ht" >1701</td>
                             <td align="right" >Deputy Group Head,CoP </td>

@@ -9,7 +9,7 @@ $start = $_SESSION['start'];
 $end = $_SESSION['end'];
 $pdf = new FPDF( );
 $title1='';
-if($report == 'attendance' || $report == 'late' || $report == 'leave') {
+if($report == 'attendance' || $report == 'late' || $report == 'leave' || $report == 'tour') {
     $len = 280;
     $pdf->AddPage('L');
     $head_font=18;
@@ -31,7 +31,7 @@ if($mode == 'single') {
             $title='Leave Register Report';
             $sql1 = "SELECT MAX(lastUpdated) as last FROM employee_leave";
             $sql = "SELECT employeeName,designation, leaveType, DATE_FORMAT(startDate,'%d-%m-%Y'),DATE_FORMAT(endDate,'%d-%m-%Y'),leaveStatus FROM employee_leave A  JOIN employee C on A.employeeCode =C.employeeCode JOIN designation E ON C.designationID = E.designationID JOIN leave_type B ON A.leaveTypeID = B.leaveTypeID WHERE '" . $date . "' "
-                    . "BETWEEN startDate AND endDate ORDER BY level";
+                    . "BETWEEN startDate AND endDate  AND leaveStatus <> 'Cancelled' ORDER BY level";
             $col = array('Name','Designation','Leave Type','From','To','Status');
             $smallTable = array(60,55,50,30,30,55);
             break;
@@ -41,7 +41,7 @@ if($mode == 'single') {
             $sql = "SELECT employeeName,designation, place, DATE_FORMAT(startDate,'%d-%m-%Y'),DATE_FORMAT(endDate,'%d-%m-%Y'),remarks FROM employee_tour A  JOIN employee C on A.employeeCode =C.employeeCode JOIN designation E ON C.designationID = E.designationID WHERE '" . $date . "'"
                     . "BETWEEN startDate AND endDate ORDER BY level";
             $col = array('Name','Designation','Place','From','To','Purpose');    
-            $smallTable = array(40,40,40,23,23,30);
+            $smallTable = array(50,45,55,26,26,100);
             break;
         case 'attendance':
             $title='Attendance Register Report';
@@ -251,10 +251,10 @@ elseif($mode=='employee') {
     {
         case 'leave':
             $title='Leave Register Report';
-            $sql = "SELECT leaveType,DATE_FORMAT(startDate,'%d-%m-%Y'),DATE_FORMAT(endDate,'%d-%m-%Y'),duration FROM employee_leave A JOIN leave_type B ON A.leaveTypeID = B.leaveTypeID WHERE ('" . $start . "' "
-                    . " BETWEEN startDate AND endDate OR '" . $end . "' BETWEEN startDate AND endDate OR startDate BETWEEN '" . $start . "' AND '" . $end . "') AND employeeCode = " . $_SESSION['employee'];
-            $col = array('Leave Type','Start Date','End Date','Duration(Days)');
-            $smallTable = array(50,50,50,30);
+            $sql = "SELECT leaveType,DATE_FORMAT(startDate,'%d-%m-%Y'),DATE_FORMAT(endDate,'%d-%m-%Y'),duration,leaveStatus FROM employee_leave A JOIN leave_type B ON A.leaveTypeID = B.leaveTypeID WHERE ('" . $start . "' "
+                    . " BETWEEN startDate AND endDate OR '" . $end . "' BETWEEN startDate AND endDate OR startDate BETWEEN '" . $start . "' AND '" . $end . "')  AND leaveStatus <> 'Cancelled' AND employeeCode = " . $_SESSION['employee'];
+            $col = array('Leave Type','Start Date','End Date','Duration(Days)','Leave Status');
+            $smallTable = array(70,60,60,30,40);
             break;
         case 'tour':
             $title='Tour Register Report';
@@ -334,10 +334,10 @@ else {
         
         case 'leave':
             $title='Leave Register Report';
-            $sql = "SELECT employeeName,designation,leaveType ,DATE_FORMAT(startDate,'%d-%m-%Y'),DATE_FORMAT(endDate,'%d-%m-%Y'),duration FROM employee_leave A JOIN employee emp ON A.employeeCode = emp.employeeCode JOIN designation E ON emp.designationID = E.designationID JOIN leave_type B ON A.leaveTypeID = B.leaveTypeID WHERE ('" . $start . "' "
-                    . " BETWEEN startDate AND endDate OR '" . $end . "' BETWEEN startDate AND endDate OR startDate BETWEEN '" . $start . "' AND '" . $end . "')" . $whr ." ORDER BY employeeName"; ;
-            $col = array('Name','Designation','Leave Type','Start Date','End Date','Duration');
-            $smallTable = array(40,45,40,23,23,20);
+            $sql = "SELECT employeeName,designation,leaveType ,DATE_FORMAT(startDate,'%d-%m-%Y'),DATE_FORMAT(endDate,'%d-%m-%Y'),duration,leaveStatus FROM employee_leave A JOIN employee emp ON A.employeeCode = emp.employeeCode JOIN designation E ON emp.designationID = E.designationID JOIN leave_type B ON A.leaveTypeID = B.leaveTypeID WHERE ('" . $start . "' "
+                    . " BETWEEN startDate AND endDate OR '" . $end . "' BETWEEN startDate AND endDate OR startDate BETWEEN '" . $start . "' AND '" . $end . "')" . $whr ." AND leaveStatus <> 'Cancelled' ORDER BY employeeName"; ;
+            $col = array('Name','Designation','Leave Type','Start Date','End Date','Duration','Leave Status');
+            $smallTable = array(60,50,40,30,30,20,50);
             break;
         case 'tour':
             $title='Tour Register Report';

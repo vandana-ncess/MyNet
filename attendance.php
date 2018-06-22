@@ -42,7 +42,7 @@ if(mysqli_num_rows($result)>0)
     $data = mysqli_fetch_array($result);
     $pre_last=$data['last'];
 }
-$sql = "SELECT COUNT(*) as empNo FROM employee_leave WHERE startDate <= '". $date. "' AND endDate >= '" .$date . "';";
+$sql = "SELECT COUNT(*) as empNo FROM employee_leave WHERE startDate <= '". $date. "' AND endDate >= '" .$date . "'  AND leaveStatus <> 'Cancelled';";
 $result = mysqli_query($conn,$sql);
 if(mysqli_num_rows($result)>0)
 {
@@ -173,7 +173,7 @@ $(document).ready(function() {
                             <td><a <?php echo 'href="rptToday.php?report=attendance&mode=single&date=' . $date . '"'; ?> target="_blank"> View Details <a/></td>
                         </tr>
                         <tr style="background-color:   #F98A9D;">
-                            <td>Employees Absent</td><td><?php echo ($emp_no-($pre_no+$leave_no+$tour_no)); ?></td><td>Last Updated On : <?php echo $pre_last; ?></td>
+                            <td>Employees Absent</td><td><?php echo ($emp_no-$pre_no); ?></td><td>Last Updated On : <?php echo $pre_last; ?></td>
                             <td><a <?php echo 'href="rptToday.php?report=absentee&mode=single&date=' . $date . '"'; ?> target="_blank"> View Details <a/></td>
                         </tr>
                         <tr style="background-color:   #9A95C3;">

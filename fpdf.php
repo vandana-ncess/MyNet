@@ -760,7 +760,7 @@ function FancyTable1($header,$header1,$header2, $data, $size)
 	if($this->CurOrientation == 'P') 
             $this->SetFont('','B',11);
         else
-            $this->SetFont('','B',14);
+            $this->SetFont('','B',11);
 	// Header
 	//$w = array(40, 30, 40);
 	//foreach($header as $col)

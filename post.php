@@ -54,7 +54,7 @@ $(document).ready(function() {
 <div id="templatemo_wrapper">
    
 	<div id="tempaltemo_header">
-            <?php if(isset($_SESSION['user'])) { ?><p align="right" style="padding-right: 50px;color:#fff;"><b><?php        echo 'Welcome ' . $_SESSION['user']; ?></b>&nbsp; <a href="logout.php" style="color: #fff;">Logout</a></p>;<?php } ?>
+            <?php if(isset($_SESSION['user'])) { ?><p align="right" style="padding-right: 50px;color:#fff;"><b><?php        echo 'Welcome ' . $_SESSION['user']; ?></b>&nbsp; <a href="adminlogout.php" style="color: #fff;">Logout</a></p>;<?php } ?>
     	<span id="header_icon"></span>
     	<div id="header_content">
         	<div id="site_title">
@@ -62,7 +62,7 @@ $(document).ready(function() {
            
 		 
 		</div>
-    </div> <!-- end of header -->
+    </div><!-- end of header -->
     
     <div id="templatemo_main_top"></div>
     <div id="templatemo_main"><span id="main_top"  style="height: 164px;"></span><span id="main_bottom" style="height: 164px;"></span>

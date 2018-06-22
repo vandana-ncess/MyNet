@@ -134,7 +134,7 @@
 <div id="templatemo_wrapper">
    
 	<div id="tempaltemo_header">
-            <?php if(isset($_SESSION['user'])) { ?><p align="right" style="padding-right: 50px;color:#fff;"><b><?php        echo 'Welcome ' . $_SESSION['user']; ?></b>&nbsp; <a href="logout.php" style="color: #fff;">Logout</a></p>;<?php } ?>
+            <?php if(isset($_SESSION['user'])) { ?><p align="right" style="padding-right: 50px;color:#fff;"><b><?php        echo 'Welcome ' . $_SESSION['user']; ?></b>&nbsp; <a href="adminlogout.php" style="color: #fff;">Logout</a></p>;<?php } ?>
     	<span id="header_icon"></span>
     	<div id="header_content">
         	<div id="site_title">
@@ -216,7 +216,7 @@
                         <td colspan="2" ><select id="ddlEmployee" name="ddlEmployee" style="width: 400px;"  ><option value="0"></option>
 
                             </select></td>
-                        <td><select name="ddlLeave" id="ddlLeave" style="width: 200px;">
+                        <td><select name="ddlLeave" id="ddlLeave" style="width: 200px;" onchange="setDuration()">
                              <?php
                                     $sql = "SELECT leaveTypeID,leaveType FROM leave_type WHERE status=1";
                                     $result = mysqli_query($conn,$sql);
@@ -234,7 +234,8 @@
                      </tr>
                     <tr >    
                         <td colspan="2"><input type="text" name="from" id='from'  style="width:110px;height: 18px;"   > 
-                            </input><input type="text" name="to" id='to'   style="width:110px;height: 18px;margin-left: 10px;"  /><input type="text" name="txtDuration" id="txtDuration" style="width: 50px;margin-left: 10px;" /> </td>
+                            </input><input type="text" name="to" id='to'   style="width:110px;height: 18px;margin-left: 10px;"  />
+                            <span class="mandatory">* </span><input type="text" name="txtDuration" id="txtDuration" required style="width: 50px;margin-left: 10px;" /> </td>
                             <td>
                                 <select name="ddlStatus" id="ddlStatus" style="width:200px;">
                                     <option value="Awaiting Approval">Awaiting Approval</option>
@@ -363,6 +364,12 @@
             document.getElementById('txtDuration').value = e.parentElement.parentElement.cells[4].innerHTML;
             document.getElementById('btnSave').value = "Update";
             document.getElementById('txtUpdateID').value = e.parentElement.children[1].value;
+        }
+        function setDuration() {
+            if(document.getElementById('ddlLeave').value == 9)
+                document.getElementById('txtDuration').value=0.5;
+            else
+                document.getElementById('txtDuration').value='';
         }
     </script>
     </body>

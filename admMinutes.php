@@ -54,11 +54,11 @@ $(document).ready(function() {
 <div id="templatemo_wrapper">
    
 	<div id="tempaltemo_header">
-            <?php if(isset($_SESSION['user'])) { ?><p align="right" style="padding-right: 50px;color:#fff;"><b><?php        echo 'Welcome ' . $_SESSION['user']; ?></b>&nbsp; <a href="logout.php" style="color: #fff;">Logout</a></p>;<?php } ?>
+            <?php if(isset($_SESSION['user'])) { ?><p align="right" style="padding-right: 50px;color:#fff;"><b><?php        echo 'Welcome ' . $_SESSION['user']; ?></b>&nbsp; <a href="adminlogout.php" style="color: #fff;">Logout</a></p>;<?php } ?>
     	<span id="header_icon"></span>
     	<div id="header_content">
         	<div id="site_title">
-				    <p>Welcome to NCESS Family</p>         </div>
+				    <p>Welcome to NCESS Intranet</p>         </div>
            
 		 
 		</div>
