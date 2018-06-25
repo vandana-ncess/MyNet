@@ -98,7 +98,8 @@ $(document).ready(function() {
         	<div class="content_box" style="height : 550px; overflow-x:   scroll;overflow-y: auto;" id="search">
                     <?php
                         $last = "";
-                        $sql = "SELECT A.*,designation,divisionName FROM employee A JOIN designation B ON A.designationID=B.designationID JOIN division C ON A.divisionID = C.divisionID where A.categoryID=5 AND A.designationID<>23 ORDER BY divisionID,level";
+                        $sql = "SELECT A.*,designation,divisionName FROM employee A JOIN designation B ON A.designationID=B.designationID JOIN division C "
+                                . "ON A.divisionID = C.divisionID where A.categoryID=5 AND A.designationID<>23 AND employeeStatus=1 ORDER BY divisionID,level";
                         $result = mysqli_query($conn,$sql);
                         $i=1;
                         if(mysqli_num_rows($result)>0) {

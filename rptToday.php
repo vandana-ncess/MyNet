@@ -41,7 +41,7 @@ if($mode == 'single') {
             $sql = "SELECT employeeName,designation, place, DATE_FORMAT(startDate,'%d-%m-%Y'),DATE_FORMAT(endDate,'%d-%m-%Y'),remarks FROM employee_tour A  JOIN employee C on A.employeeCode =C.employeeCode JOIN designation E ON C.designationID = E.designationID WHERE '" . $date . "'"
                     . "BETWEEN startDate AND endDate ORDER BY level";
             $col = array('Name','Designation','Place','From','To','Purpose');    
-            $smallTable = array(50,45,55,26,26,100);
+            $smallTable = array(50,45,50,30,30,80);
             break;
         case 'attendance':
             $title='Attendance Register Report';
@@ -55,7 +55,8 @@ if($mode == 'single') {
             $sql1 = "SELECT MAX(lastUpdated) as last FROM employee_attendance";
             $sql = "SELECT employeeName,divisionName,designation FROM employee_attendance A JOIN employee B on A.employeeID =B.employeeID JOIN designation E ON B.designationID = E.designationID "
                     . "JOIN division F ON B.divisionID=F.divisionID LEFT JOIN employee_leave C ON "
-                    . "B.employeeCode = C.employeeCode AND A.date BETWEEN startDate AND endDate WHERE A.status = 'A' AND leaveTypeID IS NULL AND A.date = '" . $date ."' AND employeeSTatus=1 ORDER BY B.categoryID,level";
+                    . "B.employeeCode = C.employeeCode AND A.date BETWEEN C.startDate AND C.endDate LEFT JOIN employee_tour D ON "
+                    . "B.employeeCode = D.employeeCode AND A.date BETWEEN D.startDate AND D.endDate WHERE A.status = 'A' AND leaveTypeID IS NULL AND place IS NULL AND  A.date = '" . $date ."' AND employeeSTatus=1 ORDER BY B.categoryID,level";
             $col = array('Name','Division','Designation'); 
             $smallTable = array(50,85,60);
             break; 
@@ -65,7 +66,7 @@ if($mode == 'single') {
             $sql = "SELECT employeeName,divisionName,designation,intime FROM employee B JOIN employee_attendance A on A.employeeID =B.employeeID JOIN designation E ON B.designationID = E.designationID "
                     . "JOIN division F ON B.divisionID=F.divisionID WHERE TIME_FORMAT(intime,'%H:%i:%s')>TIME_FORMAT('09:01:01','%H:%i:%s')  AND A.status<>'H' AND A.date = '" . $date ."' ORDER BY TIME_FORMAT(intime,'%H:%i:%s') desc";
             $col = array('Name','Division','Designation',"In Time"); 
-            $smallTable = array(75,115,55,30);
+            $smallTable = array(75,108,55,23);
             break; 
         case 'early':
             $title='Early Goers Report';
@@ -118,7 +119,10 @@ if($mode == 'single') {
     //$pdf->Cell(0,5, "Employee ID :   " . $_SESSION['empID'] . "   Report From  :  " . $_SESSION['fromDate']. "   To  :  " . $_SESSION['toDate'],0,1,'L',true);
     $pdf->Ln();
     //$col = array('Date','In Time','Out Time','Leave','Tour','Gate Register');
-    $pdf->FancyTable($col,$result,$smallTable);
+    if($report == 'tour') 
+        $pdf->FTable($col,$result,$smallTable);
+    else 
+         $pdf->FancyTable($col,$result,$smallTable);
     $pdf->Ln(1);
 
     $pdf->Output();
@@ -362,13 +366,13 @@ else {
         case 'absentee':
            $title='Absentee Report';
             $title1 = "(List Employees who were absent on this period and have not applied Leave or Tour)";
-            $sql = "SELECT employeeName,designation,DATE_FORMAT(A.date,'%d-%m-%Y'),IFNULL(TIME_FORMAT(A.outtime,'%H:%i:%s')-TIME_FORMAT(A.intime,'%H:%i:%s'),0) as duration FROM employee_attendance A JOIN employee emp on A.employeeID =emp.employeeID "
+            $sql = "SELECT employeeName,designation,DATE_FORMAT(A.date,'%d-%m-%Y') FROM employee_attendance A JOIN employee emp on A.employeeID =emp.employeeID "
                     . "JOIN designation E ON emp.designationID = E.designationID  LEFT JOIN employee_leave C ON "
                     . "emp.employeeCode = C.employeeCode AND A.date BETWEEN C.startDate AND C.endDate LEFT JOIN employee_tour D ON "
                     . "emp.employeeCode = D.employeeCode AND A.date BETWEEN D.startDate AND D.endDate WHERE A.date BETWEEN '" . $start . "' AND '" . $end . "' " 
                     . $whr . " AND (A.status = 'A' OR (TIME_FORMAT(A.outtime,'%H:%i:%s')-TIME_FORMAT(A.intime,'%H:%i:%s') < 5)) AND leaveTypeID IS NULL AND place IS NULL ORDER BY emp.categoryID,level,employeeName,date";
-            $col = array('Name','Designation','Date','Duration'); 
-            $smallTable = array(60,70,25,20);
+            $col = array('Name','Designation','Date'); 
+            $smallTable = array(60,70,25);
             break; 
        
         
@@ -407,8 +411,10 @@ $pdf->Ln(2);
 
     //$pdf->Cell(0,5, "Employee ID :   " . $_SESSION['empID'] . "   Report From  :  " . $_SESSION['fromDate']. "   To  :  " . $_SESSION['toDate'],0,1,'L',true);
     $pdf->Ln();
-    //$col = array('Date','In Time','Out Time','Leave','Tour','Gate Register');
-    $pdf->FancyTable($col,$result,$smallTable);
+    if($report == 'tour')
+        $pdf->FTable($col,$result,$smallTable);
+    else
+        $pdf->FancyTable($col,$result,$smallTable);
     $pdf->Ln(1);
 
     $pdf->Output();

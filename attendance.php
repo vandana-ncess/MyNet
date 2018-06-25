@@ -173,7 +173,7 @@ $(document).ready(function() {
                             <td><a <?php echo 'href="rptToday.php?report=attendance&mode=single&date=' . $date . '"'; ?> target="_blank"> View Details <a/></td>
                         </tr>
                         <tr style="background-color:   #F98A9D;">
-                            <td>Employees Absent</td><td><?php echo ($emp_no-$pre_no); ?></td><td>Last Updated On : <?php echo $pre_last; ?></td>
+                            <td>Employees Absent</td><td><?php echo ($emp_no-($tour_no+$pre_no+$leave_no)); ?></td><td>Last Updated On : <?php echo $pre_last; ?></td>
                             <td><a <?php echo 'href="rptToday.php?report=absentee&mode=single&date=' . $date . '"'; ?> target="_blank"> View Details <a/></td>
                         </tr>
                         <tr style="background-color:   #9A95C3;">

@@ -431,7 +431,7 @@ button:hover {
                <div style='float: right;width:300px;'>
                    <a href="eGovernance.php" target="_blank"><img class="image_wrapper image_fl" src="images/eoffice.jpg" alt="Image 1" />
                 <h5>e-Governance</h5></a>
-                <p>NCESS s-Governance activities</p>
+                <p>NCESS e-Governance activities</p>
                 </div>
           </div>
              <div class="content_box">

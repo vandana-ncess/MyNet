@@ -30,7 +30,7 @@
   $( function() {
     var currentDate = new Date();  
     
-    var dateFormat = "dd/mm/yy",
+   
       from = $( "#from" )
         .datepicker({
     showOn: "both",
@@ -230,12 +230,12 @@
                             </select> </td>
                     </tr>
                     <tr>
-                        <td colspan="2"><span class="mandatory">* </span>From Date<span class="mandatory" style="padding-left: 70px;">* </span>To Date<span  style="padding-left:80px;">Duration(Days)</span></td><td>Status</td>
+                        <td colspan="2"><span class="mandatory">* </span>From Date<span class="mandatory" style="padding-left: 70px;">* </span>To Date<span  style="padding-left:80px;"> <span class="mandatory">* </span>Duration(Days)</span></td><td>Status</td>
                      </tr>
                     <tr >    
                         <td colspan="2"><input type="text" name="from" id='from'  style="width:110px;height: 18px;"   > 
                             </input><input type="text" name="to" id='to'   style="width:110px;height: 18px;margin-left: 10px;"  />
-                            <span class="mandatory">* </span><input type="text" name="txtDuration" id="txtDuration" required style="width: 50px;margin-left: 10px;" /> </td>
+                           <input type="text" name="txtDuration" id="txtDuration" required style="width: 50px;margin-left: 10px;" /> </td>
                             <td>
                                 <select name="ddlStatus" id="ddlStatus" style="width:200px;">
                                     <option value="Awaiting Approval">Awaiting Approval</option>
@@ -262,7 +262,7 @@
         <div class="card-body" style="box-sizing: border-box;">
           <div class="table-responsive">
               <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0" style="box-sizing: border-box;color: black;">
-                  <thead style='background-color: blueviolet;'><tr><th>Employee</th><th>Leave Type</th><th>From</th><th>To</th><th>Duration</th><th>Status</th><th /></tr></thead><tbody>
+                  <thead style='background-color: blueviolet;'><tr><th>Employee</th><th>Leave Type</th><th>From</th><th>To</th><th>Duration</th><th>Status</th><th /><th /></tr></thead><tbody>
                                 <?php
                                     $sql = "SELECT leaveID,employeeName,A.employeeCode,shortname,DATE_FORMAT(startDate,'%m/%d/%Y') as start, "
                                             . "DATE_FORMAT(endDate,'%m/%d/%Y') as end,A.leaveTypeID,duration,leaveStatus"
@@ -275,7 +275,8 @@
                                             echo "<tr><td>".$row['employeeName']."</td><td>".$row['shortname']."<input type='hidden' id = 'txtLeave' value='".$row['leaveTypeID'].
                                                 "' /></td><td>". $row['start'] .
                                                     "</td><td>".$row['end']."</td><td align='center'>".$row['duration']."</td><td>".$row['leaveStatus'].
-                                                    "</td><td><img src='images/edit.png' onclick='edit(this)' style='cursor:pointer;' /><input type='hidden' id = 'txtLeaveID' value='".$row['leaveID']."' /></td></tr>";
+                                                    "</td><td><img src='images/edit.png' onclick='edit(this)' style='cursor:pointer;' /><input type='hidden' id = 'txtLeaveID' value='".$row['leaveID']."' /></td> "
+                                                    . "<td><img src='images/erase.png' onclick='deleteLeave(".$row['leaveID'].")' style='cursor:pointer;' /></td></tr>";
                                         }
                                     }
                                 ?> 
@@ -371,6 +372,25 @@
             else
                 document.getElementById('txtDuration').value='';
         }
+        function deleteLeave($id) {
+            if(confirm("Do ypou want to delete this leave?")) {
+              if (window.XMLHttpRequest) {
+                        // code for IE7+, Firefox, Chrome, Opera, Safari
+                        xmlhttp = new XMLHttpRequest();
+                    } else {
+                        // code for IE6, IE5
+                        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+                    }
+                    xmlhttp.onreadystatechange = function() {
+                        if (this.readyState == 4 && this.status == 200) {
+                            alert(this.responseText) ;document.location='adminLeave.php';
+                        }
+                    };
+                    xmlhttp.open("GET","delete.php?id="+$id+"&table=leave");
+                    xmlhttp.send();
+               
+        }   
+        }   
     </script>
     </body>
 </html>

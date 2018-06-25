@@ -12,7 +12,7 @@
 	if (!$con) {
             die('Could not connect: ' . mysqli_error($con));
 	}
-	 $sql="SELECT employeeCode,employeeName,privilegeID FROM employee A JOIN adminmenu_privileges B ON A.employeeCode=B.users WHERE menuID=" . $menuID;
+	 $sql="SELECT employeeCode,employeeName,privilegeID FROM employee A JOIN adminmenu_privileges B ON A.employeeCode=B.users WHERE status=1 AND menuID=" . $menuID;
          $result = mysqli_query($con,$sql);
 	 if(mysqli_num_rows($result)>0) {
              echo '<table id="tblUsers" width="100%"><thead><tr bgcolor="#424066" height="30px" style="color:white;"><th>Emp Code</th><th style="float:left;padding-top:5px;padding-left:5px;">Employee Name</th><th /></tr></thead><tbody>';

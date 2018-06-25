@@ -98,7 +98,8 @@ $(document).ready(function() {
             <div align="right"><input type="text" name="txtSearch" id="txtSearch" class="search" style="width:200px;height: 23px;padding: 0px 10px 0px 20px;margin: 5px 5px;" /><img src="images/search.ico" style="cursor: pointer;" onclick="search()" /> </div>   
         	<div class="content_box" style="height : 550px; overflow-x:   scroll;overflow-y: auto;" id="search">
                     <?php
-                        $sql = "SELECT *,designation FROM employee A JOIN designation B ON A.designationID=B.designationID WHERE A.categoryID=6 AND employeeStatus=1 ORDER BY  divisionID,joining_date";
+                        $sql = "SELECT *,designation FROM employee A JOIN designation B ON A.designationID=B.designationID WHERE A.categoryID=6 AND "
+                                . "employeeStatus=1 ORDER BY  divisionID,joining_date";
                         $result = mysqli_query($conn,$sql);
                         $i=1;
                         if(mysqli_num_rows($result)>0) {

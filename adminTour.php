@@ -264,7 +264,7 @@
                                             echo "<tr><td>".$row['employeeName']."</td><td>". $row['start'] .
                                                     "</td><td>".$row['end']."</td><td >".$row['place']."</td><td>".$row['remarks'].
                                                     "</td><td><img src='images/edit.png' onclick='edit(this)' style='cursor:pointer;' /><input type='hidden' id = 'txtTourID' value='".$row['tourID']."' /></td> "
-                                                    . "<td><img src='images/erase.png' onclick='deleteTour(".$row['tourID'].")' style='cursor:pointer;' /></tr>";
+                                                    . "<td><img src='images/erase.png' onclick='deleteTour(".$row['tourID'].")' style='cursor:pointer;' /></td></tr>";
                                         }
                                     }
                                 ?> 

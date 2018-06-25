@@ -33,6 +33,12 @@
     case 'tour':
         $sql = "DELETE FROM employee_tour WHERE tourID=" . $id;
         break;
+     case 'leave':
+        $sql = "DELETE FROM employee_leave WHERE leaveID=" . $id;
+        break;
+    case 'privileges':
+        $sql = "DELETE FROM adminmenu_privileges WHERE privilegeID=" . $id;
+        break;
     default:
         break;
 }
