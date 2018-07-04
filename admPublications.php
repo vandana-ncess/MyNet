@@ -1,3 +1,4 @@
+
 <?php 
     session_start();
     if(!isset($_SESSION['user']))
@@ -46,9 +47,60 @@ $(document).ready(function() {
 	});
 });
 </script>
+<script type="text/javascript">
+      function loadDesignation()
+      {
+          $catID = document.getElementById('ddlCategory').value;
+          if (window.XMLHttpRequest) {
+            // code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp = new XMLHttpRequest();
+        } else {
+            // code for IE6, IE5
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                document.getElementById("ddlDesignation").innerHTML = this.responseText ;
+                loadEmployee();
+            }
+        };
+        xmlhttp.open("GET","getDesignation.php?catID="+$catID);
+        xmlhttp.send();
+      }
+     
+      function loadEmployee()
+      {
+          $catID = document.getElementById('ddlCategory').value;
+          $desigID = document.getElementById('ddlDesignation').value;
+          $divID = document.getElementById('ddlDivision').value;
+          element = document.getElementById('ddlDivision');
+          document.getElementById('txtDiv').value = element.options[element.selectedIndex].text;
+          $str = "";
+          if($catID>0)
+              $str = $str + " AND categoryID=" + $catID;
+          if($desigID>0)
+               $str = $str + " AND designationID=" + $desigID;
+          if($divID>=0)
+              $str = $str + " AND divisionID =" + $divID;
+          if (window.XMLHttpRequest) {
+            // code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp = new XMLHttpRequest();
+        } else {
+            // code for IE6, IE5
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                document.getElementById("ddlEmployee").innerHTML = this.responseText ;
+            }
+        };
+        xmlhttp.open("GET","getEmployee.php?str="+$str);
+        xmlhttp.send();
+      }
+   </script>
 <!--////// END  \\\\\\\-->
 </head>
-<body>
+    <body onload="loadDesignation()">
 
 <div id="templatemo_body_wrapper">
 <div id="templatemo_wrapper">
@@ -106,8 +158,8 @@ $(document).ready(function() {
         </div> <!-- end of sidebar -->
         
         <div id="templatemo_content">
-            
-                <table class="tab"><form method="post" >
+            <form method="post" >
+                <table class="tab">
                         <tr>
                             <td style="width:350px;"><span class="mandatory">* </span>Year</td>
                         <td><select name="ddlYear" id="ddlYear"  style="width:100px;height:25px;" required>
@@ -146,9 +198,70 @@ $(document).ready(function() {
                             <td>DOI</td><td colspan="2"><input type="text" id="txtDOI" name="txtDOI"  style="width:266px;"   /></td><td style="padding-left: 20px;">Page No(s)</td><td><input type="text" id="txtPage" name="txtPage" style="width:112px;"  /></td>
                         </tr>
                         <tr>
+                            <td colspan="5">
+                                <p>In addition to specifying authors above, Kindly add the NCESS staffs, who are in the authors list from the below drop down list.</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="5">
+                                <fieldset>
+                                    <legend>Filter Options</legend>
+                                    <table>
+                                        <tr>
+                                            <td>Division</td><td>Category</td><td>Designation</td>
+                                        </tr>
+                                        <tr>
+                                           <td ><input type="hidden" name="txtDiv" id='txtDiv' /><select id="ddlDivision" name="ddlDivision" onchange="loadEmployee()" style="width: 200px;">
+                                            <option value="-1">All</option>
+                                            <?php
+                                                $sql = "SELECT divisionID,divisionName FROM division WHERE divisionStatus=1  AND divisionName<>''";
+                                                $result = mysqli_query($conn,$sql);
+                                                if(mysqli_num_rows($result) > 0)
+                                                {
+                                                    while ($row = mysqli_fetch_array($result)) {
+                                                        echo "<option value=" . $row['divisionID'] . ">" . $row['divisionName'] . "</option>";
+                                                    }
+                                                }
+                                            ?>
+                                            </select>
+                                            </td>
+
+                                           <td  width="200px"><select id="ddlCategory" name="ddlCategory" onchange="loadDesignation()" style="width: 200px;" ><option value="0">All</option>
+                                                    <?php
+                                                        $sql = "SELECT categoryID,categoryName FROM category WHERE categoryStatus=1";
+                                                        $result = mysqli_query($conn,$sql);
+                                                        if(mysqli_num_rows($result) > 0)
+                                                        {
+                                                            while ($row = mysqli_fetch_array($result)) {
+                                                                echo "<option value=" . $row['categoryID'] . ">" . $row['categoryName'] . "</option>";
+                                                            }
+                                                        }
+                                                    ?>
+                                                </select>
+                                            </td>
+                                            <td ><select id="ddlDesignation" name="ddlDesignation" onchange="loadEmployee()" style="width: 200px;">
+
+                                                </select>
+                                            </td> 
+                                        </tr>
+                                        <tr>
+                                            <td>Select Authors</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2"><select id="ddlEmployee" name="ddlEmployee" style="width: 400px;"  ><option value="0"></option>
+                                            </select></td>
+                                            <td><input type="button" name="btnAdd" value="Add Author" onclick="addAuthors()" /> </td>
+                                        </tr>
+                                    </table>
+                                </fieldset></td>
+                        </tr>
+                        <tr>
+                            <td colspan="5"><table id="tblAuthors" ></table> </td>
+                        </tr>
+                        <tr>
                             <td colspan="5" align="right"><input type="submit" name="btnSave" id="btnSave" value="Save" /></td>
                         </tr>
-                                </form>
+                              
 
                     <?php
                         $sql="SELECT * FROM research_publications where approvalStatus='Pending'";
@@ -173,8 +286,12 @@ $(document).ready(function() {
                     ?>
                     <?php
             if(isset($_POST['btnSave'])) {
-                $sql = "INSERT INTO research_publications(year,authors,researchArea,journal,approvalStatus) VALUES(' " . $_POST['ddlYear'] . "','" . $_POST['txtAuthor']. 
-                        "','" . $_POST['ddlArea'] . "','" . $_POST['txtTitle']. "; " . $_POST['txtJournal'].  ";" . $_POST['txtIssue'].  "; pp-" . 
+                $authorIDs = $_POST['txtAuthID'];
+                $ids = "";
+                for($i = 0; $i < sizeof($authorIDs); $i++)
+                    $ids = $ids . $authorIDs[$i] . ",";
+                $sql = "INSERT INTO research_publications(year,authors,authorIDs,researchArea,journal,approvalStatus) VALUES(' " . $_POST['ddlYear'] . "','" . $_POST['txtAuthor']. 
+                        "','". $ids . "','" . $_POST['ddlArea'] . "','" . $_POST['txtTitle']. "; " . $_POST['txtJournal'].  ";" . $_POST['txtIssue'].  "; pp-" . 
                         $_POST['txtPage']. "; DOI : " . $_POST['txtDOI']  .  "','Approved');";
                 $result = mysqli_query($conn,$sql);
                  if($result)
@@ -199,9 +316,9 @@ $(document).ready(function() {
                     echo "Failed to approve!";
                  }
             }
-          ?>   
+          ?>    
                  </table>    
-               
+            </form>    
         </div>
         
         <div class="cleaner"></div>    
@@ -240,5 +357,53 @@ $(document).ready(function() {
 				document.getElementById('txtSelect' + $i ).value = 0;	
 		}
       }
+      function addAuthors()
+      {
+          $tab = document.getElementById('tblAuthors');
+               
+                if($tab.rows.length == 0) {
+                    var row = $tab.insertRow(0);
+                    row.style.backgroundColor = "green";
+                    row.style.color = "white";
+                    row.style.height = "25px";
+                    var cell1 = row.insertCell(0);
+                    var cell3 = row.insertCell(1);
+                    cell1.innerHTML="Author";
+                    cell3.innerHTML="Remove";
+                }
+                var row = $tab.insertRow($tab.rows.length);
+                    var cell1 = row.insertCell(0);
+                    var cell3 = row.insertCell(1); 
+                    ddl = document.getElementById('ddlEmployee');
+                    cell1.innerHTML=ddl.options[ddl.selectedIndex].text ;
+                    cell3.innerHTML="<img src='images/erase.png' onclick='deleteAuthor(this)' style='cursor:pointer;' /><input type='hidden' name='txtAuthID[]' value='" + 
+                            ddl.value + "' />";
+      }
+      function deleteAuthor($id) {
+          /*     if($id > 0) {
+                
+                    if (window.XMLHttpRequest) {
+                        // code for IE7+, Firefox, Chrome, Opera, Safari
+                        xmlhttp = new XMLHttpRequest();
+                    } else {
+                        // code for IE6, IE5
+                        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+                    }
+                    xmlhttp.onreadystatechange = function() {
+                        if (this.readyState == 4 && this.status == 200) {
+                            alert(this.responseText) ;document.location='admPublications.php';
+                        }
+                    };
+                    xmlhttp.open("GET","delete.php?id="+$id+"&table=investigator");
+                    xmlhttp.send();
+                }
+                else
+                {*/
+                    $ind = $id.parentNode.parentNode.rowIndex;
+                    document.getElementById('tblAuthors').deleteRow($ind);
+              //  }
+        }   
+      
         </script>
+    </body>
 </html>

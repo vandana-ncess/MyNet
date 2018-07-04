@@ -21,7 +21,6 @@
 <link href="templatemo_style.css" rel="stylesheet" type="text/css" />
 
  <link rel="shortcut icon" href="images/logo1.png" type="image/x-icon"/>
-<link href="vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet" />
 
 <link rel="stylesheet" href="css/jquery-ui-themes-1.12.1/themes/base/jquery-ui.css">
   <script src="js/jquery-1.12.4.js"></script>
@@ -373,7 +372,7 @@
                 document.getElementById('txtDuration').value='';
         }
         function deleteLeave($id) {
-            if(confirm("Do ypou want to delete this leave?")) {
+            if(confirm("Do you want to delete this leave?")) {
               if (window.XMLHttpRequest) {
                         // code for IE7+, Firefox, Chrome, Opera, Safari
                         xmlhttp = new XMLHttpRequest();

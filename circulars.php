@@ -139,12 +139,13 @@ $(document).ready(function() {
                             echo '</table>';
                         }
                         else {
-                            $sql = "SELECT * FROM circulars where year=". $yr;
+                            $sql = "SELECT * FROM circulars where year=". $yr . " ORDER BY fileID DESC";
                             $result = mysqli_query($conn,$sql);
                             if(mysqli_num_rows($result)>0) {
                                 echo '<div  style="overflow-y: scroll;min-height:650px;" ><table id="tblDocument" >';
                                 while($row=mysqli_fetch_array($result)) {
-                                    echo '<tr><td ><a href="documents/circulars/' . $row['fileName'] . '" target="_blank" ><img class="image_wrapper image_fl1" src="images/pdf_document.ico" alt="Image 1" /><h6>' . $row['title'] .'</h6></a></td></tr>';
+                                    echo '<tr><td ><div class="content_box" style="padding-top: 3px;padding-bottom:3px;"><a href="documents/circulars/' . $row['fileName'] . 
+                                            '" target="_blank" ><img class="image_wrapper image_fl1" src="images/pdf_document.ico" alt="Image 1" /><h6>' . $row['title'] .'</h6></a></div></td></tr>';
                                     
                             } echo '</table></div>';
                         }

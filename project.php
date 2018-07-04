@@ -12,7 +12,7 @@
         $_SESSION['LAST_ACTIVITY'] = time();   
    }
     $conn = require_once('databaseconnection.php');
-                        
+   mysql_set_charset('utf8');
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -20,7 +20,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>NCESS Intranet</title>
 <meta name="keywords" content="free css templates, web design, 2-column, html css" />
-<meta name="description" content="Web Design is a 2-column website template (HTML/CSS) provided by templatemo.com" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link href="templatemo_style.css" rel="stylesheet" type="text/css" />
 <!--////// CHOOSE ONE OF THE 3 PIROBOX STYLES  \\\\\\\-->
 <link href="css_pirobox/white/style.css" media="screen" title="shadow" rel="stylesheet" type="text/css" />
@@ -99,7 +99,7 @@ $(document).ready(function() {
         	<div class="content_box" style="height : 550px; overflow-x:   scroll;overflow-y: auto;" id="search">
                     <?php
                         $sql = "SELECT *,designation FROM employee A JOIN designation B ON A.designationID=B.designationID WHERE A.categoryID=6 AND "
-                                . "employeeStatus=1 ORDER BY  divisionID,joining_date";
+                                . "employeeStatus=1 ORDER BY  divisionID,joining_date";mysql_set_charset('utf8');
                         $result = mysqli_query($conn,$sql);
                         $i=1;
                         if(mysqli_num_rows($result)>0) {
@@ -115,7 +115,7 @@ $(document).ready(function() {
                             }
                         $last = "";
                         $sql = "SELECT A.*,designation,divisionName FROM employee A JOIN designation B ON A.designationID=B.designationID  JOIN division C ON A.divisionID = C.divisionID where A.categoryID=7 AND employeeStatus=1 ORDER BY divisionID,level";
-                        $result = mysqli_query($conn,$sql);
+                        mysql_set_charset('utf8');$result = mysqli_query($conn,$sql);
                         $i=1;
                         if(mysqli_num_rows($result)>0) {
                            

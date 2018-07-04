@@ -21,58 +21,9 @@
 <link href="templatemo_style.css" rel="stylesheet" type="text/css" />
 
  <link rel="shortcut icon" href="images/logo1.png" type="image/x-icon"/>
-<link href="vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet" />
 
-<link rel="stylesheet" href="css/jquery-ui-themes-1.12.1/themes/base/jquery-ui.css">
-  <script src="js/jquery-1.12.4.js"></script>
-  <script src="js/jquery-ui-1.12.1/jquery-ui.js"></script>
-  <script> 
-  $( function() {
-    var currentDate = new Date();  
-    
-    var dateFormat = "dd/mm/yy",
-      from = $( "#from" )
-        .datepicker({
-    showOn: "both",
-      buttonImage: "images/calendar.ico",
-      buttonImageOnly: true,
-      buttonText: "Select date",
-          defaultDate: "+1w",
-          changeMonth: true,
-          numberOfMonths: 3
-        })
-        .on( "change", function() {
-          to.datepicker( "option", "minDate", getDate( this ) );
-        }),
-      to = $( "#to" ).datepicker({
-    showOn: "both",
-      buttonImage: "images/calendar.ico",
-      buttonImageOnly: true,
-      buttonText: "Select date",
-        defaultDate: "+1w",
-        changeMonth: true,
-        numberOfMonths: 3
-      })
-      .on( "change", function() {
-        from.datepicker( "option", "maxDate", getDate( this ) );
-      }
-              );
- 
-    function getDate( element ) {
-      var date;
-      try {
-        date = $.datepicker.parseDate( dateFormat, element.value );
-      } catch( error ) {
-        date = null;
-      }
- 
-      return date;
-    }
- 
-  $("#from").datepicker("setDate",currentDate);
-     $("#to").datepicker("setDate",currentDate); 
- } );
-  </script>
+<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen" />
+    <link href="bootstrap/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen" />
  
 
   <script type="text/javascript">
@@ -216,8 +167,11 @@
                         <td colspan="2" ><select id="ddlEmployee" name="ddlEmployee" style="width: 410px;"  ><option value="0"></option>
 
                             </select></td>
-                        <td><input type="text" name="from" id='from'  style="width:110px;height: 18px;"   > 
-                            </input></td>
+                        <td><div class="control-group"><div class="controls input-append date fromDate" data-date="" data-date-format="yyyy-mm-dd - HH:ii p" data-link-field="dtp_input1">
+                                <input size="16" name="from" id="from" type="text" value="" style="width: 145px;" readonly>
+                    <span class="add-on"><i class="icon-remove"></i></span>
+					<span class="add-on"><i class="icon-th"></i></span>
+                                </div></div></td>
                     </tr>
                     <tr>
                         <td colspan="2"><span class="mandatory" >* </span>Place</td>
@@ -226,14 +180,18 @@
                     <tr >    
                         <td colspan="2"><input type="text" name="txtPlace" id="txtPlace" style="width: 400px;" /> </td>
                             <td>
-                                <input type="text" name="to" id='to'   style="width:110px;height: 18px;"  />
+                                <div class="control-group"><div class="controls input-append date toDate" data-date="" data-date-format="yyyy-mm-dd - HH:ii p" data-link-field="dtp_input1">
+                    <input size="16" name="to" id="to" type="text" value="" style="width: 145px;" readonly />
+                    <span class="add-on"><i class="icon-remove"></i></span>
+					<span class="add-on"><i class="icon-th"></i></span>
+                                    </div></div>
                             </td>
                     </tr>
                 <tr>
                     <td colspan="3">Purpose</td>
                 </tr>
                 <tr>
-                    <td colspan="3"><textarea name="txtPurpose" id="txtPurpose" cols="70" ></textarea> </td>
+                    <td colspan="3"><textarea name="txtPurpose" id="txtPurpose" style="width: 500px;" ></textarea> </td>
                 </tr>
                     <tr >
                         <td colspan="3" align="right">
@@ -253,8 +211,8 @@
               <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0" style="box-sizing: border-box;color: black;">
                   <thead style='background-color: blueviolet;height: 30px;'><tr><th>Employee</th><th>From</th><th>To</th><th>Place</th><th>Purpose</th><th /><th /></tr></thead><tbody>
                                 <?php
-                                    $sql = "SELECT tourID,employeeName,A.employeeCode,DATE_FORMAT(startDate,'%m/%d/%Y') as start, "
-                                            . "DATE_FORMAT(endDate,'%m/%d/%Y') as end,place,remarks"
+                                    $sql = "SELECT tourID,employeeName,A.employeeCode,DATE_FORMAT(startDate,'%m/%d/%Y %H:%i') as start, "
+                                            . "DATE_FORMAT(endDate,'%m/%d/%Y %H:%i') as end,place,remarks"
                                             . " FROM employee_tour A  JOIN employee C "
                                             . " ON C.employeeCode=A.employeeCode WHERE updatedBy=" . $_SESSION['loggedUserID'] . " ORDER BY DATE(startDate) DESC";
                                     $result = mysqli_query($conn,$sql);
@@ -289,7 +247,7 @@
             if(isset($_POST['btnSave'])) {
                     if($_POST['btnSave'] == 'Save') {
                         $sql = "INSERT INTO employee_tour(employeeCode,startDate,endDate,place,remarks,updatedBy) VALUES(" .
-                                 $_POST['ddlEmployee']. ",'" . date('Y-m-d',strtotime($_POST['from'])) . "','" . date('Y-m-d',strtotime($_POST['to'])) .
+                                 $_POST['ddlEmployee']. ",'" . date('Y-m-d H:i:s',strtotime($_POST['from'])) . "','" . date('Y-m-d H:i:s',strtotime($_POST['to'])) .
                                 "','" . $_POST['txtPlace'] . "','" . $_POST['txtPurpose'] .
                                 "'," . $_SESSION['loggedUserID'] . ")";
                         $result = mysqli_query($conn,$sql);
@@ -302,7 +260,7 @@
                     }
                     else {
                         $sql = "UPDATE employee_tour SET employeeCode=" . $_POST['ddlEmployee'] . ", startDate ='" .
-                             date('Y-m-d',strtotime($_POST['from'])) . "', endDate='" .  date('Y-m-d',strtotime($_POST['to'])). "',place='" . $_POST['txtPlace'].
+                             $_POST['from'] . "', endDate='" .  $_POST['to']. "',place='" . $_POST['txtPlace'].
                                 "',remarks='" . $_POST['txtPurpose'] . "' WHERE tourID=" . $_POST['txtUpdateID'];
                         $result = mysqli_query($conn,$sql);
                         if($result){
@@ -368,5 +326,30 @@
         }   
         }     
     </script>
+    <script type="text/javascript" src="jquery/jquery-1.8.3.min.js" charset="UTF-8"></script>
+<script type="text/javascript" src="bootstrap/js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+<script type="text/javascript">
+    $('.fromDate').datetimepicker({
+        format: 'yyyy-mm-dd hh:ii',
+        weekStart: 1,
+        todayBtn:  1,
+		autoclose: 1,
+		todayHighlight: 1,
+		startView: 2,
+		forceParse: 0,
+        showMeridian: 1
+    });
+    $('.toDate').datetimepicker({
+       format: 'yyyy-mm-dd hh:ii',
+        weekStart: 1,
+        todayBtn:  1,
+		autoclose: 1,
+		todayHighlight: 1,
+		startView: 2,
+		forceParse: 0,
+        showMeridian: 1
+    });
+
+</script>
     </body>
 </html>

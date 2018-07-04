@@ -127,7 +127,7 @@ $(document).ready(function() {
                     <td colspan="4">
                         <table id="tblCircular" class="tbl" >
                             <?php
-                                $sql = "SELECT * FROM esf WHERE status=1";
+                                $sql = "SELECT * FROM esf ORDER by updatedOn";
                                 $result = mysqli_query($conn,$sql);
                                 if(mysqli_num_rows($result)>0) {
                                     echo '<thead><tr><th>ESF News</th><th>Delete</th></tr></thead>';
@@ -173,7 +173,8 @@ $(document).ready(function() {
  <script type="text/javascript">
         
         function deleteESF($id) {
-            if (window.XMLHttpRequest) {
+            if(confirm("Do you want to delete this event?")) {
+                if (window.XMLHttpRequest) {
                         // code for IE7+, Firefox, Chrome, Opera, Safari
                         xmlhttp = new XMLHttpRequest();
                     } else {
@@ -187,6 +188,7 @@ $(document).ready(function() {
                     };
                     xmlhttp.open("GET","delete.php?id="+$id+"&table=esf");
                     xmlhttp.send();
+            }
        }   
     </script>
 </html>

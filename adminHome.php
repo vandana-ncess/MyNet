@@ -72,7 +72,7 @@ $(document).ready(function() {
                         if($_SESSION['user'] == 'admin')
                             $sql ="SELECT * FROM adminmenu WHERE status =1 " ;
                         else 
-                            $sql ="SELECT * FROM adminmenu A JOIN adminmenu_privileges B ON A.menuID = B.menuID  AND ". $_SESSION['loggedUserID'] . " = users WHERE A.status =1 " ;
+                            $sql ="SELECT * FROM adminmenu A JOIN adminmenu_privileges B ON A.menuID = B.menuID  AND ". $_SESSION['loggedUserID'] . " = users WHERE A.status =1 ORDER BY privilegeID" ;
                          $result = mysqli_query($conn,$sql);
                         if(mysqli_num_rows($result)>0) {
                             echo "<ul>";
@@ -106,94 +106,7 @@ $(document).ready(function() {
         </div> <!-- end of sidebar -->
         
         <div id="templatemo_content">
-            <form method="post" enctype="multipart/form-data">
-            <table>
-                <tr>
-                    <td>Document Type</td><td>
-                        <select name="ddlType" id="ddlType" onchange="loadCircular()" >
-                            <option value="circular">Circular</option>
-                            <option value="rti">RTI</option>
-                            <option value="court_order">Court Order</option>
-                            <option value="notice">Notice Board</option>
-                            
-                            <option value="general">General Requisition Forms</option>
-                            <option value="lab">Lab Requisition Forms</option>
-                        </select>
-                    </td>
-                    <td>Year</td>
-                    <td>
-                        <select name="ddlYear">
-                            <?php 
-                                for($i = date('Y');$i>=1979;$i--){
-                                    echo "<option value=" . $i . ">" . $i . "</option>";
-                                }
-                            ?>
-                        </select>
-                </tr>
-                <tr>
-                    <td>Title</td><td colspan="3"><input type="text" name="txtTitle" id="txtTitle" style="width:250px;" /></td>
-                </tr>
-                <tr>
-                    <td>Description</td><td colspan="3"><input type="text" name="txtDesc" id="txtDesc" style="width:450px;" /></td>
-                </tr>
-                <tr>
-                    <td>Upload File</td><td colspan="2"><input type="file"  name="file" /> </td><td><input type="submit" name="btnUpload" id="btnUpload" value="Upload" /></td>
-                </tr>
-                <tr>
-                    <td colspan="4">
-                        <table id="tblCircular" class="tbl" ></table>
-                    </td>
-                </tr>
-            </table>
-            </form>
-          <?php
-            if(isset($_POST['btnUpload'])){
-                $info = pathinfo($_FILES['file']['name']);
-                    $ext = $info['extension']; // get the extension of the file
-                if($_POST['ddlType'] == 'circular') {
-                    $filename = "cir_" .date('Y-m-d_H-i-s') . ".".$ext;
-                    $target = 'documents/circulars/'.$filename;
-                    $sql = "INSERT INTO circulars(title,description,fileName,year) VALUES('". $_POST['txtTitle'] . "','" . $_POST['txtDesc']. "','" . $filename . "'," . date('Y').")"; 
-                }
-                elseif($_POST['ddlType'] == 'rti'){
-                    $filename = "rti_" .date('Y-m-d_H-i-s') . ".".$ext;
-                    $target = 'documents/rti/'.$filename;
-                    $sql = "INSERT INTO rti(title,description,fileName,year) VALUES('". $_POST['txtTitle'] . "','" . $_POST['txtDesc']. "','" . $filename . "'," . date('Y').")"; 
-                }
-                elseif($_POST['ddlType'] == 'lab'){
-                    $filename = "lab_" .date('Y-m-d_H-i-s') . ".".$ext;
-                    $target = 'documents/forms/'.$filename;
-                    $sql = "INSERT INTO lab_forms(title,fileName) VALUES('". $_POST['txtTitle'] .  "','" . $filename ."')"; 
-                }
-                elseif($_POST['ddlType'] == 'general'){
-                    $filename = "general_" .date('Y-m-d_H-i-s') . ".".$ext;
-                    $target = 'documents/forms/'.$filename;
-                    $sql = "INSERT INTO general_forms(title,fileName) VALUES('". $_POST['txtTitle'] . "','"  . $filename ."')"; 
-                }
-                elseif($_POST['ddlType'] == 'court') {
-                    $filename = "court_" .date('Y-m-d_H-i-s') . ".".$ext;
-                    $target = 'documents/court_order/'.$filename;
-                    $sql = "INSERT INTO court_orders(title,description,fileName,year) VALUES('". $_POST['txtTitle'] . "','" . $_POST['txtDesc']. "','" . $filename . "'," . date('Y').")"; 
-                }
-                elseif($_POST['ddlType'] == 'notice') {
-                    $filename = "notice_" .date('Y-m-d_H-i-s') . ".".$ext;
-                    $target = 'documents/'.$filename;
-                    $sql = "INSERT INTO noticeboard(title,keyword,filename,status) VALUES('". $_POST['txtTitle'] . "','" . $_POST['txtDesc']. "','" . $filename . "',1)"; 
-                    echo $sql;
-                }
-                
-                $result = mysqli_query($conn,$sql);
-                if($result)
-                {
-                    
-                    if(move_uploaded_file( $_FILES['file']['tmp_name'], $target))
-                        echo "Successfully Uploaded!";
-                    else {
-                        echo 'Upload failed!';
-                    }
-                }
-            }
-          ?>         
+           
         </div>
         
         <div class="cleaner"></div>    

@@ -38,8 +38,8 @@ if($mode == 'single') {
         case 'tour':
             $title='Tour Register Report';
             $sql1="SELECT MAX(lastUpdated) as last FROM employee_tour";
-            $sql = "SELECT employeeName,designation, place, DATE_FORMAT(startDate,'%d-%m-%Y'),DATE_FORMAT(endDate,'%d-%m-%Y'),remarks FROM employee_tour A  JOIN employee C on A.employeeCode =C.employeeCode JOIN designation E ON C.designationID = E.designationID WHERE '" . $date . "'"
-                    . "BETWEEN startDate AND endDate ORDER BY level";
+            $sql = "SELECT employeeName,designation, place, DATE_FORMAT(startDate,'%d-%m-%Y %h:%i %p'),DATE_FORMAT(endDate,'%d-%m-%Y %h:%i %p'),remarks FROM employee_tour A  JOIN employee C on A.employeeCode =C.employeeCode JOIN designation E ON C.designationID = E.designationID WHERE '" . $date . " 09:30'"
+                    . " BETWEEN startDate AND endDate ORDER BY level";
             $col = array('Name','Designation','Place','From','To','Purpose');    
             $smallTable = array(50,45,50,30,30,80);
             break;
@@ -56,25 +56,33 @@ if($mode == 'single') {
             $sql = "SELECT employeeName,divisionName,designation FROM employee_attendance A JOIN employee B on A.employeeID =B.employeeID JOIN designation E ON B.designationID = E.designationID "
                     . "JOIN division F ON B.divisionID=F.divisionID LEFT JOIN employee_leave C ON "
                     . "B.employeeCode = C.employeeCode AND A.date BETWEEN C.startDate AND C.endDate LEFT JOIN employee_tour D ON "
-                    . "B.employeeCode = D.employeeCode AND A.date BETWEEN D.startDate AND D.endDate WHERE A.status = 'A' AND leaveTypeID IS NULL AND place IS NULL AND  A.date = '" . $date ."' AND employeeSTatus=1 ORDER BY B.categoryID,level";
+                    . "B.employeeCode = D.employeeCode AND CONCAT(A.date,' 09:30') BETWEEN D.startDate AND D.endDate WHERE A.status = 'A' AND leaveTypeID IS NULL AND place IS NULL AND  A.date = '" . $date ."' AND employeeSTatus=1 ORDER BY B.categoryID,level";
             $col = array('Name','Division','Designation'); 
             $smallTable = array(50,85,60);
             break; 
         case 'late':
             $title='Late Comers Report';
             $sql1 = "SELECT MAX(lastUpdated) as last FROM employee_attendance";
-            $sql = "SELECT employeeName,divisionName,designation,intime FROM employee B JOIN employee_attendance A on A.employeeID =B.employeeID JOIN designation E ON B.designationID = E.designationID "
-                    . "JOIN division F ON B.divisionID=F.divisionID WHERE TIME_FORMAT(intime,'%H:%i:%s')>TIME_FORMAT('09:01:01','%H:%i:%s')  AND A.status<>'H' AND A.date = '" . $date ."' ORDER BY TIME_FORMAT(intime,'%H:%i:%s') desc";
-            $col = array('Name','Division','Designation',"In Time"); 
-            $smallTable = array(75,108,55,23);
+            $sql = "SELECT employeeName,divisionName,designation,intime,CONCAT(IF(C.leaveTypeID = 9 ,'Half CL',''),IF(place <> '','Tour/Field','')) as comment FROM employee B JOIN employee_attendance A on A.employeeID =B.employeeID JOIN designation E ON B.designationID = E.designationID "
+                    . "JOIN division F ON B.divisionID=F.divisionID LEFT JOIN employee_leave C ON B.employeeCode = C.employeeCode AND A.date BETWEEN "
+                    . "C.startDate AND C.endDate LEFT JOIN leave_type L ON L.leaveTypeID = C.leaveTypeID LEFT JOIN employee_tour D ON "
+                    . "B.employeeCode = D.employeeCode AND CONCAT(A.date,' 09:30') BETWEEN D.startDate AND D.endDate "
+                    . "WHERE TIME_FORMAT(intime,'%H:%i:%s')>TIME_FORMAT('09:01:01','%H:%i:%s')  AND A.status<>'H' "
+                    . "AND A.date = '" . $date ."' ORDER BY TIME_FORMAT(intime,'%H:%i:%s') desc";
+            $col = array('Name','Division','Designation',"In Time","Remarks"); 
+            $smallTable = array(75,108,50,21,30);
             break; 
         case 'early':
             $title='Early Goers Report';
             $sql1 = "SELECT MAX(lastUpdated) as last FROM employee_attendance";
-            $sql = "SELECT employeeName,designation,intime,outtime FROM employee B JOIN employee_attendance A on A.employeeID =B.employeeID JOIN designation E ON B.designationID = E.designationID "
-                    . "JOIN division F ON B.divisionID=F.divisionID WHERE TIME_FORMAT(outtime,'%H:%i:%s')<TIME_FORMAT('17:30:00','%H:%i:%s')  AND A.status<>'H' AND A.date = '" . $date ."' ORDER BY TIME_FORMAT(outtime,'%H:%i:%s') ASC";
-            $col = array('Name','Designation',"In Time",'Out Time'); 
-            $smallTable = array(60,65,30,30);
+            $sql = "SELECT employeeName,designation,intime,outtime,CONCAT(IF(C.leaveTypeID = 9 ,'Half CL',''),IF(place <> '','Tour/Field','')) as comment FROM employee B JOIN employee_attendance A on A.employeeID =B.employeeID JOIN designation E ON B.designationID = E.designationID "
+                    . "JOIN division F ON B.divisionID=F.divisionID LEFT JOIN employee_leave C ON B.employeeCode = C.employeeCode AND A.date BETWEEN "
+                    . "C.startDate AND C.endDate LEFT JOIN leave_type L ON L.leaveTypeID = C.leaveTypeID LEFT JOIN employee_tour D ON "
+                    . "B.employeeCode = D.employeeCode AND CONCAT(A.date,' 17:30') BETWEEN D.startDate AND D.endDate WHERE "
+                    . "TIME_FORMAT(outtime,'%H:%i:%s')<TIME_FORMAT('17:30:00','%H:%i:%s')  AND A.status<>'H' AND A.date = '" . $date .
+                    "' ORDER BY TIME_FORMAT(outtime,'%H:%i:%s') ASC";
+            $col = array('Name','Designation',"In Time",'Out Time','Remarks'); 
+            $smallTable = array(60,65,18,18,35);
             break; 
         case 'employee':
             $title='Staff List';

@@ -56,7 +56,7 @@ if(mysqli_num_rows($result)>0)
     $data = mysqli_fetch_array($result);
     $leave_last=$data['last'];
 }
-$sql = "SELECT COUNT(*) as empNo FROM employee_tour WHERE startDate <= '" .$date. "' AND endDate >= '" . $date . "';";
+$sql = "SELECT COUNT(*) as empNo FROM employee_tour WHERE '" .$date. " 09.30' BETWEEN startDate  AND endDate ";
 $result = mysqli_query($conn,$sql);
 if(mysqli_num_rows($result)>0)
 {

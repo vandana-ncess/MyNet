@@ -12,7 +12,7 @@
     $st = str_replace('A.','',$str);
     $conn  = require_once('databaseconnection.php');
     $sql = "SELECT * FROM `research_publications` A JOIN (SELECT count(*) as total,year from research_publications ".$st ." GROUP by year ) as B ON A.year=B.year "
-            . $str ." ORDER BY A.year desc" ;
+            . $str ." ORDER BY A.year desc,publicationsID desc" ;
     $result = mysqli_query($conn,$sql);
     $no = mysqli_num_rows($result);
     if($no>0) {
