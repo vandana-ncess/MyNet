@@ -121,29 +121,45 @@ $(document).ready(function() {
                     <td><span class="mandatory">*</span>Date & Venue</td><td colspan="3"><input type="text" name="txtVenue" id="txtVenue" style="width:450px;" required /></td>
                 </tr>
                 <tr>
-                    <td /><td align="right"><input type="submit" name="btnUpload" id="btnUpload" value="Save" /></td>
+                    <td /><td align="right"><input type="submit" name="btnUpload" id="btnUpload" value="Save" />
+                        <input type="hidden" name="txtEsfID" id="txtEsfID" /></td>
                 </tr>
                  <tr>
                     <td colspan="4">
-                        <table id="tblCircular" class="tbl" >
+                        <div style="max-height: 520px; overflow-y: auto;">
+                        <table id="tblEsf" class="tbl" >
                             <?php
-                                $sql = "SELECT * FROM esf ORDER by updatedOn";
+                                $sql = "SELECT * FROM esf ORDER by updatedOn DESC";
                                 $result = mysqli_query($conn,$sql);
                                 if(mysqli_num_rows($result)>0) {
-                                    echo '<thead><tr><th>ESF News</th><th>Delete</th></tr></thead>';
+                                    echo '<thead><tr><th>Heading</th><th>Subject</th><th>Speaker</th><th>Date&Venue</th><th>Edit</th><th>Delete</th><th>Stop</th></tr></thead>';
                                     while($data= mysqli_fetch_array($result)) {
-                                        echo '<tr><td>'.$data['matter'].'</td><td><img src="images/erase.png" onclick="deleteESF('.$data['id']. ')" style="cursor:pointer;" /></td></tr>';
+                                        echo '<tr><td>'.$data['matter'].'</td><td>'.$data['title'].'</td><td>'.$data['speaker'].'</td><td>'.$data['date'].'</td>'
+                                                
+                                                . '<td><img src="images/edit.png" onclick="editESF(this)" style="cursor:pointer;" />'
+                                                . '<input type="hidden" name="txtID[]" value="'. $data['id'] . '" /></td>'
+                                                 .'<td><img src="images/erase.png" onclick="deleteESF('.$data['id']. ','. "'delete'" .')" style="cursor:pointer;" /></td>';
+                                        if($data['status']==1)
+                                                echo '<td><img src="images/no.ico" onclick="deleteESF('.$data['id']. ','. "'stop'" .')" style="cursor:pointer;" /></td>';
+                                        
+                                        echo '</tr>';
+                                                
                                     }
                                 }
                             ?>                            
                         </table>
+                        </div>
                     </td>
                 </tr>
             </table>
             </form>
           <?php
             if(isset($_POST['btnUpload'])){
-                $sql = "INSERT INTO esf(matter,title,speaker,date,status) VALUES('". $_POST['txtTitle'] . "','" . $_POST['txtDesc']. "','" . $_POST['txtSpeaker']. "','" . $_POST['txtVenue']. "',1)"; 
+                if($_POST['btnUpload']=='Save') 
+                    $sql = "INSERT INTO esf(matter,title,speaker,date,status) VALUES('". $_POST['txtTitle'] . "','" . $_POST['txtDesc']. "','" . $_POST['txtSpeaker']. "','" . $_POST['txtVenue']. "',1)"; 
+                else
+                    $sql = "UPDATE esf SET matter='" . $_POST['txtTitle']."', title='" . $_POST['txtDesc'] . "', speaker='". $_POST['txtSpeaker'] . "', date='".
+                        $_POST['txtVenue'] . "' WHERE id=" . $_POST['txtEsfID'] ;
                 $result = mysqli_query($conn,$sql);
                 if($result) {
                     echo '<script>alert("Successfully Uploaded!");document.location="esfAdmin.php";</script>';
@@ -172,8 +188,12 @@ $(document).ready(function() {
 </div>
  <script type="text/javascript">
         
-        function deleteESF($id) {
-            if(confirm("Do you want to delete this event?")) {
+        function deleteESF($id,$mode) {
+            if($mode=='delete')
+                $str = "Do you want to delete this event?";
+            else
+                $str = "Do you want to stop this scrolling in home page?";
+            if(confirm($str)) {
                 if (window.XMLHttpRequest) {
                         // code for IE7+, Firefox, Chrome, Opera, Safari
                         xmlhttp = new XMLHttpRequest();
@@ -183,12 +203,20 @@ $(document).ready(function() {
                     }
                     xmlhttp.onreadystatechange = function() {
                         if (this.readyState == 4 && this.status == 200) {
-                            alert(this.responseText) ;document.location='esfAdmin.php';
+                            alert(this.responseText);document.location='esfAdmin.php';
                         }
                     };
-                    xmlhttp.open("GET","delete.php?id="+$id+"&table=esf");
+                    xmlhttp.open("GET","delete.php?id="+$id+"&table=esf&mode="+$mode);
                     xmlhttp.send();
             }
-       }   
+       }  
+       function editESF(e) {
+            document.getElementById('txtTitle').value =  e.parentElement.parentElement.cells[0].innerHTML;
+            document.getElementById('txtDesc').value =  e.parentElement.parentElement.cells[1].innerHTML;
+            document.getElementById('txtSpeaker').value =  e.parentElement.parentElement.cells[2].innerHTML;
+            document.getElementById('txtVenue').value =  e.parentElement.parentElement.cells[3].innerHTML;
+            document.getElementById('txtEsfID').value = e.parentElement.parentElement.cells[4].children[1].value;
+            document.getElementById('btnUpload').value = "Update";
+       }
     </script>
 </html>

@@ -100,7 +100,7 @@ $(document).ready(function() {
                 <li><a href="agenda.php">Committees</a></li>
                 <li>Finance Committee</li>
             </ul>
-            <a href="fc.php" style="float: right;padding-top: 10px;padding-right: 5px;font-size: 14px;">Agendas & Minutes</a>
+            <a href="fc.php" style="float: right;padding-top: 10px;padding-right: 5px;font-size: 14px;"><input type="button" value="Agenda & Minutes" style="width: 200px;cursor: pointer;" /></a>
             <div style="background-color: white;">
                 <h3 style="padding-top: 20px;margin-bottom: 5px;padding-left: 20px;">Finance Committee Members</h3>
                 <table cellpadding="5" cellspacing="20">

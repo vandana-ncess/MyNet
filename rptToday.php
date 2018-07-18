@@ -2,6 +2,13 @@
 error_reporting(E_ALL);
 session_start();   
 $conn = require_once('databaseconnection.php');
+ if($_SESSION['user'] != 'admin') {
+        $sql = "SELECT * FROM report_privileges where employeeCode='" . $_SESSION['loggedUserID'] . "'";
+        $result = mysqli_query($conn,$sql);
+        if(mysqli_num_rows($result)==0) {
+            echo '<script>alert("You are not authorised to view Reports, Kindly contact the System Administrator!");document.location="attendance.php";</script>';
+        }
+    }
 include_once('fpdf.php');
 $report = $_GET['report'];
 $mode = $_GET['mode'];
@@ -39,6 +46,7 @@ if($mode == 'single') {
             $title='Tour Register Report';
             $sql1="SELECT MAX(lastUpdated) as last FROM employee_tour";
             $sql = "SELECT employeeName,designation, place, DATE_FORMAT(startDate,'%d-%m-%Y %h:%i %p'),DATE_FORMAT(endDate,'%d-%m-%Y %h:%i %p'),remarks FROM employee_tour A  JOIN employee C on A.employeeCode =C.employeeCode JOIN designation E ON C.designationID = E.designationID WHERE '" . $date . " 09:30'"
+                    . " BETWEEN startDate AND endDate OR '" . $date . " 16:30'"
                     . " BETWEEN startDate AND endDate ORDER BY level";
             $col = array('Name','Designation','Place','From','To','Purpose');    
             $smallTable = array(50,45,50,30,30,80);
@@ -46,7 +54,9 @@ if($mode == 'single') {
         case 'attendance':
             $title='Attendance Register Report';
             $sql1 = "SELECT MAX(lastUpdated) as last FROM employee_attendance";
-            $sql = "SELECT employeeName, divisionName,designation,intime,outtime FROM employee_attendance A  JOIN employee C on A.employeeID =C.employeeID JOIN division D ON C.divisionID=D.divisionID JOIN designation E ON C.designationID = E.designationID WHERE date = '" . $date . "' AND intime<>'' ORDER BY C.categoryID,level " ;
+            $sql = "SELECT employeeName, divisionName,designation,intime,outtime FROM employee_attendance A  JOIN employee C on A.employeeID =C.employeeID "
+                    . "JOIN division D ON C.divisionID=D.divisionID JOIN designation E ON C.designationID = E.designationID WHERE date = '" 
+                    . $date . "' AND intime<>'' ORDER BY C.categoryID,level " ;
             $col = array('Name','Division','Designation','Time In','Time Out');    
             $smallTable = array(75,107,53,21,21);
             break;
@@ -347,14 +357,14 @@ else {
         case 'leave':
             $title='Leave Register Report';
             $sql = "SELECT employeeName,designation,leaveType ,DATE_FORMAT(startDate,'%d-%m-%Y'),DATE_FORMAT(endDate,'%d-%m-%Y'),duration,leaveStatus FROM employee_leave A JOIN employee emp ON A.employeeCode = emp.employeeCode JOIN designation E ON emp.designationID = E.designationID JOIN leave_type B ON A.leaveTypeID = B.leaveTypeID WHERE ('" . $start . "' "
-                    . " BETWEEN startDate AND endDate OR '" . $end . "' BETWEEN startDate AND endDate OR startDate BETWEEN '" . $start . "' AND '" . $end . "')" . $whr ." AND leaveStatus <> 'Cancelled' ORDER BY employeeName"; ;
+                    . " BETWEEN startDate AND endDate OR '" . $end . "' BETWEEN startDate AND endDate OR startDate BETWEEN '" . $start . "' AND '" . $end . "')" . $whr ." AND leaveStatus <> 'Cancelled' AND employeeStatus=1 ORDER BY employeeName"; ;
             $col = array('Name','Designation','Leave Type','Start Date','End Date','Duration','Leave Status');
             $smallTable = array(60,50,40,30,30,20,50);
             break;
         case 'tour':
             $title='Tour Register Report';
             $sql = "SELECT employeeName,designation,DATE_FORMAT(startDate,'%d-%m-%Y'),DATE_FORMAT(endDate,'%d-%m-%Y'),place,remarks FROM employee_tour A  JOIN employee emp on A.employeeCode =emp.employeeCode JOIN designation E ON emp.designationID = E.designationID WHERE ('" . $start . "' "
-                    . " BETWEEN startDate AND endDate OR '" . $end . "' BETWEEN startDate AND endDate OR startDate BETWEEN '" . $start . "' AND '" . $end . "')" . $whr . " ORDER BY employeeName";
+                    . " BETWEEN startDate AND endDate OR '" . $end . "' BETWEEN startDate AND endDate OR startDate BETWEEN '" . $start . "' AND '" . $end . "')" . $whr . " AND employeeStatus=1 ORDER BY employeeName";
                     
             $col = array('Name','Designation','From','To','Place','Purpose');    
             $smallTable = array(40,40,23,23,40,40);
@@ -366,7 +376,7 @@ else {
                     . " C.employeeCode = emp.employeeCode AND A.date between C.startDate AND C.endDate LEFT JOIN employee_tour E ON "
                     . " emp.employeeCode=E.employeeCode AND A.date between E.startDate AND E.endDate LEFT JOIN gate_register F ON "
                     . "F.employeeCode = emp.employeeCode AND a.date=f.date LEFT JOIN leave_type D ON C.leaveTypeID = D.leaveTypeID WHERE A.date "
-                    . "BETWEEN '" . $start . "' AND '" . $end . "'" . $whr . " ORDER BY emp.categoryID,level,A.employeeID,A.date";
+                    . "BETWEEN '" . $start . "' AND '" . $end . "'" . $whr . " AND employeeStatus=1 ORDER BY emp.categoryID,level,A.employeeID,A.date";
             $col = array('Date','Name','In','Out','Leave','Tour','Gate Register','Open/Closed','Status');    
             $smallTable = array(25,65,20,20,25,40,40,28,15);
             
@@ -378,7 +388,7 @@ else {
                     . "JOIN designation E ON emp.designationID = E.designationID  LEFT JOIN employee_leave C ON "
                     . "emp.employeeCode = C.employeeCode AND A.date BETWEEN C.startDate AND C.endDate LEFT JOIN employee_tour D ON "
                     . "emp.employeeCode = D.employeeCode AND A.date BETWEEN D.startDate AND D.endDate WHERE A.date BETWEEN '" . $start . "' AND '" . $end . "' " 
-                    . $whr . " AND (A.status = 'A' OR (TIME_FORMAT(A.outtime,'%H:%i:%s')-TIME_FORMAT(A.intime,'%H:%i:%s') < 5)) AND leaveTypeID IS NULL AND place IS NULL ORDER BY emp.categoryID,level,employeeName,date";
+                    . $whr . " AND (A.status = 'A' OR (TIME_FORMAT(A.outtime,'%H:%i:%s')-TIME_FORMAT(A.intime,'%H:%i:%s') < 5)) AND leaveTypeID IS NULL AND place IS NULL AND employeeStatus=1 ORDER BY emp.categoryID,level,employeeName,date";
             $col = array('Name','Designation','Date'); 
             $smallTable = array(60,70,25);
             break; 

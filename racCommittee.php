@@ -102,7 +102,7 @@ $(document).ready(function() {
                 <li><a href="agenda.php">Committees</a></li>
                 <li>Research Advisory Council</li>
             </ul>
-            <a href="rac.php" style="float: right;padding-top: 10px;padding-right: 5px;font-size: 14px;">Agendas & Minutes</a>
+            <a href="rac.php" style="float: right;padding-top: 10px;padding-right: 5px;font-size: 14px;"><input type="button" value="Agenda & Minutes" style="width: 200px;cursor: pointer;" /></a>
             <div style="background-color: white;">
                 <h3 style="padding-top: 20px;margin-bottom: 5px;padding-left: 20px;">Research Advisory Council Members</h3>
                 <table cellpadding="5" cellspacing="20">

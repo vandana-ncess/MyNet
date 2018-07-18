@@ -214,7 +214,7 @@
                                     $sql = "SELECT tourID,employeeName,A.employeeCode,DATE_FORMAT(startDate,'%m/%d/%Y %H:%i') as start, "
                                             . "DATE_FORMAT(endDate,'%m/%d/%Y %H:%i') as end,place,remarks"
                                             . " FROM employee_tour A  JOIN employee C "
-                                            . " ON C.employeeCode=A.employeeCode WHERE updatedBy=" . $_SESSION['loggedUserID'] . " ORDER BY DATE(startDate) DESC";
+                                            . " ON C.employeeCode=A.employeeCode WHERE A.updatedBy=" . $_SESSION['loggedUserID'] . " ORDER BY DATE(startDate) DESC";
                                     $result = mysqli_query($conn,$sql);
                                     if(mysqli_num_rows($result) > 0)
                                     {                                               
@@ -260,7 +260,7 @@
                     }
                     else {
                         $sql = "UPDATE employee_tour SET employeeCode=" . $_POST['ddlEmployee'] . ", startDate ='" .
-                             $_POST['from'] . "', endDate='" .  $_POST['to']. "',place='" . $_POST['txtPlace'].
+                             date('Y-m-d H:i:s',strtotime($_POST['from'])) . "', endDate='" .  date('Y-m-d H:i:s',strtotime($_POST['to'])). "',place='" . $_POST['txtPlace'].
                                 "',remarks='" . $_POST['txtPurpose'] . "' WHERE tourID=" . $_POST['txtUpdateID'];
                         $result = mysqli_query($conn,$sql);
                         if($result){

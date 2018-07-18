@@ -166,7 +166,7 @@
           
         </div> <!-- end of sidebar -->
         
-        <div id="templatemo_content">
+        <div id="templatemo_content" style="width: 650px;">
             <form method="post" action="">
             <table  class="tab" style="padding-left: 10px;">
                     <tr>
@@ -266,7 +266,7 @@
                                     $sql = "SELECT leaveID,employeeName,A.employeeCode,shortname,DATE_FORMAT(startDate,'%m/%d/%Y') as start, "
                                             . "DATE_FORMAT(endDate,'%m/%d/%Y') as end,A.leaveTypeID,duration,leaveStatus"
                                             . " FROM employee_leave A JOIN leave_type B ON A.leaveTypeID=B.leaveTypeID JOIN employee C "
-                                            . " ON C.employeeCode=A.employeeCode WHERE updatedBy=" . $_SESSION['loggedUserID'] . " ORDER BY DATE(startDate) DESC";
+                                            . " ON C.employeeCode=A.employeeCode WHERE A.updatedBy=" . $_SESSION['loggedUserID'] . " ORDER BY DATE(startDate) DESC";
                                     $result = mysqli_query($conn,$sql);
                                     if(mysqli_num_rows($result) > 0)
                                     {                                               
@@ -313,7 +313,7 @@
                     else {
                         $sql = "UPDATE employee_leave SET leaveTypeID = " . $_POST['ddlLeave'] . ", employeeCode=" . $_POST['ddlEmployee'] . ", startDate ='" .
                              date('Y-m-d',strtotime($_POST['from'])) . "', endDate='" .  date('Y-m-d',strtotime($_POST['to'])). "',duration=" . $_POST['txtDuration'].
-                                ",leaveStatus='" . $_POST['ddlStatus'] . "' WHERE leaveID=" . $_POST['txtUpdateID'];
+                                ",leaveStatus='" . $_POST['ddlStatus'] . "', updatedBy=" .$_SESSION['loggedUserID'] ." WHERE leaveID=" . $_POST['txtUpdateID'];
                         $result = mysqli_query($conn,$sql);
                         if($result){
                             echo '<script>alert("Updated successfully!");</script>';

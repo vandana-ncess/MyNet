@@ -28,7 +28,10 @@
         $sql = "UPDATE noticeboard SET status=0 WHERE id=" . $id;
         break;
     case 'esf':
-        $sql = "UPDATE esf SET status=0 WHERE id=" . $id;
+        if($_GET['mode']=='delete')
+            $sql = "DELETE FROM esf WHERE id=" . $id;
+        else
+            $sql = "UPDATE esf SET status=0 WHERE id=" . $id;
         break;
     case 'tour':
         $sql = "DELETE FROM employee_tour WHERE tourID=" . $id;
@@ -41,7 +44,7 @@
         break;
     default:
         break;
-}
+} 
 $result = mysqli_query($conn,$sql);
 if($result)
     echo 'Deleted Successfully!';

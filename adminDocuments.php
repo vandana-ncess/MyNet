@@ -113,7 +113,7 @@ $(document).ready(function() {
                         <select name="ddlType" id="ddlType" onchange="loadCircular()" >
                             <option value="circular">OM/Circular</option>
                             <option value="rti">RTI</option>
-                            <option value="court_order">Court Order</option>
+                            <option value="court">Court Order</option>
                             <option value="notice">Notice Board</option>
                             
                             <option value="general">General Requisition Forms</option>
@@ -219,6 +219,8 @@ $(document).ready(function() {
                     xmlhttp.open("GET","getNoticeBoard.php");
                     xmlhttp.send();
                 }
+                else
+                    document.getElementById('tblCircular').innerHTML="";
         }
         function deleteNoticeBoard($id) {
             if (window.XMLHttpRequest) {
@@ -230,7 +232,7 @@ $(document).ready(function() {
                     }
                     xmlhttp.onreadystatechange = function() {
                         if (this.readyState == 4 && this.status == 200) {
-                            alert(this.responseText) ;document.location='adminHome.php';
+                            alert(this.responseText) ;document.location='adminDocuments.php';
                         }
                     };
                     xmlhttp.open("GET","delete.php?id="+$id+"&table=notice");

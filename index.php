@@ -509,10 +509,8 @@ button:hover {
             <div class="content_box" style="height:250px;">
                 <h4 style="color:#999900; ">Follow Social Media Pages of NCESS</h4>
             <table><tr><td width="300px" style="border-radius: 22px;">
-                        <div class="fb-page" data-href="https://www.facebook.com/ESSO-NCESS" data-tabs="timeline" data-width="400px" data-height="250px" data-small-header="true" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true"><blockquote cite="https://www.facebook.com/ESSO-NCESS" class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/ESSO-NCESS">National Centre for Earth Science Studies</a></blockquote></div>                            </td>
-<td width="300px"><div>            <a class="twitter-timeline"  href="https://twitter.com/hashtag/ESSO-NCESS" data-widget-id="982654893038202880">#ESSO-NCESS Tweets</a>
-            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-          </div></td>
+                        <div class="fb-page" data-href="https://www.facebook.com/ESSO-NCESS" data-tabs="timeline" data-width="200px" data-height="250px" data-small-header="true" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true"><blockquote cite="https://www.facebook.com/ESSO-NCESS" class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/ESSO-NCESS">National Centre for Earth Science Studies</a></blockquote></div>                            </td>
+<td width="300px"><div>            <a href="https://twitter.com/TwitterDev?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">Follow @ESSO_NCESS</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> </div></td><td><script type="text/javascript" src="http://ytchannelembed.com/ytce-frgallery.js"></script><div style="width:100%;max-width:130px;" class="ytce" data-user="ESSO-NCESS" data-rows="1" data-ratio="hd" data-width="130" data-margin="15" data-desc="100" data-desc_color="9E9E9E" data-title="30" data-title_color="000000" data-https="0" data-duration="1" data-views="1" data-likes="1" data-dislikes="1" data-fav="1" data-cols="1" ></div></td>
                 </tr></table>
             </div>
             <div class="content_box last_box"  style="height:170px;padding-bottom:10px;">

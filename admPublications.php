@@ -288,11 +288,17 @@ $(document).ready(function() {
             if(isset($_POST['btnSave'])) {
                 $authorIDs = $_POST['txtAuthID'];
                 $ids = "";
+                $jou = $_POST['txtTitle']. "; " . $_POST['txtJournal'].  ";";
+                if($_POST['txtIssue'] != '')
+                    $jou = $jou. $_POST['txtIssue'] . ";";
+                if($_POST['txtPage']!='')
+                    $jou = $jou.  " pp-" .$_POST['txtPage']. ";";
+                if($_POST['txtDOI']!='')
+                    $jou = $jou.  " DOI : " .$_POST['txtDOI']. ";";
                 for($i = 0; $i < sizeof($authorIDs); $i++)
                     $ids = $ids . $authorIDs[$i] . ",";
                 $sql = "INSERT INTO research_publications(year,authors,authorIDs,researchArea,journal,approvalStatus) VALUES(' " . $_POST['ddlYear'] . "','" . $_POST['txtAuthor']. 
-                        "','". $ids . "','" . $_POST['ddlArea'] . "','" . $_POST['txtTitle']. "; " . $_POST['txtJournal'].  ";" . $_POST['txtIssue'].  "; pp-" . 
-                        $_POST['txtPage']. "; DOI : " . $_POST['txtDOI']  .  "','Approved');";
+                        "','". $ids . "','" . $_POST['ddlArea'] . "','" . $jou .   "','Approved');";
                 $result = mysqli_query($conn,$sql);
                  if($result)
                     echo "Submitted Publication!";

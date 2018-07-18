@@ -35,6 +35,13 @@ if(mysqli_num_rows($result)>0)
     $data = mysqli_fetch_array($result);
     $pre_no = $data['empNo'];
 }
+/*$sql = "SELECT COUNT(*) as empNo FROM  employee B JOIN employee_attendance A ON A.employeeID = B.employeeID WHERE date = '" . $date . "' AND (status='A') AND employeeStatus=1;";
+$result = mysqli_query($conn,$sql);
+if(mysqli_num_rows($result)>0)
+{
+    $data = mysqli_fetch_array($result);
+    $ab_no = $data['empNo'];
+}*/
 $sql = "SELECT MAX(lastUpdated) as last FROM employee_attendance";
 $result = mysqli_query($conn,$sql);
 if(mysqli_num_rows($result)>0)
@@ -56,7 +63,7 @@ if(mysqli_num_rows($result)>0)
     $data = mysqli_fetch_array($result);
     $leave_last=$data['last'];
 }
-$sql = "SELECT COUNT(*) as empNo FROM employee_tour WHERE '" .$date. " 09.30' BETWEEN startDate  AND endDate ";
+$sql = "SELECT COUNT(*) as empNo FROM employee_tour WHERE '" .$date. " 09.30' BETWEEN startDate  AND endDate OR '" .$date. " 16.30' BETWEEN startDate  AND endDate ";
 $result = mysqli_query($conn,$sql);
 if(mysqli_num_rows($result)>0)
 {
@@ -173,7 +180,7 @@ $(document).ready(function() {
                             <td><a <?php echo 'href="rptToday.php?report=attendance&mode=single&date=' . $date . '"'; ?> target="_blank"> View Details <a/></td>
                         </tr>
                         <tr style="background-color:   #F98A9D;">
-                            <td>Employees Absent</td><td><?php echo ($emp_no-($tour_no+$pre_no+$leave_no)); ?></td><td>Last Updated On : <?php echo $pre_last; ?></td>
+                            <td>Employees Absent</td><td><?php echo $emp_no-($tour_no+$leave_no+$pre_no); ?></td><td>Last Updated On : <?php echo $pre_last; ?></td>
                             <td><a <?php echo 'href="rptToday.php?report=absentee&mode=single&date=' . $date . '"'; ?> target="_blank"> View Details <a/></td>
                         </tr>
                         <tr style="background-color:   #9A95C3;">
@@ -258,8 +265,8 @@ $(document).ready(function() {
                     $sql = "SELECT A.employeeID as empID,A.employeeCode,employeeName,divisionName,designation,B.intime,"
                             . "B.outtime,leaveType,shortname,place, H.outtime as gateout, H.intime as gatein,B.status,open_closed_status,TIME_FORMAT(B.outtime,'%H:%i:%s')-TIME_FORMAT(B.intime,'%H:%i:%s') as timediff   FROM employee A JOIN employee_attendance B ON A.employeeID = B.employeeID JOIN division C on "
                             . "A.divisionID = C.divisionID JOIN designation D ON A.designationID = D.designationID LEFT JOIN gate_register H ON A.employeeCode = H.employeeCode "
-                            . " AND H.date = '" . $date . "' AND H.outtime <> '' LEFT JOIN employee_tour F ON A.employeeCode = F.employeeCode AND "
-                            . "F.startDate <= '" . $date . "' AND F.endDate >= '" .  $date . "' LEFT JOIN employee_leave E ON A.employeeCode  = E.employeeCode"
+                            . " AND H.date = '" . $date . "' AND H.outtime <> '' LEFT JOIN employee_tour F ON A.employeeCode = F.employeeCode AND '"  . $date . " 09:30'"
+                            . " BETWEEN F.startDate AND F.endDate LEFT JOIN employee_leave E ON A.employeeCode  = E.employeeCode"
                             . " AND E.startDate <= '" . $date . "' AND E.endDate >= ' " . $date . "' LEFT JOIN leave_type G ON E.leaveTypeID = G.leaveTypeID WHERE A.employeeStatus=1 AND b.date ='" . $date . "';";
                     $result = mysqli_query($conn,$sql);
                     if(mysqli_num_rows($result) > 0)
@@ -304,7 +311,7 @@ $(document).ready(function() {
               </tbody>
             </table>
           </div>
-            <div><span style='color:green;'>P - Present; </span>&nbsp;<span style='color:red;'> A - Absent; </span>&nbsp;<span style='color:orange;'> HD - Half Day; </span>&nbsp;
+            <div><span style='color:green;'>P - Present; </span>&nbsp;<span style='color:red;'> A - Absent; </span>&nbsp;&nbsp;
                 <span style='color:blue;'> L - Leave; </span>&nbsp;<span style='color:purple;'> HL - Half Day Leave; </span>&nbsp;<span style='color:orange;'> T - Tour </span></div>
         </div>
                     
