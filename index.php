@@ -374,143 +374,33 @@ button:hover {
                 
             </div>
             <div align="right"><input type="text" name="txtSearch" class="search" id="txtSearch" style="width:200px;height: 25px;padding: 0px 0px;margin: 5px 5px;" /><img src="images/search.ico" style="cursor: pointer;" onclick="search()" /> </div>   
-            <div class="content_box" style="padding-top: 30px;">
-                <div style='float: left;width:300px;'>
-            	<a href="employees.php" target="_parent"><img class="image_wrapper image_fl" src="images/employee.ico" alt="Image 1" />
-                <h5>Staff Details</h5></a>
-                <p>Get Full details of NCESS Staffs here.</p>
-                </div><div style='float: right;width:290px;'>
-            	<a href="attendance.php"><img class="image_wrapper image_fl" src="images/attendance.ico" alt="Image 1" />
-                <h5>Staff Attendance</h5></a>
-                <p>Get Staff attendance details here. </p>
-              </div>
-          </div>
-            <div class="content_box" style="height:20px;">
-                <div style='float: left;width:300px;'>
-                    <a href="agenda.php" target="_parent"><img class="image_wrapper image_fl" src="images/group_128.ico" alt="Image 1" style="margin-right: 15px;" />
-                <h5>Committees</h5></a>
-                    <p >Details of various committees are available here.</p>
-                </div>
-               <div style='float: right;width:300px;'>
-                    <a href="documents.php" target="_parent"><img class="image_wrapper image_fl" src="images/folder1.ico" alt="Image 1" />
-                <h5>Documents</h5></a>
-                <p>Get different documents like various requisition forms, circulars, etc. here.</p>
-                </div>
-              
-          </div>
-             <div class="content_box">
-                 <div style='float: left;width:300px;'>
-                    <a href="http://ncess.gov.in" target="_blank"><img class="image_wrapper image_fl" src="images/logo3.png" alt="Image 1" />
-                <h5>NCESS Website</h5></a>
-                <p>Official Website of NCESS.</p>
-                </div>
-                <div style='float: right;width:300px;'>
-                    <a href="planprojects.php" target="_parent"><img class="image_wrapper image_fl" src="images/project_2013.ico" alt="Image 1" />
-                <h5>Ongoing Projects</h5></a>
-                <p>View all ongoing plan projects of NCESS here.</p>
-                </div>
-            </div>
-            <div class="content_box">
-                <div style='float: left;width:300px;'>
-            	<a href="publications.php" ><img class="image_wrapper image_fl" src="images/news.ico" alt="Image 1" />
-                <h5>Research Publications</h5></a>
-                <p>All our research publications are available here</p>
-                </div><div style='float: right;width:300px;'>
-            	<a href="http://ncess.gov.in/facilities/laboratories.html" target="_blank"><img class="image_wrapper image_fl" src="images/laboratory.png" alt="Image 1" />
-                <h5>Laboratories</h5></a>
-                <p>Details about all laboratory services provided in NCESS.</p>
-                </div>
-          </div> 
-           
-            <div class="content_box">
-                <div style='float: left;width:300px;'>
-            	<a href="esf.php" target="_blank"><img class="image_wrapper image_fl" src="images/ESF.jpg" alt="Image 1" />
-                <h5>Earth Science Forum</h5></a>
-                <p>Get NCESS-ESF related activities.</p>
-              </div>
-               <div style='float: right;width:300px;'>
-                   <a href="eGovernance.php" target="_blank"><img class="image_wrapper image_fl" src="images/eoffice.jpg" alt="Image 1" />
-                <h5>e-Governance</h5></a>
-                <p>NCESS e-Governance activities</p>
-                </div>
-          </div>
-             <div class="content_box">
-                 <div style='float: left;width:300px;'>
-            	<a href="announcements.php" target="_parent"><img class="image_wrapper image_fl" src="images/notice_board.ico" alt="Image 1" />
-                <h5>Notice Board</h5></a>
-                <p>All current announcements are available here.</p>
-              </div>
-                
-                 <div style='float: right;width:300px;'>
-            	<a href="reports.php" target="_parent"><img class="image_wrapper image_fl" src="images/report.ico" alt="Image 1" />
-                <h5>Reports</h5></a>
-                <p>All reports are available here.</p>
-                
-              </div>  
-               
-                
-          </div>
-            <div class="content_box">
-                <div style='float: left;width:300px;'>
-                    <a href="email.php" target="_blank"><img class="image_wrapper image_fl" src="images/address.ico" alt="Image 1" />
-                        <h5 >Email Address Book</h5></a>
-                <p>Email IDs of all employees</p>
-                </div> <div style='float: right;width:300px;'>
-                    <a href="directory.php" target="_parent"><img class="image_wrapper image_fl" src="images/directory.ico" alt="Image 1" />
-                <h5>Contact Directory</h5></a>
-                <p>Contact details of all staff are available here</p>
-              </div>
-                
-            </div>
-            
-            <div class="content_box">
-               <!-- <div style='float: left;width:300px;'>
-                    <a href="http://ncess.gov.in" target="_blank"><img class="image_wrapper image_fl" src="images/logo2.png" alt="Image 1" />
-                <h5>NCESS Website</h5></a>
-                <p>Official Website of NCESS.</p>
-                </div>-->
-               <div style='float: right;width:300px;'>
-            	<a href="http://ncess.gov.in/notifications/awards.html" target="_blank"><img class="image_wrapper image_fl" src="images/medal.ico" alt="Image 1" />
-                <h5>Awards</h5></a>
-                <p>All recent awards are available here</p>
-              </div>
-                <div style='float: right;width:300px;'>
-            	<a href="http://192.168.17.11:8001/" target="_blank"><img class="image_wrapper image_fl" src="images/library.ico" alt="Image 1" />
-                <h5>Online Library</h5></a>
-                <p>Access our online library here.</p>
-                </div>
-               
-          </div>
-           
-             
-             <div class="content_box"  style="height: 20px;">
-                  <div style='float: left;width:300px;'>
-            	<a href="profile.php" target="_parent"><img class="image_wrapper image_fl" src="images/profile.ico" alt="Image 1" />
-                <h5>Profile Updations</h5></a>
-                <p>View & update your profile and research publications here.</p>
-              </div>
-                 <div style='float: right;width:300px;padding-bottom: 2px;'>
-                     <a href="discussion.php" target="_parent"><img class="image_wrapper image_fl" src="images/char.ico" alt="Image 1" />
-                <h5>Discussion Forum</h5></a>
-                <p>You can discuss about various topics here.</p>
-              </div>
-              
-          </div>
-            
-             <div class="content_box"  style="height: 20px;">
-                
-               <div style='float: left;width:300px;'>
-                     <a href="feedback.php" target="_parent"><img class="image_wrapper image_fl" src="images/app.ico" alt="Image 1" />
-                <h5>Feedback</h5></a>
-                  <p>Enter your valuable comments / suggestions for improving the   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  NCESS Intranet portal.</p>
-              </div>  
-          </div>
-            
-            <div class="content_box" style="height:250px;">
+            <?php
+                $sql = "SELECT * FROM homemenu WHERE status=1";
+                $result = mysqli_query($conn,$sql);
+                if(mysqli_num_rows($result)>0) {
+                    while ($row = mysqli_fetch_array($result)) {
+                        echo '<div class="content_box" style="padding-top: 10px;height:20px;">
+                                <div style="float: left;width:300px;">';
+                        echo '<a href="' . $row['page'].'" target="_parent"><img class="image_wrapper image_fl" src="images/'. $row['image'].'" alt="Image 1" />';
+                        echo ' <h5>'. $row['menu'].'</h5></a> <p>'.$row['description'].'</p> </div>';
+                        if($row = mysqli_fetch_array($result)) {
+                            echo '<div style="float: right;width:290px;"><a href="' . $row['page'].'" target="_parent"><img class="image_wrapper image_fl" src="images/'. $row['image'].'" alt="Image 1" />';
+                            echo ' <h5>'. $row['menu'].'</h5></a> <p>'.$row['description'].'</p> </div>';
+                        }
+                        echo '</div>';
+                    }
+                }
+            ?>
+           <div class="content_box" style="height:250px;">
                 <h4 style="color:#999900; ">Follow Social Media Pages of NCESS</h4>
-            <table><tr><td width="300px" style="border-radius: 22px;">
-                        <div class="fb-page" data-href="https://www.facebook.com/ESSO-NCESS" data-tabs="timeline" data-width="200px" data-height="250px" data-small-header="true" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true"><blockquote cite="https://www.facebook.com/ESSO-NCESS" class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/ESSO-NCESS">National Centre for Earth Science Studies</a></blockquote></div>                            </td>
-<td width="300px"><div>            <a href="https://twitter.com/TwitterDev?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">Follow @ESSO_NCESS</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> </div></td><td><script type="text/javascript" src="http://ytchannelembed.com/ytce-frgallery.js"></script><div style="width:100%;max-width:130px;" class="ytce" data-user="ESSO-NCESS" data-rows="1" data-ratio="hd" data-width="130" data-margin="15" data-desc="100" data-desc_color="9E9E9E" data-title="30" data-title_color="000000" data-https="0" data-duration="1" data-views="1" data-likes="1" data-dislikes="1" data-fav="1" data-cols="1" ></div></td>
+            <table><tr><td >
+                        <div class="fb-page" data-href="https://www.facebook.com/ESSO-NCESS" data-tabs="timeline" data-width="220px" data-height="250px" data-small-header="true" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true"><blockquote cite="https://www.facebook.com/ESSO-NCESS" class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/ESSO-NCESS">National Centre for Earth Science Studies</a></blockquote></div>                            </td>
+                    <td>
+                        <div> 
+                            <a class="twitter-timeline" data-lang="en" data-width="220" data-height="250" href="https://twitter.com/ESSO_NCESS?ref_src=twsrc%5Etfw">Tweets by ESSO_NCESS</a> 
+                            <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></div></td>
+                    <td><iframe width="200" height="250" src="https://www.youtube.com/embed/kj9JruwD130" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                    </td>
                 </tr></table>
             </div>
             <div class="content_box last_box"  style="height:170px;padding-bottom:10px;">
@@ -592,7 +482,7 @@ button:hover {
                     },
                     transEndEventName = transEndEventNames[ Modernizr.prefixed( 'transition' ) ],
                     $wrapper = $( '#custom-inner' ),
-                    $calendar = $( '#calendar' ),
+                    $calendar = $( '#calendar' ),  
                     cal = $calendar.calendario({
                         onDayMouseenter : function( $el, data, dateProperties ) {
                             if( data.content.length > 0 ) {
@@ -628,4 +518,4 @@ button:hover {
         </script>
      
 </body>
-</html>
+</html>   
