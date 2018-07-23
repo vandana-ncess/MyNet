@@ -80,7 +80,7 @@ if($mode == 'single') {
                     . "WHERE TIME_FORMAT(intime,'%H:%i:%s')>TIME_FORMAT('09:01:01','%H:%i:%s')  AND A.status<>'H' "
                     . "AND A.date = '" . $date ."' ORDER BY TIME_FORMAT(intime,'%H:%i:%s') desc";
             $col = array('Name','Division','Designation',"In Time","Remarks"); 
-            $smallTable = array(75,108,50,21,30);
+            $smallTable = array(75,100,60,21,30);
             break; 
         case 'early':
             $title='Early Goers Report';
