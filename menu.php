@@ -110,12 +110,12 @@ $(document).ready(function() {
                         <div style="max-height: 600px; overflow-y: auto;">
                         <table id="tblEsf" class="tbl" >
                             <?php
-                                $sql = "SELECT * FROM homemenu where status=1 ORDER by menuOrder";
+                                $sql = "SELECT * FROM menu where status=1 ORDER by menuOrder";
                                 $result = mysqli_query($conn,$sql);
                                 if(mysqli_num_rows($result)>0) {
                                     echo '<thead><tr><th>Title</th><th>Page</th><th>Description</th><th>Menu Order</th><th>Icon Name</th><th>Edit</th><th>Delete</th></tr></thead>';
                                     while($data= mysqli_fetch_array($result)) {
-                                        echo '<tr><td>'.$data['menu'].'</td><td>'.$data['page'].'</td><td>'.$data['description'].'</td><td align="center">'.$data['menuOrder'].'</td><td>'
+                                        echo '<tr><td>'.$data['menu'].'</td><td>'.$data['menuPage'].'</td><td>'.$data['description'].'</td><td align="center">'.$data['menuOrder'].'</td><td>'
                                                 .$data['image'].'</td>'
                                                 . '<td><img src="images/edit.png" onclick="editMenu(this)" style="cursor:pointer;" />'
                                                 . '<input type="hidden" name="txtID[]" value="'. $data['menuID'] . '" /></td>';
@@ -131,22 +131,22 @@ $(document).ready(function() {
                              <?php
             if(isset($_POST['btnUpload'])){
                 if($_POST['btnUpload']=='Save') {
-                    $sql = "SELECT * FROM homemenu WHERE menuOrder=" . $_POST['txtOrder'] . " AND status=1";
+                    $sql = "SELECT * FROM menu WHERE menuOrder=" . $_POST['txtOrder'] . " AND status=1";
                     $result = mysqli_query($conn,$sql);
                     if(mysqli_num_rows($result)>0) {
                         echo '<script>alert("Menu order already exists!");document.location="menu.php";</script>'; 
                         exit();
                     }
-                    $sql = "INSERT INTO homemenu(menu,page,description,menuOrder,image,status) VALUES('". $_POST['txtTitle']. "','" . $_POST['txtPage'].  "','" . $_POST['txtDesc']. "'," . $_POST['txtOrder']. ",'" . $_POST['txtImage']. "',1)"; 
+                    $sql = "INSERT INTO menu(menu,menuPage,description,menuOrder,image,status) VALUES('". $_POST['txtTitle']. "','" . $_POST['txtPage'].  "','" . $_POST['txtDesc']. "'," . $_POST['txtOrder']. ",'" . $_POST['txtImage']. "',1)"; 
                 }
                 else {
-                    $sql = "SELECT * FROM homemenu WHERE menuOrder=" . $_POST['txtOrder'] . "  AND status=1 AND menuID<>".$_POST['txtMenuID'];
+                    $sql = "SELECT * FROM menu WHERE menuOrder=" . $_POST['txtOrder'] . "  AND status=1 AND menuID<>".$_POST['txtMenuID'];
                     $result = mysqli_query($conn,$sql);
                     if(mysqli_num_rows($result)>0) {
                         echo '<script>alert("Menu order already exists!");document.location="menu.php";</script>'; 
                         exit();
                     }
-                    $sql = "UPDATE homemenu SET menu='" . $_POST['txtTitle'] ."', page='".$_POST['txtPage']."', description='". $_POST['txtDesc'] . "', menuOrder=". $_POST['txtOrder'] . ", image='".
+                    $sql = "UPDATE menu SET menu='" . $_POST['txtTitle'] ."', menuPage='".$_POST['txtPage']."', description='". $_POST['txtDesc'] . "', menuOrder=". $_POST['txtOrder'] . ", image='".
                         $_POST['txtImage'] . "' WHERE menuID=" . $_POST['txtMenuID'] ;
                 }
                 $result = mysqli_query($conn,$sql);

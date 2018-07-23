@@ -43,7 +43,7 @@
         $sql = "DELETE FROM adminmenu_privileges WHERE privilegeID=" . $id;
         break;
     case 'menu':
-        $sql = "UPDATE homemenu SET status=0 WHERE menuID=" . $id;
+        $sql = "UPDATE menu SET status=0 WHERE menuID=" . $id;
         break;
     default:
         break;

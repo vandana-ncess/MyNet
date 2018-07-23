@@ -375,16 +375,16 @@ button:hover {
             </div>
             <div align="right"><input type="text" name="txtSearch" class="search" id="txtSearch" style="width:200px;height: 25px;padding: 0px 0px;margin: 5px 5px;" /><img src="images/search.ico" style="cursor: pointer;" onclick="search()" /> </div>   
             <?php
-                $sql = "SELECT * FROM homemenu WHERE status=1";
+                $sql = "SELECT * FROM menu WHERE status=1 AND menuID>1";
                 $result = mysqli_query($conn,$sql);
                 if(mysqli_num_rows($result)>0) {
                     while ($row = mysqli_fetch_array($result)) {
                         echo '<div class="content_box" style="padding-top: 10px;height:20px;">
                                 <div style="float: left;width:300px;">';
-                        echo '<a href="' . $row['page'].'" target="_parent"><img class="image_wrapper image_fl" src="images/'. $row['image'].'" alt="Image 1" />';
+                        echo '<a href="' . $row['menuPage'].'" target="_parent"><img class="image_wrapper image_fl" src="images/'. $row['image'].'" alt="Image 1" />';
                         echo ' <h5>'. $row['menu'].'</h5></a> <p>'.$row['description'].'</p> </div>';
                         if($row = mysqli_fetch_array($result)) {
-                            echo '<div style="float: right;width:290px;"><a href="' . $row['page'].'" target="_parent"><img class="image_wrapper image_fl" src="images/'. $row['image'].'" alt="Image 1" />';
+                            echo '<div style="float: right;width:290px;"><a href="' . $row['menuPage'].'" target="_parent"><img class="image_wrapper image_fl" src="images/'. $row['image'].'" alt="Image 1" />';
                             echo ' <h5>'. $row['menu'].'</h5></a> <p>'.$row['description'].'</p> </div>';
                         }
                         echo '</div>';
