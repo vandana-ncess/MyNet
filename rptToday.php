@@ -16,20 +16,34 @@ $start = $_SESSION['start'];
 $end = $_SESSION['end'];
 $pdf = new FPDF( );
 $title1='';
-if($report == 'attendance' || $report == 'late' || $report == 'leave' || $report == 'tour') {
-    $len = 280;
-    $pdf->AddPage('L');
-    $head_font=18;
-        $body_font=14;
-}
-else{
-    $len = 200;
-    $pdf->AddPage();
-    $head_font=14;
-    $body_font=12;
-}
+
     
 $title = '';
+$sqll = "SELECT * FROM holidays WHERE year=" . date('Y');
+    $re = mysqli_query($conn,$sqll);
+    if(mysqli_num_rows($re)>0) {
+        $arr = "";
+        while($dat = mysqli_fetch_array($re)) {
+            $arr = $arr . '"' . date("m-d-Y", strtotime($dat['date'])) . '",';
+        }
+    }
+ $holidays=array($arr);
+    $holidays = array("04-30");
+    $holSql = "SELECT DATE_FORMAT(date,'%m-%d') As cnt FROM holidays where date BETWEEN '". $start . "' AND '" . $end . "' AND link<>''";
+    $holRes = mysqli_query($conn, $holSql);
+     $rows = [];
+    if(mysqli_num_rows($holRes) >0)
+    {
+       $i=0;
+        while($row = mysqli_fetch_array($holRes))
+        {
+            $rows[$i] = $row['cnt'];
+            $i++;
+        }
+    }
+    
+    $days =  getWorkingDays($start,$end,$rows);
+    $pageType='';
 if($mode == 'single') {
     $date = $_GET['date'];
     switch ($report)
@@ -41,6 +55,7 @@ if($mode == 'single') {
                     . "BETWEEN startDate AND endDate  AND leaveStatus <> 'Cancelled' ORDER BY level";
             $col = array('Name','Designation','Leave Type','From','To','Status');
             $smallTable = array(60,55,50,30,30,55);
+            $pageType = 'L';
             break;
         case 'tour':
             $title='Tour Register Report';
@@ -50,6 +65,7 @@ if($mode == 'single') {
                     . " BETWEEN startDate AND endDate ORDER BY level";
             $col = array('Name','Designation','Place','From','To','Purpose');    
             $smallTable = array(50,45,50,30,30,80);
+            $pageType = 'L';
             break;
         case 'attendance':
             $title='Attendance Register Report';
@@ -59,6 +75,7 @@ if($mode == 'single') {
                     . $date . "' AND intime<>'' ORDER BY C.categoryID,level " ;
             $col = array('Name','Division','Designation','Time In','Time Out');    
             $smallTable = array(75,107,53,21,21);
+            $pageType = 'L';
             break;
         case 'absentee':
            $title='Absentee Report';
@@ -69,6 +86,7 @@ if($mode == 'single') {
                     . "B.employeeCode = D.employeeCode AND CONCAT(A.date,' 09:30') BETWEEN D.startDate AND D.endDate WHERE A.status = 'A' AND leaveTypeID IS NULL AND place IS NULL AND  A.date = '" . $date ."' AND employeeSTatus=1 ORDER BY B.categoryID,level";
             $col = array('Name','Division','Designation'); 
             $smallTable = array(50,85,60);
+            $pageType = 'P';
             break; 
         case 'late':
             $title='Late Comers Report';
@@ -81,6 +99,7 @@ if($mode == 'single') {
                     . "AND A.date = '" . $date ."' ORDER BY TIME_FORMAT(intime,'%H:%i:%s') desc";
             $col = array('Name','Division','Designation',"In Time","Remarks"); 
             $smallTable = array(75,100,60,21,30);
+            $pageType = 'L';
             break; 
         case 'early':
             $title='Early Goers Report';
@@ -93,15 +112,29 @@ if($mode == 'single') {
                     "' ORDER BY TIME_FORMAT(outtime,'%H:%i:%s') ASC";
             $col = array('Name','Designation',"In Time",'Out Time','Remarks'); 
             $smallTable = array(60,65,18,18,35);
+            $pageType = 'P';
             break; 
         case 'employee':
             $title='Staff List';
             $sql1 = "SELECT MAX(lastUpdated) as last FROM employee_attendance";
-            $sql = "SELECT employeeName,designation,divisionName FROM employee B JOIN designation E ON B.designationID = E.designationID "
+            $sql = "SELECT  employeeName,designation,divisionName FROM employee B JOIN designation E ON B.designationID = E.designationID "
                     . " JOIN division F ON B.divisionID=F.divisionID WHERE employeeStatus=1 ORDER BY B.categoryID,level";
-            $col = array('Name','Designation',"Division"); 
-            $smallTable = array(53,59,84);
+            $col = array('Sl. No.','Name','Designation',"Division"); 
+            $smallTable = array(12,52,58,76);
+            $pageType = 'P';
             break; 
+    }
+     if($pageType == 'L') {
+        $len = 280;
+        $pdf->AddPage('L');
+        $head_font=18;
+        $body_font=14;
+    }
+    else{
+        $len = 200;
+        $pdf->AddPage();
+        $head_font=14;
+        $body_font=12;
     }
     $pdf->SetFont('Times','B',$head_font);
     $pdf->SetTextColor(51,51,255);
@@ -139,6 +172,8 @@ if($mode == 'single') {
     //$col = array('Date','In Time','Out Time','Leave','Tour','Gate Register');
     if($report == 'tour') 
         $pdf->FTable($col,$result,$smallTable);
+    elseif($report == 'employee')
+        $pdf->FancyTableWithSlNo($col,$result,$smallTable);
     else 
          $pdf->FancyTable($col,$result,$smallTable);
     $pdf->Ln(1);
@@ -146,61 +181,40 @@ if($mode == 'single') {
     $pdf->Output();
 }
 elseif($report == 'late') {
-    $sqll = "SELECT * FROM holidays WHERE year=" . date('Y');
-    $re = mysqli_query($conn,$sqll);
-    if(mysqli_num_rows($re)>0) {
-        $arr = "";
-        while($dat = mysqli_fetch_array($re)) {
-            $arr = $arr . '"' . date("m-d-Y", strtotime($dat['date'])) . '",';
-        }
-    }
-    $holidays=array($arr);
-    $holidays = array("04-30");
-    $holSql = "SELECT DATE_FORMAT(date,'%m-%d') As cnt FROM holidays where date BETWEEN '". $start . "' AND '" . $end . "' AND link<>''";
-    $holRes = mysqli_query($conn, $holSql);
-     $rows = [];
-    if(mysqli_num_rows($holRes) >0)
-    {
-       $i=0;
-        while($row = mysqli_fetch_array($holRes))
-        {
-            $rows[$i] = $row['cnt'];
-            $i++;
-        }
-    }
     
-    $days =  getWorkingDays($start,$end,$rows);
+   $pageType = 'L';
+   $len = 280;
+                $pdf->AddPage('L');
+                $head_font=18;
+                $body_font=14;
    // $days = $days - $holDays;
     if($mode == 'division') {
-        if($_SESSION['division'] < 0)
-            $whr = '';
-        else {
-            $whr = ' AND B.divisionID = ' . $_SESSION['division'];
-        }
-        $cond = "Division : " . $_SESSION['div'];
+        $whr = $_SESSION['division'];
+        $cond = $_SESSION['div'];
     }
     else {
-        $whr = ' AND B.employeeCode = ' . $_SESSION['employee'];
+        $whr = ' AND emp.employeeCode = ' . $_SESSION['employee'];
         $cond = "Employee : " . $_SESSION['emp'];
     }
-        $pdf->SetFont('Times','B',$head_font);
+        $pdf->SetFont('Times','B',18);
             $pdf->SetTextColor(51,51,255);
             $pdf->MultiCell(0,5,'NATIONAL CENTRE FOR EARTH SCIENCE STUDIES',0,'C');
-            $pdf->SetFont('Times','',$body_font);
+            $pdf->SetFont('Times','',14);
             $pdf->MultiCell(0,5,'Ulloor - Akkulam road, Akkulam, Thiruvananthapuram, Kerala 695011',0,'C');
-            $pdf->SetFont('Times','B',$head_font);
+            $pdf->SetFont('Times','B',18);
              $pdf->Ln();
             $pdf->MultiCell(0,7,"Late Comers & Early Goers Report",0,'C');
-            $pdf->Line(10,40,$len,40);
-             $pdf->SetFont('times','',$body_font);
+            $pdf->Ln(6);
+             $pdf->SetFont('times','',14);
             $pdf->cell(0,10,$cond,0,0,'L');
-            $pdf->cell(0,10,"Period : " . date('d-m-Y',strtotime($start)) . "  To  " . date('d-m-Y',strtotime($end)),0,0,'R');
-           $pdf->Ln();
+             $pdf->Ln();
+            $pdf->cell(0,10," Period : " . date('d-m-Y',strtotime($start)) . "  To  " . date('d-m-Y',strtotime($end)),0,0,'L');
+           $pdf->Ln(); $pdf->Line(10,60,$len,60);
            $pdf->Ln();
            
         $sql = "SELECT employeeName,designation,". $days .",pres,IFNULL(in_cnt,0),IFNULL(intime_short,0),IFNULL(out_cnt,0),IFNULL(outtime_short,0), "
             . "TIME_FORMAT(SEC_TO_TIME(TIME_TO_SEC(IFNULL(intime_short,0))+TIME_TO_SEC(IFNULL(outtime_short,0))),'%H:%i:%s') as tot, IFNULL(open_status,0) FROM "
-            . " employee_attendance A JOIN employee B ON A.employeeID=B.employeeID JOIN designation C ON B.designationID=C.designationID "
+            . " employee_attendance A JOIN employee emp ON A.employeeID=emp.employeeID JOIN designation C ON emp.designationID=C.designationID "
             . " JOIN (SELECT employeeID,COUNT(*) as pres FROM employee_attendance WHERE status = 'P' AND date BETWEEN '". $start . "' AND '" . $end 
             ."' GROUP BY employeeID) AS F ON A.employeeID=F.employeeID LEFT JOIN (SELECT employeeID,COUNT(*) as open_status FROM employee_attendance "
                 . " WHERE open_closed_status='Open' AND date BETWEEN '"  . $start . "' AND '" . $end . "' AND status <> 'H' GROUP BY employeeID) AS G "
@@ -222,16 +236,16 @@ elseif($report == 'late') {
          
            
                 $sql1 = "SELECT employeeCode, employeeName,designation, COUNT(intime) AS cnt,SEC_TO_TIME(SUM(TIME_TO_SEC(TIMEDIFF(TIME_FORMAT(intime,'%H:%i:%s'),TIME_FORMAT('09:01:01','%H:%i:%s'))))) as late,open_status "
-                        . "FROM employee_attendance A JOIN employee B ON A.employeeID=B.employeeID JOIN designation E ON B.designationID = E.designationID LEFT JOIN (SELECT employeeID,COUNT(*) as open_status FROM employee_attendance "
+                        . "FROM employee_attendance A JOIN employee emp ON A.employeeID=emp.employeeID JOIN designation E ON emp.designationID = E.designationID LEFT JOIN (SELECT employeeID,COUNT(*) as open_status FROM employee_attendance "
                 . " WHERE open_closed_status='Open' AND date BETWEEN '"  . $start . "' AND '" . $end . "' AND status <> 'H' GROUP BY employeeID) AS G "
-                . " ON B.employeeID = G.employeeID "
+                . " ON emp.employeeID = G.employeeID "
                     . " WHERE TIME_FORMAT(intime,'%H:%i:%s')>TIME_FORMAT('09:01:01','%H:%i:%s') AND A.date BETWEEN '" . $start . "' AND '" . $end . "' "
                     . $whr . "  AND status <> 'H' " . $whr. "  GROUP BY A.employeeID ORDER BY late DESC" ;
                 $col1 = array('Emp Code','Employee Name','Designation','No. of Days', 'Short Fall','Days with Open Status'); 
                 $sql2 = "SELECT employeeCode, employeeName,designation, COUNT(outtime) AS cnt,SEC_TO_TIME(SUM(TIME_TO_SEC(TIMEDIFF(TIME_FORMAT('17:30:00','%H:%i:%s'),TIME_FORMAT(outtime,'%H:%i:%s'))))) as late,open_status "
-                        . "FROM employee_attendance A JOIN employee B ON A.employeeID=B.employeeID JOIN designation E ON B.designationID = E.designationID LEFT JOIN (SELECT employeeID,COUNT(*) as open_status FROM employee_attendance "
+                        . "FROM employee_attendance A JOIN employee emp ON A.employeeID=emp.employeeID JOIN designation E ON emp.designationID = E.designationID LEFT JOIN (SELECT employeeID,COUNT(*) as open_status FROM employee_attendance "
                 . " WHERE open_closed_status='Open' AND date BETWEEN '"  . $start . "' AND '" . $end . "' AND status <> 'H' GROUP BY employeeID) AS G "
-                . " ON B.employeeID = G.employeeID "
+                . " ON emp.employeeID = G.employeeID "
                     . " WHERE TIME_FORMAT(outtime,'%H:%i:%s')<TIME_FORMAT('17:30:00','%H:%i:%s') AND A.date BETWEEN '" . $start . "' AND '" . $end . "' "
                     . $whr . "  AND status <> 'H'  " . $whr. " GROUP BY A.employeeID ORDER BY late DESC" ;
                 $col2 = array('Emp Code','Employee Name','Designation','No. of Days', 'Short Fall','Days with Open Status');   
@@ -243,7 +257,7 @@ elseif($report == 'late') {
            // mysqli_select_db($conn,"ncess_intranet");
    
             $result = mysqli_query($conn,$sql1);
-            
+             
             $pdf->SetFillColor(200,220,255);
             $pdf->Ln();
 
@@ -276,14 +290,16 @@ elseif($mode=='employee') {
             $sql = "SELECT leaveType,DATE_FORMAT(startDate,'%d-%m-%Y'),DATE_FORMAT(endDate,'%d-%m-%Y'),duration,leaveStatus FROM employee_leave A JOIN leave_type B ON A.leaveTypeID = B.leaveTypeID WHERE ('" . $start . "' "
                     . " BETWEEN startDate AND endDate OR '" . $end . "' BETWEEN startDate AND endDate OR startDate BETWEEN '" . $start . "' AND '" . $end . "')  AND leaveStatus <> 'Cancelled' AND employeeCode = " . $_SESSION['employee'];
             $col = array('Leave Type','Start Date','End Date','Duration(Days)','Leave Status');
-            $smallTable = array(70,60,60,30,40);
+            $smallTable = array(70,60,60,40,50);
+            $pageType = 'L';
             break;
         case 'tour':
             $title='Tour Register Report';
             $sql = "SELECT DATE_FORMAT(startDate,'%d-%m-%Y'),DATE_FORMAT(endDate,'%d-%m-%Y'),place,remarks FROM employee_tour A  WHERE ('" . $start . "' "
                     . " BETWEEN startDate AND endDate OR '" . $end . "' BETWEEN startDate AND endDate OR startDate BETWEEN '" . $start . "' AND '" . $end . "') AND employeeCode = " . $_SESSION['employee'];
             $col = array('From','To','Place','Purpose');    
-            $smallTable = array(40,40,40,50);
+            $smallTable = array(40,40,80,120);
+            $pageType = 'L';
             break;
         case 'attendance':
             $title='Attendance Register Report';
@@ -295,6 +311,7 @@ elseif($mode=='employee') {
             . "C.leaveTypeID = D.leaveTypeID WHERE A.date BETWEEN '" . $start . "' AND '" . $end . "' AND B.employeeCode = " . $_SESSION['employee'] . " ORDER BY A.date" ;
             $col = array('Date','Time In','Time Out','Leave','Tour','Gate Register','Status');   
             $smallTable = array(30,20,25,60,60,50,20);
+            $pageType = 'L';
             break;
         case 'absentee':
            $title='Absentee Report';
@@ -304,9 +321,43 @@ elseif($mode=='employee') {
                     . "AND A.status = 'A' AND leaveTypeID IS NULL AND B.employeeCode = " . $_SESSION['employee'] . " ORDER BY date";
             $col = array('Date'); 
             $smallTable = array(60);
+            $pageType = 'P';
             break; 
+        case 'summary':
+            $title='Attendance Summary Report';
+            $sql = "SELECT employeeName,designation,". $days .",pres,IFNULL(leave_no,0) as ltot,lop, TIME_FORMAT(SEC_TO_TIME(TIME_TO_SEC(IFNULL(intime_short,0)) + "
+                    . "TIME_TO_SEC(IFNULL(outtime_short,0))),'%H:%i:%s') as tot  FROM employee_attendance A JOIN employee emp ON "
+                    . "A.employeeID=emp.employeeID JOIN designation C ON emp.designationID=C.designationID JOIN (SELECT employeeID,COUNT(*) as pres FROM "
+                    . "employee_attendance WHERE status = 'P' AND date BETWEEN '". $start . "' AND '" . $end . "' GROUP BY employeeID) AS F ON A.employeeID=F.employeeID "
+                    . " LEFT JOIN "
+                    . "(SELECT employeeID,COUNT(*) as in_cnt,SEC_TO_TIME(SUM(TIME_TO_SEC(TIMEDIFF(TIME_FORMAT(intime,'%H:%i:%s'),TIME_FORMAT('09:01:01','%H:%i:%s'))))) "
+                    . "as intime_short FROM employee_attendance WHERE TIME_FORMAT(intime,'%H:%i:%s')>TIME_FORMAT('09:01:01','%H:%i:%s') AND date BETWEEN '" 
+                    . $start . "' AND '" . $end . "' AND status <> 'H' GROUP BY employeeID) AS D ON A.employeeID=D.employeeID LEFT JOIN "
+                    . "(SELECT employeeID,COUNT(*) as out_cnt,SEC_TO_TIME(SUM(TIME_TO_SEC(TIMEDIFF(TIME_FORMAT('17:30:00','%H:%i:%s'),TIME_FORMAT(outtime,'%H:%i:%s'))))) "
+                    . "as outtime_short FROM employee_attendance WHERE TIME_FORMAT(outtime,'%H:%i:%s') <TIME_FORMAT('17:30:00','%H:%i:%s') AND date "
+                    . "BETWEEN '". $start . "' AND '" . $end . "' AND status <> 'H'  GROUP BY employeeID) as E ON A.employeeID=E.employeeID LEFT JOIN "
+                    . "(SELECT employeeCode,COUNT(*) as leave_no FROM employee_leave WHERE ((startDate BETWEEN '". $start . "' AND '" . $end . "') AND "
+                    . "('" . $start . "' BETWEEN startDate AND endDate)) AND leaveTypeID<>12 group by employeeCode) AS l ON l.employeeCode=emp.employeeCode LEFT JOIN "
+                    . "(SELECT employeeCode,COUNT(*) as lop FROM employee_leave WHERE ((startDate BETWEEN '". $start . "' AND '" . $end . "') AND "
+                    . "('" . $start . "' BETWEEN startDate AND endDate)) AND leaveTypeID=12 group by employeeCode) AS lo ON lo.employeeCode=emp.employeeCode WHERE A.date BETWEEN '". $start . "' AND '" 
+                    . $end . "' AND emp.employeeCode = " . $_SESSION['employee'] . " AND status <> 'H' GROUP BY A.employeeID";
+            $col = array('Employee Name','Designation','Working Days','Present','Allowed Leaves','LOP','Short Fall');    
+            $smallTable = array(70,53,35,30,40,25,30);
+            $pageType = 'L';
+            break;
         
-        
+    }
+     if($pageType == 'L') {
+        $len = 280;
+        $pdf->AddPage('L');
+        $head_font=18;
+        $body_font=14;
+    }
+    else{
+        $len = 200;
+        $pdf->AddPage();
+        $head_font=14;
+        $body_font=12;
     }
     $pdf->SetFont('Times','B',$head_font);
     $pdf->SetTextColor(51,51,255);
@@ -340,17 +391,16 @@ elseif($mode=='employee') {
     //$pdf->Cell(0,5, "Employee ID :   " . $_SESSION['empID'] . "   Report From  :  " . $_SESSION['fromDate']. "   To  :  " . $_SESSION['toDate'],0,1,'L',true);
     $pdf->Ln();
     //$col = array('Date','In Time','Out Time','Leave','Tour','Gate Register');
-    $pdf->FancyTable($col,$result,$smallTable);
+    if($report == 'tour')
+        $pdf->FTable($col,$result,$smallTable);
+    else
+        $pdf->FancyTable($col,$result,$smallTable);
     $pdf->Ln(1);
 
     $pdf->Output();
 }
 else {
-    if($_SESSION['division'] < 0)
-            $whr = '';
-        else {
-            $whr = ' AND emp.divisionID = ' . $_SESSION['division'];
-        }
+    $whr = $_SESSION['division'];
     switch ($report)
     {
         
@@ -360,6 +410,7 @@ else {
                     . " BETWEEN startDate AND endDate OR '" . $end . "' BETWEEN startDate AND endDate OR startDate BETWEEN '" . $start . "' AND '" . $end . "')" . $whr ." AND leaveStatus <> 'Cancelled' AND employeeStatus=1 ORDER BY employeeName"; ;
             $col = array('Name','Designation','Leave Type','Start Date','End Date','Duration','Leave Status');
             $smallTable = array(60,50,40,30,30,20,50);
+            $pageType = 'L';
             break;
         case 'tour':
             $title='Tour Register Report';
@@ -367,7 +418,8 @@ else {
                     . " BETWEEN startDate AND endDate OR '" . $end . "' BETWEEN startDate AND endDate OR startDate BETWEEN '" . $start . "' AND '" . $end . "')" . $whr . " AND employeeStatus=1 ORDER BY employeeName";
                     
             $col = array('Name','Designation','From','To','Place','Purpose');    
-            $smallTable = array(40,40,23,23,40,40);
+            $smallTable = array(60,40,30,30,40,75);
+            $pageType = 'L';
             break;
         case 'attendance':
             $title='Attendance Register Report';
@@ -379,7 +431,30 @@ else {
                     . "BETWEEN '" . $start . "' AND '" . $end . "'" . $whr . " AND employeeStatus=1 ORDER BY emp.categoryID,level,A.employeeID,A.date";
             $col = array('Date','Name','In','Out','Leave','Tour','Gate Register','Open/Closed','Status');    
             $smallTable = array(25,65,20,20,25,40,40,28,15);
+            $pageType = 'L';
             
+            break;
+        case 'summary':
+            $title='Attendance Summary Report';
+            $sql = "SELECT employeeName,designation,". $days .",pres,IFNULL(leave_no,0) as ltot,lop, TIME_FORMAT(SEC_TO_TIME(TIME_TO_SEC(IFNULL(intime_short,0)) + "
+                    . "TIME_TO_SEC(IFNULL(outtime_short,0))),'%H:%i:%s') as tot  FROM employee_attendance A JOIN employee emp ON "
+                    . "A.employeeID=emp.employeeID JOIN designation C ON emp.designationID=C.designationID JOIN (SELECT employeeID,COUNT(*) as pres FROM "
+                    . "employee_attendance WHERE status = 'P' AND date BETWEEN '". $start . "' AND '" . $end . "' GROUP BY employeeID) AS F ON A.employeeID=F.employeeID "
+                    . " LEFT JOIN "
+                    . "(SELECT employeeID,COUNT(*) as in_cnt,SEC_TO_TIME(SUM(TIME_TO_SEC(TIMEDIFF(TIME_FORMAT(intime,'%H:%i:%s'),TIME_FORMAT('09:01:01','%H:%i:%s'))))) "
+                    . "as intime_short FROM employee_attendance WHERE TIME_FORMAT(intime,'%H:%i:%s')>TIME_FORMAT('09:01:01','%H:%i:%s') AND date BETWEEN '" 
+                    . $start . "' AND '" . $end . "' AND status <> 'H' GROUP BY employeeID) AS D ON A.employeeID=D.employeeID LEFT JOIN "
+                    . "(SELECT employeeID,COUNT(*) as out_cnt,SEC_TO_TIME(SUM(TIME_TO_SEC(TIMEDIFF(TIME_FORMAT('17:30:00','%H:%i:%s'),TIME_FORMAT(outtime,'%H:%i:%s'))))) "
+                    . "as outtime_short FROM employee_attendance WHERE TIME_FORMAT(outtime,'%H:%i:%s') <TIME_FORMAT('17:30:00','%H:%i:%s') AND date "
+                    . "BETWEEN '". $start . "' AND '" . $end . "' AND status <> 'H'  GROUP BY employeeID) as E ON A.employeeID=E.employeeID LEFT JOIN "
+                    . "(SELECT employeeCode,COUNT(*) as leave_no FROM employee_leave WHERE ((startDate BETWEEN '". $start . "' AND '" . $end . "') AND "
+                    . "('" . $start . "' BETWEEN startDate AND endDate)) AND leaveTypeID<>12 group by employeeCode) AS l ON l.employeeCode=emp.employeeCode LEFT JOIN "
+                    . "(SELECT employeeCode,COUNT(*) as lop FROM employee_leave WHERE ((startDate BETWEEN '". $start . "' AND '" . $end . "') AND "
+                    . "('" . $start . "' BETWEEN startDate AND endDate)) AND leaveTypeID=12 group by employeeCode) AS lo ON lo.employeeCode=emp.employeeCode WHERE A.date BETWEEN '". $start . "' AND '" 
+                    . $end . "' " . $whr . " AND status <> 'H'  AND employeeStatus=1 GROUP BY A.employeeID ORDER BY emp.categoryID,level,A.employeeID";
+            $col = array('Employee Name','Designation','Working Days','Present','Allowed Leaves','LOP','Short Fall');    
+            $smallTable = array(70,53,35,30,40,25,30);
+            $pageType = 'L';
             break;
         case 'absentee':
            $title='Absentee Report';
@@ -391,10 +466,23 @@ else {
                     . $whr . " AND (A.status = 'A' OR (TIME_FORMAT(A.outtime,'%H:%i:%s')-TIME_FORMAT(A.intime,'%H:%i:%s') < 5)) AND leaveTypeID IS NULL AND place IS NULL AND employeeStatus=1 ORDER BY emp.categoryID,level,employeeName,date";
             $col = array('Name','Designation','Date'); 
             $smallTable = array(60,70,25);
+            $pageType = 'P';
             break; 
        
         
             } 
+    if($pageType == 'L') {
+        $len = 280;
+        $pdf->AddPage('L');
+        $head_font=18;
+        $body_font=14;
+    }
+    else{
+        $len = 200;
+        $pdf->AddPage();
+        $head_font=14;
+        $body_font=12;
+    }
     $pdf->SetFont('Times','B',$head_font);
     $pdf->SetTextColor(51,51,255);
     $pdf->MultiCell(0,5,'NATIONAL CENTRE FOR EARTH SCIENCE STUDIES',0,'C');
@@ -407,13 +495,17 @@ $pdf->Ln(2);
      $pdf->SetFont('Times','',11);
      $pdf->MultiCell(0,5,$title1,0,'C');
  $pdf->SetFont('times','B',$body_font);
-   
-    $pdf->cell(0,10,"Division : " . $_SESSION['div'],0,0,'L');
+   if($_SESSION['div']=='')
+       $he = "Division : All";
+   else
+       $he = $_SESSION['div'];
+    $pdf->cell(0,10,$he,0,0,'L');
+    $pdf->Ln();
     $pdf->cell(0,10,"Preiod : " . date('d-m-Y',strtotime($start)) . "  To  " . date('d-m-Y',strtotime($end)),0,0,'R');
     
-     $pdf->Line(10,45,$len,45);
+     $pdf->Line(10,55,$len,55);
      
-    $pdf->Ln(2);
+    $pdf->Ln(1);
    // $conn=mysqli_connect("localhost","root","");
    // mysqli_select_db($conn,"ncess_intranet");
     /*$sql = "SELECT A.date, A.intime,A.outtime,leaveType,place,CONCAT(F.outtime,'-', F.intime ) FROM employee_attendance A "

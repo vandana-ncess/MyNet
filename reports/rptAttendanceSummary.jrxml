@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptAttendanceSummary" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f2e611a6-19f0-4c85-a46c-f27d69122e45">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="100"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="sub" uuid="f2abb00f-9cdc-46bc-9d3f-1e5cdbb2f08c">
+		<parameter name="empName" class="java.lang.String"/>
+		<parameter name="start" class="java.util.Date"/>
+		<parameter name="end" class="java.util.Date"/>
+		<queryString language="SQL">
+			<![CDATA[SELECT DATE_FORMAT(A.date,'%d-%m-%Y'),A.intime,A.outtime,leaveType,place,CONCAT(F.outtime,'-', F.intime ) as gate,A.status  FROM employee_attendance  A JOIN employee B on A.employeeID =B.employeeID LEFT JOIN  employee_leave C ON B.employeeCode = C.employeeCode AND  A.date between C.startDate AND C.endDate LEFT JOIN employee_tour E ON B.employeeCode=E.employeeCode AND A.date between E.startDate  AND E.endDate LEFT JOIN gate_register F ON F.employeeCode = B.employeeCode AND a.date=f.date LEFT JOIN leave_type D ON C.leaveTypeID = D.leaveTypeID WHERE A.date BETWEEN $P{start} AND $P{end} AND employeeName=$P{empName}  ORDER BY A.date]]>
+		</queryString>
+		<field name="DATE_FORMAT(A.date,&apos;%d-%m-%Y&apos;)" class="java.lang.String"/>
+		<field name="intime" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="outtime" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="leaveType" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="place" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="gate" class="java.lang.String"/>
+		<field name="status" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<group name="DATE_FORMAT(A.date,&apos;%d-%m-%Y&apos;)">
+			<groupExpression><![CDATA[]]></groupExpression>
+		</group>
+	</subDataset>
+	<parameter name="start" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="end" class="java.util.Date"/>
+	<queryString>
+		<![CDATA[SELECT employeeName,designation,pres,IFNULL(leave_no,0) as ltot, TIME_FORMAT(SEC_TO_TIME(TIME_TO_SEC(IFNULL(intime_short,0)) + TIME_TO_SEC(IFNULL(outtime_short,0))),'%H:%i:%s') as tot,  IFNULL(open_status,0) FROM employee_attendance A JOIN employee B ON A.employeeID=B.employeeID JOIN designation C ON B.designationID=C.designationID JOIN (SELECT employeeID,COUNT(*) as pres FROM employee_attendance WHERE status = 'P' AND date BETWEEN $P{start} AND $P{end} GROUP BY employeeID) AS F ON A.employeeID=F.employeeID LEFT JOIN (SELECT employeeID,COUNT(*) as open_status FROM employee_attendance WHERE open_closed_status='Open' AND date BETWEEN $P{start} AND $P{end} AND status <> 'H' GROUP BY employeeID) AS G ON A.employeeID = G.employeeID LEFT JOIN (SELECT employeeID,COUNT(*) as in_cnt,SEC_TO_TIME(SUM(TIME_TO_SEC(TIMEDIFF(TIME_FORMAT(intime,'%H:%i:%s'),TIME_FORMAT('09:01:01','%H:%i:%s'))))) as intime_short FROM employee_attendance WHERE TIME_FORMAT(intime,'%H:%i:%s')>TIME_FORMAT('09:01:01','%H:%i:%s') AND date BETWEEN $P{start} AND $P{end} AND status <> 'H' GROUP BY employeeID) AS D ON A.employeeID=D.employeeID LEFT JOIN (SELECT employeeID,COUNT(*) as out_cnt,SEC_TO_TIME(SUM(TIME_TO_SEC(TIMEDIFF(TIME_FORMAT('17:30:00','%H:%i:%s'),TIME_FORMAT(outtime,'%H:%i:%s'))))) as outtime_short FROM employee_attendance WHERE TIME_FORMAT(outtime,'%H:%i:%s') <TIME_FORMAT('17:30:00','%H:%i:%s') AND date BETWEEN $P{start} AND $P{end} AND status <> 'H'  GROUP BY employeeID) as E ON A.employeeID=E.employeeID LEFT JOIN (SELECT employeeCode,COUNT(*) as leave_no FROM employee_leave WHERE startDate BETWEEN $P{start} AND $P{end} OR $P{start} BETWEEN startDate AND endDate group by employeeCode) AS l ON l.employeeCode=B.employeeCode WHERE A.date BETWEEN $P{start} AND $P{end} AND status <> 'H' GROUP BY A.employeeID]]>
+	</queryString>
+	<field name="employeeName" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="designation" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="pres" class="java.lang.Long"/>
+	<field name="ltot" class="java.lang.Long"/>
+	<field name="tot" class="java.lang.String"/>
+	<field name="IFNULL(open_status,0)" class="java.lang.Long"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="98" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Transparent" x="11" y="0" width="519" height="28" forecolor="#003399" uuid="62582e78-9f8b-442b-9017-64f7fa307e8a"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font fontName="Serif" size="20" isBold="true"/>
+				</textElement>
+				<text><![CDATA[   NATIONAL CENTRE FOR EARTH SCIENCE STUDIES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="24" y="28" width="506" height="26" forecolor="#003399" uuid="bba6d70b-b0f1-49ba-a883-87a45334e99d"/>
+				<textElement>
+					<font fontName="Serif" size="15"/>
+				</textElement>
+				<text><![CDATA[                Post Box No.7250, Akkulam, Thiruvananthapuram – 695 011, India]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="24" y="71" width="449" height="25" forecolor="#000066" uuid="9cddd855-f623-4bd7-93b9-52df83d59947"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Serif" size="15" isBold="true"/>
+				</textElement>
+				<text><![CDATA[     ATTENDANCE SUMMARY REPORT]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="1" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="263" splitType="Stretch">
+			<rectangle>
+				<reportElement x="25" y="0" width="505" height="133" uuid="8edd2ddd-21ca-447c-9c42-4c8d1e8d3289"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="49" y="22" width="100" height="20" uuid="919fc053-df5e-477d-987d-40e76ff856e1"/>
+				<text><![CDATA[E mployee Name]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="149" y="22" width="100" height="20" uuid="a4cb7212-b6c9-4322-8050-883c4816ad9d"/>
+				<textFieldExpression><![CDATA[$F{employeeName}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="266" y="22" width="100" height="20" uuid="bde36da5-02ba-4f92-8df2-9ab44de54ebb"/>
+				<text><![CDATA[Designation]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="366" y="22" width="100" height="20" uuid="fbfae168-cf01-4ddc-b3b9-a088864d3a45"/>
+				<textFieldExpression><![CDATA[$F{designation}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="266" y="72" width="100" height="20" uuid="af81e0d0-ed2d-42b9-8795-40187920cb30"/>
+				<text><![CDATA[No Of Days Present]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="379" y="72" width="100" height="20" uuid="dcd16441-27c7-433a-966c-e3648fd91938"/>
+				<textFieldExpression><![CDATA[$F{pres}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="49" y="103" width="100" height="20" uuid="91824bad-e940-480f-9752-3950de6bf36a"/>
+				<text><![CDATA[Total Leaves]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="149" y="103" width="100" height="20" uuid="aef17933-d5de-4ea1-baa1-6674bd9b192b"/>
+				<textFieldExpression><![CDATA[$F{ltot}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="149" y="47" width="100" height="20" uuid="7c3f78a8-af7e-4ea6-95b5-2ad32d27912a"/>
+				<textFieldExpression><![CDATA[$P{start}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="300" y="47" width="100" height="20" uuid="d39f0ba6-2d83-40c9-84a0-14ea176c5f2f"/>
+				<textFieldExpression><![CDATA[$P{end}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="49" y="47" width="100" height="20" uuid="7ff675c0-35fa-4847-aa84-1688c1e3a39f"/>
+				<text><![CDATA[Period ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="266" y="47" width="13" height="20" uuid="44f91a14-0087-40ce-97f3-31e100c0a81e"/>
+				<text><![CDATA[-]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="49" y="72" width="100" height="20" uuid="dfc25511-4b8f-4b8a-8285-73cfcb19ff40"/>
+				<text><![CDATA[Working Days]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement key="table" style="table" x="43" y="167" width="487" height="50" uuid="c84c8626-e64c-4a75-9bcc-6cb3be5533e0"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="sub" uuid="a8b450c2-6b2c-4d6e-aca3-98bb666c7a77">
+						<datasetParameter name="empName">
+							<datasetParameterExpression><![CDATA[$F{employeeName}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="start">
+							<datasetParameterExpression><![CDATA[$P{start}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="end">
+							<datasetParameterExpression><![CDATA[$P{end}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="90" uuid="b37f7684-dae9-470e-a16e-d312eba2b178">
+						<jr:columnHeader style="table_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="30" uuid="b4c98556-8c87-4008-a436-8dc68d0af727"/>
+								<text><![CDATA[Date]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table_TD" height="20">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="20" uuid="f163ff90-c654-4e12-acd8-fb8a59f17ae2"/>
+								<textFieldExpression><![CDATA[$F{DATE_FORMAT(A.date,'%d-%m-%Y')}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="90" uuid="f9861d03-c94c-4a59-b088-df34aef63eff">
+						<jr:columnHeader style="table_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="30" uuid="0c47e34e-17ea-446d-84e3-e7dd3bebdfb5"/>
+								<text><![CDATA[intime]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table_TD" height="20">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="20" uuid="668c3b49-8e81-48c8-8982-07e38cb25ecd"/>
+								<textFieldExpression><![CDATA[$F{intime}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="90" uuid="886d69b8-1428-4579-b1a0-46560f54beda">
+						<jr:columnHeader style="table_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="30" uuid="3b512491-365f-417f-b178-3965052b78cf"/>
+								<text><![CDATA[outtime]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table_TD" height="20">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="20" uuid="149cb7cb-a523-4834-bff3-e69dec52a960"/>
+								<textFieldExpression><![CDATA[$F{outtime}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="90" uuid="20e85d82-b91c-4caa-9219-01973c76a6d2">
+						<jr:columnHeader style="table_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="30" uuid="00c04c27-1fda-4d49-9ccc-355dd7e44c02"/>
+								<text><![CDATA[Leave Type]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table_TD" height="20">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="20" uuid="3d294e35-fbbd-46c9-80eb-c8fd00f98934"/>
+								<textFieldExpression><![CDATA[$F{leaveType}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="90" uuid="bc430866-0c1b-47c2-b622-e01a91ddf5df">
+						<jr:columnHeader style="table_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="30" uuid="24683302-32cb-4eba-b15a-8ab7b548921b"/>
+								<text><![CDATA[Tour]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table_TD" height="20">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="20" uuid="b4dce553-857c-4e6e-ba70-c4fd627538e4"/>
+								<textFieldExpression><![CDATA[$F{place}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="90" uuid="b2ae40bb-0365-4f9a-92c6-c6d2d6a25355">
+						<jr:columnHeader style="table_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="30" uuid="166e6a02-eb02-45be-ad4b-6372d8b0d2ec"/>
+								<text><![CDATA[Gate]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table_TD" height="20">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="20" uuid="bb577a2f-d9a7-4c0d-b330-d5258224f848"/>
+								<textFieldExpression><![CDATA[$F{gate}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="90" uuid="e44cf296-7a32-4ed6-96c1-045c526c74f4">
+						<jr:columnHeader style="table_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="30" uuid="0b65e73d-a5a0-48e8-a0d8-5f6da2c71caf"/>
+								<text><![CDATA[Status]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table_TD" height="20">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="20" uuid="15711798-7f66-4ce9-9d3f-1b91717fda1c"/>
+								<textFieldExpression><![CDATA[$F{status}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

@@ -26,8 +26,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>NCESS Intranet</title>
-<meta name="keywords" content="free css templates, web design, 2-column, html css" />
-<meta name="description" content="Web Design is a 2-column website template (HTML/CSS) provided by templatemo.com" />
+<link rel="shortcut icon" href="images/logo1.png" type="image/x-icon"/>
 <link href="templatemo_style.css" rel="stylesheet" type="text/css" />
 <!--////// CHOOSE ONE OF THE 3 PIROBOX STYLES  \\\\\\\-->
 <link href="css_pirobox/white/style.css" media="screen" title="shadow" rel="stylesheet" type="text/css" />
@@ -108,6 +107,8 @@ $(document).ready(function() {
           $divID = document.getElementById('ddlDivision').value;
           element = document.getElementById('ddlDivision');
           document.getElementById('txtDiv').value = element.options[element.selectedIndex].text;
+          document.getElementById('txtCat').value = document.getElementById('ddlCategory').options[document.getElementById('ddlCategory').selectedIndex].text;
+          document.getElementById('txtDes').value = document.getElementById('ddlDesignation').options[document.getElementById('ddlDesignation').selectedIndex].text;
           $str = "";
           if($catID>0)
               $str = $str + " AND categoryID=" + $catID;
@@ -205,7 +206,8 @@ $(document).ready(function() {
                     <tr>
                         <td colspan="2" align="right">Select Report</td><td colspan="4">
                             <select name="ddlReport" id="ddlReport">
-                                <option value="attendance">Attendance Summary Report</option>
+                               <option value="summary">Attendance Summary Report</option>
+                                <option value="attendance">Detailed Attendance Report</option>
                                 <option value="leave">Leave Report</option>
                                 <option value="tour">Tour Report</option>
                                 <option value="late">Late Comers & Early Goers' Report</option>
@@ -213,8 +215,8 @@ $(document).ready(function() {
                             </select>
                         </td>
                         <td>
-                            <input type="radio" name="rdoDivision" id="rdoDivision" onchange="activate()" value="Division" checked /> Division Wise 
-                            <input type="radio" name="rdoDivision" id="rdoEmp" value="Employee" onchange="activate()"  /> Employee Wise
+                            <input type="radio" name="rdoDivision" id="rdoEmp" value="Employee" onchange="activate()" checked  /> Single
+                            <input type="radio" name="rdoDivision" id="rdoDivision" onchange="activate()" value="Division" checked /> Employee Group 
                         </td>
                         
                     </tr>
@@ -224,7 +226,7 @@ $(document).ready(function() {
                         <td >Division</td><td style="padding-left: 10px;" colspan="3"><input type="hidden" name="txtDiv" id='txtDiv' /><select id="ddlDivision" name="ddlDivision" onchange="loadEmployee()" style="width: 500px;">
                                 <option value="-1">All</option>
                             <?php
-                                $sql = "SELECT divisionID,divisionName FROM division WHERE divisionStatus=1";
+                                $sql = "SELECT divisionID,divisionName FROM division WHERE divisionStatus=1 AND divisionName<>''";
                                 $result = mysqli_query($conn,$sql);
                                 if(mysqli_num_rows($result) > 0)
                                 {
@@ -237,7 +239,7 @@ $(document).ready(function() {
                         </td>
                     </tr>
                     <tr>
-                        <td>Category</td><td style="padding-left: 10px;" width="200px"><select id="ddlCategory" name="ddlCategory" onchange="loadDesignation()" style="width: 180px;" ><option value="0">All</option>
+                        <td>Category</td><td style="padding-left: 10px;" width="200px"><input type="hidden" name="txtCat" id='txtCat' /><select id="ddlCategory" name="ddlCategory" onchange="loadDesignation()" style="width: 180px;" ><option value="0">All</option>
                                 <?php
                                     $sql = "SELECT categoryID,categoryName FROM category WHERE categoryStatus=1";
                                     $result = mysqli_query($conn,$sql);
@@ -250,7 +252,7 @@ $(document).ready(function() {
                                 ?>
                             </select>
                         </td>
-                        <td  >Designation</td><td colspan="3" style="padding-left: 10px;"><select id="ddlDesignation" name="ddlDesignation" onchange="loadEmployee()" style="width: 215px;">
+                        <td  >Designation</td><td colspan="3" style="padding-left: 10px;"><input type="hidden" name="txtDes" id='txtDes' /><select id="ddlDesignation" name="ddlDesignation" onchange="loadEmployee()" style="width: 215px;">
 
                             </select>
                         </td>
@@ -299,16 +301,33 @@ $(document).ready(function() {
         else {
             $_SESSION['start'] = date('Y-m-d',strtotime($_POST['datepicker1']));
             $_SESSION['end'] = date('Y-m-d',strtotime($_POST['datepicker2']));
-            if($_POST['rdoDivision']=='Division') {
-                $_SESSION['division'] = $_POST['ddlDivision'];
-                $_SESSION['div'] = $_POST['txtDiv'];
-                echo '<script>window.open("rptToday.php?report='. $_POST['ddlReport'] . '&mode=division","_blank");</script>';
-            }
-            else {
-                $_SESSION['employee'] = $_POST['ddlEmployee'];
-                $_SESSION['emp'] = $_POST['txtEmp'];
-                echo '<script>window.open("rptToday.php?report='. $_POST['ddlReport'] . '&mode=employee","_blank");</script>';
-            }
+            /*if($_POST['ddlReport']=='summary')
+                echo '<script>window.open("rptViewer.php","_blank");</script>';
+            else {*/
+                if($_POST['rdoDivision']=='Division') {
+                    $whr = '';
+                    $str = '';
+                    if($_POST['ddlCategory']>0) {
+                        $whr = $whr . " AND emp.categoryID=" . $_POST['ddlCategory'];
+                        $str = $str . " Category : " . $_POST['txtCat']. "; ";
+                    }
+                    if($_POST['ddlDesignation']>0) {
+                        $whr = $whr . " AND emp.designationID=" . $_POST['ddlDesignation'];
+                        $str = $str . " Designation : " . $_POST['txtDes']. "; "; 
+                    }     
+                    if($_POST['ddlDivision']>=0) {
+                        $whr = $whr . " AND emp.divisionID =" . $_POST['ddlDivision'];
+                        $str = $str . " Division : " . $_POST['txtDiv']. "; ";
+                    }    
+                    $_SESSION['division'] = $whr;
+                    $_SESSION['div'] = $str;
+                    echo '<script>window.open("rptToday.php?report='. $_POST['ddlReport'] . '&mode=division","_blank");</script>';
+                }
+                else {
+                    $_SESSION['employee'] = $_POST['ddlEmployee'];
+                    $_SESSION['emp'] = $_POST['txtEmp'];
+                    echo '<script>window.open("rptToday.php?report='. $_POST['ddlReport'] . '&mode=employee","_blank");</script>';
+                }
         }
     }
 ?>
@@ -322,13 +341,9 @@ $(document).ready(function() {
         function activate()
         {
             if(document.getElementById('rdoEmp').checked) {
-                document.getElementById('ddlCategory').disabled = false;
-                document.getElementById('ddlDesignation').disabled = false;
                 document.getElementById('ddlEmployee').disabled = false;
             }
             else {
-                document.getElementById('ddlCategory').disabled = true;
-                document.getElementById('ddlDesignation').disabled = true;
                 document.getElementById('ddlEmployee').disabled = true;
             }
             loadDesignation();
@@ -351,16 +366,16 @@ $(document).ready(function() {
             }
             
             if(document.getElementById('rdoEmp').checked) {
-               if(document.getElementById('ddlEmployee').value == ''){
+               if(document.getElementById('ddlEmployee').value == '-1'){
                    alert('Kindly select an Employee!');
-                   exit;
+                   e.preventDefault();
                }
             }
             else
             {
               if(document.getElementById('ddlDivision').value == ''){
                    alert('Kindly select a Division!');
-                   exit;
+                   e.preventDefault();
                }  
             }
             

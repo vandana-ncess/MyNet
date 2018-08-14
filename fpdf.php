@@ -891,6 +891,68 @@ function FancyTable($header, $data, $size)
     }
 }
 
+function FancyTableWithSlNo($header, $data, $size)
+{
+	// Colors, line width and bold font
+    if(mysqli_num_rows($data)>0) {
+	$this->SetFillColor(51,51,255);
+	$this->SetTextColor(255);
+	$this->SetDrawColor(51,51,255);
+	$this->SetLineWidth(.3);
+	if($this->CurOrientation == 'P') 
+            $this->SetFont('','B',11);
+        else
+            $this->SetFont('','B',14);
+	// Header
+	//$w = array(40, 30, 40);
+	//foreach($header as $col)
+        //$this->Cell(40,5,$col,1,0,'L',true);
+	for($i=0;$i<count($size);$i++)
+        {
+            if($this->CurOrientation == 'P') 
+                $this->Cell($size[$i],6,$header[$i],1,0,'C',true);
+            else
+                $this->Cell($size[$i],10,$header[$i],1,0,'C',true);
+        }    
+		
+		
+	$this->Ln();
+	// Color and font restoration
+	$this->SetFillColor(204,229,255);
+	$this->SetTextColor(0);
+	$this->SetFont('');
+	// Data
+	$fill = false;
+        if($this->CurOrientation == 'P')   
+            $s = 6;
+        else
+            $s = 10;
+        $j=1;
+	foreach($data as $row)
+	{
+		$i = 1;
+                    $this->Cell($size[0],$s,$j,1,'','L',$fill);
+                    foreach($row as $col)
+                    {
+                        $this->Cell($size[$i],$s,$col,1,'','L',$fill);
+                        $i++;
+                    }
+		
+        //$this->Ln();
+		$j++;
+		//$this->Cell($w[0],6,$row['Detail'],'LR',0,'L',$fill);
+		//$this->Cell($w[1],6,$row['Result'],'LR',0,'C',$fill);
+		//$this->Cell($w[2],6,($row['Interpretation']),'LR',0,'L',$fill);
+		//$this->Cell($w[3],6,($row[3]),'LR',0,'R',$fill);
+			$fill = !$fill;
+		
+		$this->Ln();
+	}
+	// Closing line
+	//$this->Cell(array_sum($w),0,'','T');
+    }
+}
+
 // Colored table
 function FancyTable1($header,$header1,$header2, $data, $size)
 {

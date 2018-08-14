@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptAttendanceSummary_subreport1" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="c0f667ec-0277-4967-b12a-b0d17c821a5c">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="empName" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT DATE_FORMAT(A.date,'%d-%m-%Y'),employeeName,A.intime,A.outtime,shortname,place,CONCAT(F.outtime,'-', F.intime ) as gate,open_closed_status,A.status FROM employee_attendance A JOIN employee emp ON A.employeeID =emp.employeeID JOIN designation des ON emp.designationID = des.designationID LEFT JOIN employee_leave C ON  C.employeeCode = emp.employeeCode AND A.date between C.startDate AND C.endDate LEFT JOIN employee_tour E ON  emp.employeeCode=E.employeeCode AND A.date between E.startDate AND E.endDate LEFT JOIN gate_register F ON F.employeeCode = emp.employeeCode AND a.date=f.date LEFT JOIN leave_type D ON C.leaveTypeID = D.leaveTypeID WHERE A.date BETWEEN '2018-08-01' AND '2018-08-08' AND employeeName=$P{empName} order by A.employeeID,A.date]]>
+	</queryString>
+	<field name="DATE_FORMAT(A.date,&apos;%d-%m-%Y&apos;)" class="java.lang.String"/>
+	<field name="employeeName" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="intime" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="outtime" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="shortname" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="place" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="gate" class="java.lang.String"/>
+	<field name="open_closed_status" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="status" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<group name="employeeName">
+		<groupExpression><![CDATA[$F{employeeName}]]></groupExpression>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="29" splitType="Stretch">
+			<staticText>
+				<reportElement x="11" y="2" width="56" height="20" uuid="09378d6f-1a36-4358-8496-27981c1c9b7f"/>
+				<text><![CDATA[Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="85" y="2" width="82" height="20" uuid="332367ac-5207-49b8-adfb-2627689540f0"/>
+				<text><![CDATA[intime]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="167" y="2" width="82" height="20" uuid="6ffe492b-e9e4-42c0-a4df-75902bc879ae"/>
+				<text><![CDATA[outtime]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="249" y="2" width="59" height="20" uuid="8b9d11f4-4833-4110-8c40-c64afa3387d4"/>
+				<text><![CDATA[Leave]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="308" y="2" width="50" height="20" uuid="14f03b1c-a34f-4be2-9ccd-4dc07a79e039"/>
+				<text><![CDATA[Tour]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="371" y="2" width="100" height="20" uuid="dd16f0cc-8d19-4d9c-b470-ee17853cce64"/>
+				<text><![CDATA[open_closed_status]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="31" splitType="Stretch">
+			<textField>
+				<reportElement x="11" y="5" width="56" height="20" uuid="05ef5022-9c9b-4d6b-a816-b0a4fa17e597"/>
+				<textFieldExpression><![CDATA[$F{DATE_FORMAT(A.date,'%d-%m-%Y')}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="85" y="5" width="82" height="20" uuid="d2c2f96f-7277-4f03-a173-9a0690636750"/>
+				<textFieldExpression><![CDATA[$F{intime}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="167" y="5" width="82" height="20" uuid="05f6d761-9442-4562-a250-963244198f32"/>
+				<textFieldExpression><![CDATA[$F{outtime}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="249" y="5" width="59" height="20" uuid="c1962814-1d92-42c2-8af8-c5d1a0263d42"/>
+				<textFieldExpression><![CDATA[$F{shortname}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="308" y="5" width="50" height="20" uuid="f0bcd2fc-169d-45f4-8133-08bc887f866c"/>
+				<textFieldExpression><![CDATA[$F{place}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="371" y="5" width="100" height="20" uuid="782d7910-2ee9-4d2f-9629-817fd86446bd"/>
+				<textFieldExpression><![CDATA[$F{open_closed_status}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>
