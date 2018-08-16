@@ -336,9 +336,9 @@ elseif($mode=='employee') {
                     . "(SELECT employeeID,COUNT(*) as out_cnt,SEC_TO_TIME(SUM(TIME_TO_SEC(TIMEDIFF(TIME_FORMAT('17:30:00','%H:%i:%s'),TIME_FORMAT(outtime,'%H:%i:%s'))))) "
                     . "as outtime_short FROM employee_attendance WHERE TIME_FORMAT(outtime,'%H:%i:%s') <TIME_FORMAT('17:30:00','%H:%i:%s') AND date "
                     . "BETWEEN '". $start . "' AND '" . $end . "' AND status <> 'H'  GROUP BY employeeID) as E ON A.employeeID=E.employeeID LEFT JOIN "
-                    . "(SELECT employeeCode,COUNT(*) as leave_no FROM employee_leave WHERE ((startDate BETWEEN '". $start . "' AND '" . $end . "') AND "
+                    . "(SELECT employeeCode,COUNT(*) as leave_no FROM employee_leave WHERE ((startDate BETWEEN '". $start . "' AND '" . $end . "') OR "
                     . "('" . $start . "' BETWEEN startDate AND endDate)) AND leaveTypeID<>12 group by employeeCode) AS l ON l.employeeCode=emp.employeeCode LEFT JOIN "
-                    . "(SELECT employeeCode,COUNT(*) as lop FROM employee_leave WHERE ((startDate BETWEEN '". $start . "' AND '" . $end . "') AND "
+                    . "(SELECT employeeCode,COUNT(*) as lop FROM employee_leave WHERE ((startDate BETWEEN '". $start . "' AND '" . $end . "') OR "
                     . "('" . $start . "' BETWEEN startDate AND endDate)) AND leaveTypeID=12 group by employeeCode) AS lo ON lo.employeeCode=emp.employeeCode WHERE A.date BETWEEN '". $start . "' AND '" 
                     . $end . "' AND emp.employeeCode = " . $_SESSION['employee'] . " AND status <> 'H' GROUP BY A.employeeID";
             $col = array('Employee Name','Designation','Working Days','Present','Allowed Leaves','LOP','Short Fall');    
@@ -447,9 +447,9 @@ else {
                     . "(SELECT employeeID,COUNT(*) as out_cnt,SEC_TO_TIME(SUM(TIME_TO_SEC(TIMEDIFF(TIME_FORMAT('17:30:00','%H:%i:%s'),TIME_FORMAT(outtime,'%H:%i:%s'))))) "
                     . "as outtime_short FROM employee_attendance WHERE TIME_FORMAT(outtime,'%H:%i:%s') <TIME_FORMAT('17:30:00','%H:%i:%s') AND date "
                     . "BETWEEN '". $start . "' AND '" . $end . "' AND status <> 'H'  GROUP BY employeeID) as E ON A.employeeID=E.employeeID LEFT JOIN "
-                    . "(SELECT employeeCode,COUNT(*) as leave_no FROM employee_leave WHERE ((startDate BETWEEN '". $start . "' AND '" . $end . "') AND "
+                    . "(SELECT employeeCode,COUNT(*) as leave_no FROM employee_leave WHERE ((startDate BETWEEN '". $start . "' AND '" . $end . "') OR "
                     . "('" . $start . "' BETWEEN startDate AND endDate)) AND leaveTypeID<>12 group by employeeCode) AS l ON l.employeeCode=emp.employeeCode LEFT JOIN "
-                    . "(SELECT employeeCode,COUNT(*) as lop FROM employee_leave WHERE ((startDate BETWEEN '". $start . "' AND '" . $end . "') AND "
+                    . "(SELECT employeeCode,COUNT(*) as lop FROM employee_leave WHERE ((startDate BETWEEN '". $start . "' AND '" . $end . "') OR "
                     . "('" . $start . "' BETWEEN startDate AND endDate)) AND leaveTypeID=12 group by employeeCode) AS lo ON lo.employeeCode=emp.employeeCode WHERE A.date BETWEEN '". $start . "' AND '" 
                     . $end . "' " . $whr . " AND status <> 'H'  AND employeeStatus=1 GROUP BY A.employeeID ORDER BY emp.categoryID,level,A.employeeID";
             $col = array('Employee Name','Designation','Working Days','Present','Allowed Leaves','LOP','Short Fall');    
